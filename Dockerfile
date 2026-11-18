@@ -1,13 +1,15 @@
 # Stage 1: Build Vite React App
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Install dependencies with frozen lockfile
-COPY package.json package-lock.json ./
-RUN npm ci
+# Copy package files
+COPY package*.json ./
 
-# Copy source files
+# Install dependencies cleanly
+RUN npm install
+
+# Copy application source
 COPY . .
 
 # Build production assets
@@ -16,8 +18,8 @@ RUN npm run build
 # Stage 2: Serve with lightweight Nginx
 FROM nginx:alpine
 
-# Remove default nginx config
-RUN rm /etc/nginx/conf.d/default.conf
+# Remove default config
+RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Copy custom nginx SPA config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
@@ -25,7 +27,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy build artifacts from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 8080 (Google Cloud Run default)
+# Expose default Cloud Run port
 EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
