@@ -12,11 +12,14 @@ import {
   RotateCcw,
   Sparkles,
   Filter,
+  Smartphone,
+  PlusSquare,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { apiService } from '../api/client'
 import { analyticsStore } from '../utils/analyticsStore'
 import { cn } from '../utils/cn'
+import InstallShortcutModal from '../components/InstallShortcutModal'
 
 const EXAMS = [
   { id: 'NEET_PG', label: 'NEET PG' },
@@ -33,11 +36,18 @@ export default function ProfileScreen({
   const [isUpdatingExam, setIsUpdatingExam] = useState(false)
   const [successNote, setSuccessNote] = useState('')
   const [topicFilter, setTopicFilter] = useState('ALL') // 'ALL' | 'PHARM' | 'PATH' | 'PSM' | 'WEAK'
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(false)
   const [analytics, setAnalytics] = useState(() =>
     analyticsStore.getAnalyticsSummary()
   )
 
   useEffect(() => {
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true
+    setIsStandalone(Boolean(standalone))
+
     // 1. Initial local analytics
     const localData = analyticsStore.getAnalyticsSummary()
     setAnalytics(localData)
@@ -301,6 +311,40 @@ export default function ProfileScreen({
             Live & Active
           </span>
         </div>
+
+        {/* Device Shortcut / PWA Status */}
+        <div className="pt-2 border-t border-[#E2ECF2] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Smartphone className="w-4 h-4 text-[#053F5C] shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-[#053F5C] truncate">
+                {isStandalone ? 'Home Screen Shortcut Active' : 'Add to Home Screen'}
+              </p>
+              <p className="text-[10px] text-[#5C768D] truncate">
+                {isStandalone
+                  ? 'Running in full-screen standalone mode'
+                  : 'Install icon on your phone for 1-tap recall'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setIsInstallModalOpen(true)}
+            className="py-1.5 px-3 rounded-xl bg-[#E2F3F8] hover:bg-[#C5E6F1] text-[#053F5C] text-xs font-bold border border-[#B8D5E3] transition-all flex items-center gap-1.5 cursor-pointer shrink-0 active:scale-95 shadow-xs"
+          >
+            {isStandalone ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-[#429EBD]" />
+                <span>Installed</span>
+              </>
+            ) : (
+              <>
+                <PlusSquare className="w-3.5 h-3.5 text-[#429EBD]" />
+                <span>Add Shortcut</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* 2. Overall Accuracy & Performance Scorecard */}
@@ -549,6 +593,12 @@ export default function ProfileScreen({
           )}
         </div>
       </div>
+
+      {/* Install Shortcut Modal */}
+      <InstallShortcutModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+      />
     </div>
   )
 }

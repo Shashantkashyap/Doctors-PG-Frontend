@@ -9,27 +9,27 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'MedRecall - Pocket Revision & Instant Search',
-        short_name: 'MedRecall',
-        description: '90s Ward Cards, 5m Checklists & 10-MCQ Micro-Drills for NEET PG & INI-CET',
-        theme_color: '#ffffff',
-        background_color: '#f8fafc',
+        name: 'Clinical Recall · Focused learning. Lasting knowledge.',
+        short_name: 'Clinical Recall',
+        description: 'High-yield Clinical Cards, Checklists & Practice Micro-Drills for NEET PG & INI-CET',
+        theme_color: '#053F5C',
+        background_color: '#F4F7F9',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: '/pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
