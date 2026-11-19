@@ -1,10 +1,6 @@
 import axios from 'axios'
 
-const LIVE_BACKEND_URL = 'https://doctors-pg-backend-1001199295091.asia-south2.run.app/api/v1'
-
-const API_BASE_URL = 
-  import.meta.env.VITE_API_URL || 
-  (import.meta.env.DEV ? '/api/v1' : LIVE_BACKEND_URL)
+export const API_BASE_URL = 'https://doctors-pg-backend-1001199295091.asia-south2.run.app/api/v1'
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
