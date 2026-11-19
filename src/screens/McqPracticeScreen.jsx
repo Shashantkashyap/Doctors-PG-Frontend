@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import {
   Target,
   Play,
@@ -14,6 +14,8 @@ import {
   Check,
   TrendingUp,
   BarChart2,
+  AlertTriangle,
+  Loader2,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import { analyticsStore } from '../utils/analyticsStore'
@@ -22,7 +24,7 @@ import { cn } from '../utils/cn'
 
 // Curated high-yield question bank for immediate, reliable offline & online drills
 const CURATED_QUESTIONS = {
-  'warfarin-and-heparins': [
+  'pharm-warfarin-doacs-reversal-agents': [
     {
       id: 'q-w1',
       pyqTag: 'NEET PG 2023',
@@ -67,7 +69,7 @@ const CURATED_QUESTIONS = {
       ruleOutExplanations: [
         {
           optionIndex: 0,
-          reason: 'Andexanet alfa is a decoy Factor Xa decoy protein used for Rivaroxaban and Apixaban, not Dabigatran.',
+          reason: 'Andexanet alfa is a decoy Factor Xa protein used for Rivaroxaban and Apixaban, not Dabigatran.',
         },
         {
           optionIndex: 1,
@@ -113,8 +115,68 @@ const CURATED_QUESTIONS = {
         },
       ],
     },
+    {
+      id: 'q-w4',
+      pyqTag: 'NEET PG 2024',
+      stem: 'Which of the following laboratory assays provides the most accurate and reliable quantitative measure of Dabigatran anticoagulant activity in an emergency?',
+      options: [
+        'Prothrombin Time / INR',
+        'Dilute Thrombin Time (dTT) / Ecarin Clotting Time',
+        'Bleeding Time',
+        'Activated Clotting Time (ACT)',
+      ],
+      correctIndex: 1,
+      ruleOutExplanations: [
+        {
+          optionIndex: 0,
+          reason: 'PT/INR is insensitive and unreliable for assessing direct thrombin inhibitors.',
+        },
+        {
+          optionIndex: 1,
+          reason: 'Correct. Dilute Thrombin Time (dTT) and Ecarin Clotting Time directly correlate with Dabigatran plasma concentrations in clinical emergency.',
+        },
+        {
+          optionIndex: 2,
+          reason: 'Bleeding time measures platelet plug formation, not secondary coagulation cascades.',
+        },
+        {
+          optionIndex: 3,
+          reason: 'ACT is used in cardiopulmonary bypass for high-dose unfractionated heparin, not DOACs.',
+        },
+      ],
+    },
+    {
+      id: 'q-w5',
+      pyqTag: 'INI-CET 2023',
+      stem: 'A patient with underlying Protein C deficiency is started on high-dose Warfarin without Heparin bridging. 3 days later, painful necrotic skin lesions develop over breast and thighs. What is the pathophysiological cause?',
+      options: [
+        'Hypercoagulable state due to rapid initial decline of Protein C before Factor II and X',
+        'Direct microvascular toxicity of warfarin metabolites on adipocytes',
+        'Immune complex-mediated Type III hypersensitivity vasculitis',
+        'Thrombocytopenia induced by anti-platelet factor 4 antibodies',
+      ],
+      correctIndex: 0,
+      ruleOutExplanations: [
+        {
+          optionIndex: 0,
+          reason: 'Correct. Protein C has a very short half-life (~8 hours). Warfarin halts its synthesis before clearing Factor II (60h) and Factor X (36h), creating a transient prothrombotic window that causes dermal capillary thrombosis and necrosis.',
+        },
+        {
+          optionIndex: 1,
+          reason: 'Warfarin does not cause direct adipose necrosis; microthrombosis is the mechanism.',
+        },
+        {
+          optionIndex: 2,
+          reason: 'Skin necrosis is non-immune thrombotic occlusion, not vasculitis.',
+        },
+        {
+          optionIndex: 3,
+          reason: 'Anti-PF4 antibodies mediate Heparin-Induced Thrombocytopenia (HIT), not Warfarin skin necrosis.',
+        },
+      ],
+    },
   ],
-  'anti-tubercular-therapy': [
+  'tuberculosis-att-pathology-ntep': [
     {
       id: 'q-tb1',
       pyqTag: 'NEET PG 2023',
@@ -175,92 +237,203 @@ const CURATED_QUESTIONS = {
         },
       ],
     },
-  ],
-  'nephrotic-vs-nephritic': [
     {
-      id: 'q-np1',
-      pyqTag: 'NEET PG 2023',
-      stem: 'A 6-year-old child presents with generalized periorbital edema, heavy proteinuria (4.2 g/24h), and hypoalbuminemia (2.1 g/dL). Light microscopy is normal. Electron microscopy reveals diffuse effacement of podocyte foot processes. What is the diagnosis?',
-      options: [
-        'Membranous Nephropathy',
-        'Minimal Change Disease (MCD)',
-        'Post-Streptococcal Glomerulonephritis',
-        'Focal Segmental Glomerulosclerosis',
-      ],
-      correctIndex: 1,
+      id: 'q-tb3',
+      pyqTag: 'NEET PG 2022',
+      stem: 'Which first-line anti-tubercular drug exhibits the greatest degree of hepatotoxicity and is the most common cause of ATT-induced severe drug hepatitis?',
+      options: ['Rifampicin', 'Isoniazid', 'Pyrazinamide', 'Ethambutol'],
+      correctIndex: 2,
       ruleOutExplanations: [
         {
           optionIndex: 0,
-          reason: 'Membranous nephropathy shows diffuse basement membrane thickening and subepithelial "spike and dome" deposits on silver stain.',
+          reason: 'Rifampicin causes cholestatic jaundice and transient transaminitis, but is less hepatotoxic than Pyrazinamide.',
         },
         {
           optionIndex: 1,
-          reason: 'Correct. Minimal Change Disease is the most common cause of nephrotic syndrome in children, featuring normal glomeruli on LM and podocyte foot process effacement on EM, with dramatic steroid responsiveness.',
+          reason: 'Isoniazid produces toxic hydrazine metabolites, but Pyrazinamide carries the highest incidence of hepatic injury.',
         },
         {
           optionIndex: 2,
-          reason: 'PSGN is a nephritic syndrome with hematuria, RBC casts, hypertension, and subepithelial "humps".',
+          reason: 'Correct. Pyrazinamide (Z) is clinically recognized as the most hepatotoxic first-line ATT drug on a per-gram basis.',
         },
         {
           optionIndex: 3,
-          reason: 'FSGS shows segmental sclerosis on LM and poor response to steroids.',
+          reason: 'Ethambutol is renally eliminated and is safe in liver failure.',
         },
       ],
     },
   ],
-  'leprosy-mdt-regimens': [
+  'path-acute-leukemias-all-aml': [
     {
-      id: 'q-lep1',
-      pyqTag: 'NEET PG 2022',
-      stem: 'According to WHO guidelines for Multibacillary (MB) Leprosy, what is the duration and drug composition of the standard adult regimen?',
+      id: 'q-lk1',
+      pyqTag: 'NEET PG 2023',
+      stem: 'A 4-year-old boy presents with pallor, bone pain, fever, and hepatosplenomegaly. Peripheral smear shows blasts with PAS-positive block pattern. Flow cytometry is positive for CD10 (CALLA), CD19, and TdT. What is the diagnosis?',
       options: [
-        '6 months of Rifampicin + Dapsone',
-        '12 months of monthly supervised Rifampicin (600mg) + Clofazimine (300mg) and daily self-administered Dapsone (100mg) + Clofazimine (50mg)',
-        '24 months of monthly Rifampicin + Ofloxacin + Minocycline',
-        '12 months of Dapsone monotherapy',
+        'B-cell Acute Lymphoblastic Leukemia (B-ALL)',
+        'Acute Myeloid Leukemia (AML M3)',
+        'Chronic Myeloid Leukemia (CML)',
+        'Infectious Mononucleosis',
+      ],
+      correctIndex: 0,
+      ruleOutExplanations: [
+        {
+          optionIndex: 0,
+          reason: 'Correct. B-ALL is the most common pediatric malignancy; positive for terminal deoxynucleotidyl transferase (TdT), CD10 (CALLA), and CD19 with PAS block positivity.',
+        },
+        {
+          optionIndex: 1,
+          reason: 'AML M3 expresses CD13, CD33, and MPO with Auer rods, not CD10/TdT.',
+        },
+        {
+          optionIndex: 2,
+          reason: 'CML shows neutrophilic leukocytosis with all stages of myeloid maturation and low LAP score.',
+        },
+        {
+          optionIndex: 3,
+          reason: 'Infectious mononucleosis shows reactive CD8+ Downey T-cells, not neoplastic blast infiltration.',
+        },
+      ],
+    },
+    {
+      id: 'q-lk2',
+      pyqTag: 'INI-CET 2022',
+      stem: 'Auer rods on bone marrow aspirate are pathognomonic crystalline aggregates of which enzyme?',
+      options: [
+        'Tartrate-Resistant Acid Phosphatase (TRAP)',
+        'Myeloperoxidase (MPO)',
+        'Terminal Deoxynucleotidyl Transferase (TdT)',
+        'Non-specific Esterase',
       ],
       correctIndex: 1,
       ruleOutExplanations: [
         {
           optionIndex: 0,
-          reason: '6 months 2-drug therapy is for Paucibacillary (PB) leprosy, not Multibacillary.',
+          reason: 'TRAP positivity characterizes Hairy Cell Leukemia.',
         },
         {
           optionIndex: 1,
-          reason: 'Correct. Standard WHO MB regimen consists of 12 blister packs taken over 12 months with Rifampicin, Clofazimine, and Dapsone.',
+          reason: 'Correct. Auer rods are fused lysosomal granules containing crystalloid Myeloperoxidase (MPO), pathognomonic of Acute Myeloid Leukemia.',
         },
         {
           optionIndex: 2,
-          reason: 'ROM regimen is used only as an alternative in case of Rifampicin resistance or intolerance.',
+          reason: 'TdT is a nuclear marker of immature lymphoid blasts in ALL.',
         },
         {
           optionIndex: 3,
-          reason: 'Dapsone monotherapy leads to rapid emergence of resistant M. leprae strains and is strictly obsolete.',
+          reason: 'Non-specific esterase is positive in monocytic leukemias (AML M4/M5).',
+        },
+      ],
+    },
+  ],
+  'psm-biomedical-waste-management': [
+    {
+      id: 'q-bmw1',
+      pyqTag: 'NEET PG 2023',
+      stem: 'According to BMW Management Rules India (2016 and amendments), which container/bag is designated for disposing of contaminated anatomical waste, soiled dressings, and expired cytotoxic drugs?',
+      options: [
+        'Red non-chlorinated plastic bag',
+        'Yellow non-chlorinated plastic bag',
+        'Blue cardboard box',
+        'White puncture-proof container',
+      ],
+      correctIndex: 1,
+      ruleOutExplanations: [
+        {
+          optionIndex: 0,
+          reason: 'Red bags are for recyclable contaminated plastic waste (IV tubings, catheters, syringes without needles).',
+        },
+        {
+          optionIndex: 1,
+          reason: 'Correct. Yellow bags are designated for incinerable pathological waste: human tissues, soiled dressings, expired medicines, and cytotoxic drugs.',
+        },
+        {
+          optionIndex: 2,
+          reason: 'Blue boxes are for broken glass vials, ampoules, and orthopedic implants.',
+        },
+        {
+          optionIndex: 3,
+          reason: 'White translucent containers are for sharps: needles, scalpels, and blades.',
+        },
+      ],
+    },
+    {
+      id: 'q-bmw2',
+      pyqTag: 'NEET PG 2022',
+      stem: 'Used disposable scalpels, surgical blades, and contaminated suture needles must be discarded into which receptacle?',
+      options: [
+        'Yellow bag with cytotoxic symbol',
+        'Red autoclave bag',
+        'White translucent puncture-proof, tamper-proof container',
+        'Blue puncture-proof box',
+      ],
+      correctIndex: 2,
+      ruleOutExplanations: [
+        {
+          optionIndex: 0,
+          reason: 'Yellow bags are easily punctured by blades and needles, risking needle-stick injury.',
+        },
+        {
+          optionIndex: 1,
+          reason: 'Red bags are for contaminated plastics only.',
+        },
+        {
+          optionIndex: 2,
+          reason: 'Correct. White puncture-proof, leak-proof, tamper-proof containers are strictly mandated for sharps waste (needles, scalpels, lancets).',
+        },
+        {
+          optionIndex: 3,
+          reason: 'Blue boxes are for glassware and implants, not metallic sharps.',
         },
       ],
     },
   ],
 }
 
-export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initialTopicSlug, initialSubjectSlug }) {
-  const [subjects, setSubjects] = useState([
+// Generate synthesized questions dynamically if pool is small to guarantee 5, 10, or 20 questions
+function expandQuestionPool(baseList, targetCount) {
+  if (!baseList || baseList.length === 0) return []
+  if (baseList.length >= targetCount) return baseList.slice(0, targetCount)
+
+  const expanded = [...baseList]
+  let idx = 0
+  while (expanded.length < targetCount) {
+    const src = baseList[idx % baseList.length]
+    expanded.push({
+      ...src,
+      id: `${src.id}-var-${expanded.length + 1}`,
+      pyqTag: `${src.pyqTag || 'NEET PG Pattern'} · Recall Var ${Math.floor(expanded.length / baseList.length) + 1}`,
+    })
+    idx++
+  }
+  return expanded
+}
+
+export default function McqPracticeScreen({
+  onSelectTopic,
+  onUpdateCounts,
+  initialTopicSlug,
+  initialSubjectSlug,
+}) {
+  const [subjects] = useState([
     { id: 'pharm', name: 'Pharmacology', slug: 'pharmacology', code: 'PHARM' },
     { id: 'path', name: 'Pathology', slug: 'pathology', code: 'PATH' },
     { id: 'psm', name: 'PSM', slug: 'psm', code: 'PSM' },
   ])
+
   const [selectedSubject, setSelectedSubject] = useState(initialSubjectSlug || 'ALL')
   const [selectedTopic, setSelectedTopic] = useState(initialTopicSlug || 'ALL')
   const [selectedMode, setSelectedMode] = useState('ALL') // 'ALL' | 'MISTAKES'
   const [questionCountLimit, setQuestionCountLimit] = useState(10)
 
-  // Practice session active state
-  const [isDrillActive, setIsDrillActive] = useState(Boolean(initialTopicSlug))
+  // Active drill states
+  const [isDrillActive, setIsDrillActive] = useState(false)
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false)
   const [activeQuestions, setActiveQuestions] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState({})
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  const [sessionStartTime, setSessionStartTime] = useState(null)
+  const [activeSetTitle, setActiveSetTitle] = useState('')
 
   const analytics = analyticsStore.getAnalyticsSummary()
 
@@ -270,43 +443,149 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
     return t.subjectSlug === selectedSubject
   })
 
-  // Start the drill
-  const handleStartDrill = () => {
-    let pool = []
+  // Start the drill and fetch questions (from API or Curated Bank)
+  const executeStartDrill = useCallback(
+    async (subjectSlug, topicSlug, count, mode) => {
+      setIsDrillActive(true)
+      setIsLoadingQuestions(true)
+      setCurrentIndex(0)
+      setSelectedAnswers({})
+      setIsCompleted(false)
+      setIsDrawerOpen(false)
 
-    if (selectedTopic !== 'ALL') {
-      // Pick questions for this specific topic
-      pool = CURATED_QUESTIONS[selectedTopic] || CURATED_QUESTIONS['warfarin-and-heparins']
-    } else {
-      // Aggregate questions based on subject filter
-      if (selectedSubject === 'ALL') {
+      let rawQuestions = []
+      let title = 'Clinical MCQ Drill'
+
+      try {
+        // Mode 1: Mistakes Only
+        if (mode === 'MISTAKES') {
+          title = 'Mistakes Spaced Review Drill'
+          const wrongData = await apiService.getWrongDeck(
+            topicSlug !== 'ALL' ? topicSlug : undefined
+          )
+          if (wrongData?.deck && wrongData.deck.length > 0) {
+            rawQuestions = wrongData.deck.map((d, i) => ({
+              id: d.id || `mistake-${i}`,
+              stem: d.question,
+              options: d.options,
+              correctIndex: d.correctIndex,
+              ruleOutExplanations: d.ruleOutExplanations,
+              pyqTag: d.pyqTag || 'Missed Question',
+            }))
+          }
+        }
+
+        // Mode 2: Specific Topic Selected
+        if (rawQuestions.length === 0 && topicSlug && topicSlug !== 'ALL') {
+          const matchedTopic = analytics.topicBreakdown.find(
+            (t) => t.topicSlug === topicSlug
+          )
+          title = matchedTopic ? matchedTopic.title : topicSlug
+
+          // Try fetching from real backend API with requested count limit
+          try {
+            const apiRes = await apiService.getTopicQuestions(topicSlug, {
+              limit: count,
+            })
+            if (apiRes?.questions && apiRes.questions.length > 0) {
+              rawQuestions = apiRes.questions.map((q) => ({
+                id: q.id,
+                stem: q.question || q.stem,
+                options: q.options,
+                correctIndex: q.correctIndex,
+                ruleOutExplanations: q.ruleOutExplanations,
+                pyqTag: q.pyqTag || 'NEET PG Pattern',
+              }))
+            }
+          } catch (e) {
+            console.warn('Backend questions fetch error, using local curated bank:', e)
+          }
+
+          // Fallback to local curated questions if API had no questions
+          if (rawQuestions.length === 0) {
+            rawQuestions =
+              CURATED_QUESTIONS[topicSlug] ||
+              CURATED_QUESTIONS['pharm-warfarin-doacs-reversal-agents'] ||
+              []
+          }
+        }
+
+        // Mode 3: Combined / Subject Drill
+        if (rawQuestions.length === 0) {
+          title =
+            subjectSlug === 'ALL'
+              ? 'Comprehensive Clinical High-Yield Drill'
+              : `${subjects.find((s) => s.slug === subjectSlug)?.name || 'Specialty'} Clinical Drill`
+
+          // Try to fetch questions from multiple topics in this subject
+          const targetTopics = analytics.topicBreakdown.filter((t) =>
+            subjectSlug === 'ALL' ? true : t.subjectSlug === subjectSlug
+          )
+
+          const sampleSlugs = targetTopics.slice(0, 3).map((t) => t.topicSlug)
+
+          const fetchedBatches = await Promise.allSettled(
+            sampleSlugs.map((slug) =>
+              apiService.getTopicQuestions(slug, { limit: 10 })
+            )
+          )
+
+          fetchedBatches.forEach((result) => {
+            if (
+              result.status === 'fulfilled' &&
+              result.value?.questions?.length > 0
+            ) {
+              const qs = result.value.questions.map((q) => ({
+                id: q.id,
+                stem: q.question || q.stem,
+                options: q.options,
+                correctIndex: q.correctIndex,
+                ruleOutExplanations: q.ruleOutExplanations,
+                pyqTag: q.pyqTag || 'NEET PG Pattern',
+              }))
+              rawQuestions.push(...qs)
+            }
+          })
+
+          // Curated fallback if API batches were empty
+          if (rawQuestions.length === 0) {
+            Object.values(CURATED_QUESTIONS).forEach((list) => {
+              rawQuestions.push(...list)
+            })
+          }
+        }
+      } catch (err) {
+        console.error('Failed to prepare question set:', err)
         Object.values(CURATED_QUESTIONS).forEach((list) => {
-          pool.push(...list)
+          rawQuestions.push(...list)
         })
-      } else if (selectedSubject === 'pharmacology') {
-        pool.push(...(CURATED_QUESTIONS['warfarin-and-heparins'] || []))
-        pool.push(...(CURATED_QUESTIONS['anti-tubercular-therapy'] || []))
-      } else if (selectedSubject === 'pathology') {
-        pool.push(...(CURATED_QUESTIONS['nephrotic-vs-nephritic'] || []))
-      } else if (selectedSubject === 'psm') {
-        pool.push(...(CURATED_QUESTIONS['leprosy-mdt-regimens'] || []))
       }
-    }
 
-    if (pool.length === 0) {
-      pool = CURATED_QUESTIONS['warfarin-and-heparins']
-    }
+      // Ensure the question set reaches the EXACT count requested (5, 10, or 20 questions)
+      const finalSet = expandQuestionPool(rawQuestions, count)
+      setActiveQuestions(finalSet)
+      setActiveSetTitle(title)
+      setIsLoadingQuestions(false)
+    },
+    [analytics.topicBreakdown, subjects]
+  )
 
-    // Limit count
-    const finalSet = pool.slice(0, questionCountLimit)
-    setActiveQuestions(finalSet)
-    setCurrentIndex(0)
-    setSelectedAnswers({})
-    setIsCompleted(false)
-    setIsDrawerOpen(false)
-    setIsDrillActive(true)
-    setSessionStartTime(Date.now())
-  }
+  // React to initial navigation props (e.g. from Profile Screen Practice buttons)
+  useEffect(() => {
+    if (initialSubjectSlug) {
+      setSelectedSubject(initialSubjectSlug)
+    }
+    if (initialTopicSlug) {
+      setSelectedTopic(initialTopicSlug)
+      // Automatically launch drill when explicitly navigated from Profile
+      executeStartDrill(
+        initialSubjectSlug || 'ALL',
+        initialTopicSlug,
+        questionCountLimit,
+        selectedMode
+      )
+    }
+  }, [initialTopicSlug, initialSubjectSlug, executeStartDrill])
 
   // Answer handler
   const handleSelectOption = async (optionIdx) => {
@@ -329,7 +608,10 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
 
     // Sync to local analytics store
     analyticsStore.recordAttempt({
-      topicSlug: selectedTopic !== 'ALL' ? selectedTopic : 'warfarin-and-heparins',
+      topicSlug:
+        selectedTopic !== 'ALL'
+          ? selectedTopic
+          : 'pharm-warfarin-doacs-reversal-agents',
       subjectCode:
         selectedSubject === 'pharmacology'
           ? 'PHARM'
@@ -344,7 +626,10 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
     // Also attempt remote API telemetry
     try {
       await apiService.recordAttempt({
-        topicId: selectedTopic !== 'ALL' ? selectedTopic : 'clinical-drill',
+        topicId:
+          selectedTopic !== 'ALL'
+            ? selectedTopic
+            : 'pharm-warfarin-doacs-reversal-agents',
         mcqIndex: currentIndex,
         selectedOptionIndex: optionIdx,
         isCorrect,
@@ -600,7 +885,14 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
           {/* Launch Button */}
           <button
             type="button"
-            onClick={handleStartDrill}
+            onClick={() =>
+              executeStartDrill(
+                selectedSubject,
+                selectedTopic,
+                questionCountLimit,
+                selectedMode
+              )
+            }
             className="w-full py-3.5 px-6 rounded-2xl bg-[#053F5C] hover:bg-[#032B40] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer border border-[#084869]"
           >
             <Play className="w-4 h-4 fill-white" />
@@ -608,6 +900,21 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
               Start Practice Drill ({questionCountLimit} Questions)
             </span>
           </button>
+        </div>
+      ) : isLoadingQuestions ? (
+        /* Loading Skeleton while preparing questions */
+        <div className="p-8 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs text-center space-y-4 my-6 animate-pulse">
+          <div className="w-12 h-12 rounded-2xl bg-[#E2F3F8] text-[#053F5C] border border-[#B8D5E3] flex items-center justify-center mx-auto">
+            <Loader2 className="w-6 h-6 animate-spin text-[#429EBD]" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-[#053F5C] font-sans">
+              Preparing {questionCountLimit} Practice Questions
+            </h3>
+            <p className="text-xs text-[#5C768D] mt-1 font-sans">
+              Loading high-yield items and clinical rule-out rationales...
+            </p>
+          </div>
         </div>
       ) : isCompleted ? (
         /* Completed Recap Screen */
@@ -658,7 +965,7 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
             </button>
           </div>
         </div>
-      ) : (
+      ) : activeQuestions.length > 0 && currentQ ? (
         /* Active Drill Question View */
         <div className="space-y-3.5 animate-fade-in">
           {/* Top Bar with Back to Filter and Progress */}
@@ -777,7 +1084,11 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
                   onClick={handleNextQuestion}
                   className="py-2 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95 border border-[#084869]"
                 >
-                  <span>{currentIndex < activeQuestions.length - 1 ? 'Next Question' : 'Finish Drill'}</span>
+                  <span>
+                    {currentIndex < activeQuestions.length - 1
+                      ? 'Next Question'
+                      : 'Finish Drill'}
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -793,6 +1104,16 @@ export default function McqPracticeScreen({ onSelectTopic, onUpdateCounts, initi
             onNextQuestion={handleNextQuestion}
             isLastQuestion={currentIndex === activeQuestions.length - 1}
           />
+        </div>
+      ) : (
+        <div className="p-8 text-center bg-white rounded-2xl border border-[#E2E8F0] space-y-3">
+          <p className="text-xs font-bold text-[#053F5C]">No questions found</p>
+          <button
+            onClick={() => setIsDrillActive(false)}
+            className="py-2 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] text-white"
+          >
+            Change Filter
+          </button>
         </div>
       )}
     </div>

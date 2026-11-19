@@ -14,6 +14,7 @@ import {
   Filter,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { apiService } from '../api/client'
 import { analyticsStore } from '../utils/analyticsStore'
 import { cn } from '../utils/cn'
 
@@ -37,8 +38,37 @@ export default function ProfileScreen({
   )
 
   useEffect(() => {
-    // Refresh analytics on load
-    setAnalytics(analyticsStore.getAnalyticsSummary())
+    // 1. Initial local analytics
+    const localData = analyticsStore.getAnalyticsSummary()
+    setAnalytics(localData)
+
+    // 2. Fetch live telemetry from backend
+    apiService
+      .getProgressSummary()
+      .then((res) => {
+        if (res?.success && res.summary) {
+          setAnalytics((prev) => {
+            const bAttempted = res.summary.totalQuestionsAttempted || 0
+            const bCorrect = res.summary.totalQuestionsCorrect || 0
+            const bAccuracy = res.summary.overallAccuracy || 0
+            const bMastered = res.summary.masteryCounts?.mastered || 0
+
+            return {
+              ...prev,
+              overall: {
+                ...prev.overall,
+                totalAttempted: Math.max(prev.overall.totalAttempted, bAttempted),
+                totalCorrect: Math.max(prev.overall.totalCorrect, bCorrect),
+                overallAccuracy: bAttempted > 0 ? bAccuracy : prev.overall.overallAccuracy,
+                masteredCount: Math.max(prev.overall.masteredCount, bMastered),
+              },
+            }
+          })
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend progress summary load fallback:', err)
+      })
   }, [])
 
   if (!user) return null

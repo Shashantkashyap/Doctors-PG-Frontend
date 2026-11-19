@@ -53,7 +53,7 @@ export const apiService = {
 
   // Topic & 3-Layer Revision
   getTopic: (slug) => api.get(`/topics/${slug}`).then((r) => r.data),
-  getTopicQuestions: (slug) => api.get(`/topics/${slug}/questions`).then((r) => r.data),
+  getTopicQuestions: (slug, params = {}) => api.get(`/topics/${slug}/questions`, { params }).then((r) => r.data),
 
   // Practice & Mistakes Deck
   recordAttempt: (payload) => api.post('/progress/attempt', payload).then((r) => r.data),
