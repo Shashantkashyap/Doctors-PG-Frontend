@@ -53,6 +53,47 @@ export default function ProfileScreen({
             const bAccuracy = res.summary.overallAccuracy || 0
             const bMastered = res.summary.masteryCounts?.mastered || 0
 
+            const rawSubjList = res.summary.subjectBreakdown || res.subjectBreakdown
+            let updatedSubjects = prev.subjectBreakdown
+            if (Array.isArray(rawSubjList) && rawSubjList.length > 0) {
+              updatedSubjects = rawSubjList.map((sb) => {
+                const prevSubj = prev.subjectBreakdown.find((s) => s.code === sb.code || s.slug === sb.slug)
+                return {
+                  ...(prevSubj || {}),
+                  code: sb.code,
+                  name: sb.name,
+                  slug: sb.slug,
+                  attempted: sb.attempted,
+                  correct: sb.correct,
+                  accuracy: sb.accuracyPercent || 0,
+                  topicsCount: sb.topicsCount,
+                }
+              })
+            }
+
+            let updatedTopics = prev.topicBreakdown
+            if (Array.isArray(res.topicProgressList) && res.topicProgressList.length > 0) {
+              const remoteMap = new Map(res.topicProgressList.map((p) => [p.topicSlug, p]))
+              updatedTopics = prev.topicBreakdown.map((t) => {
+                const remote = remoteMap.get(t.topicSlug)
+                if (remote) {
+                  return {
+                    ...t,
+                    attempted: remote.attemptedCount,
+                    correct: Math.max(0, remote.attemptedCount - remote.wrongCount),
+                    accuracy: remote.accuracyPercent,
+                    status:
+                      remote.masteryStatus === 'mastered'
+                        ? 'Mastered'
+                        : remote.accuracyPercent >= 60
+                        ? 'Solid'
+                        : 'Needs Revision',
+                  }
+                }
+                return t
+              })
+            }
+
             return {
               ...prev,
               overall: {
@@ -62,6 +103,8 @@ export default function ProfileScreen({
                 overallAccuracy: bAttempted > 0 ? bAccuracy : prev.overall.overallAccuracy,
                 masteredCount: Math.max(prev.overall.masteredCount, bMastered),
               },
+              subjectBreakdown: updatedSubjects,
+              topicBreakdown: updatedTopics,
             }
           })
         }

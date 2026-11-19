@@ -457,108 +457,40 @@ export default function McqPracticeScreen({
       let title = 'Clinical MCQ Drill'
 
       try {
-        // Mode 1: Mistakes Only
-        if (mode === 'MISTAKES') {
-          title = 'Mistakes Spaced Review Drill'
-          const wrongData = await apiService.getWrongDeck(
-            topicSlug !== 'ALL' ? topicSlug : undefined
-          )
-          if (wrongData?.deck && wrongData.deck.length > 0) {
-            rawQuestions = wrongData.deck.map((d, i) => ({
-              id: d.id || `mistake-${i}`,
-              stem: d.question,
-              options: d.options,
-              correctIndex: d.correctIndex,
-              ruleOutExplanations: d.ruleOutExplanations,
-              pyqTag: d.pyqTag || 'Missed Question',
-            }))
-          }
-        }
+        // Call the unified Backend Practice Drill Engine!
+        const drillRes = await apiService.getPracticeDrill({
+          subjectSlug: subjectSlug || 'all',
+          topicSlug: topicSlug && topicSlug !== 'ALL' ? topicSlug : undefined,
+          mode: mode === 'MISTAKES' ? 'mistakes' : 'all',
+          limit: count,
+        })
 
-        // Mode 2: Specific Topic Selected
-        if (rawQuestions.length === 0 && topicSlug && topicSlug !== 'ALL') {
-          const matchedTopic = analytics.topicBreakdown.find(
-            (t) => t.topicSlug === topicSlug
-          )
-          title = matchedTopic ? matchedTopic.title : topicSlug
-
-          // Try fetching from real backend API with requested count limit
-          try {
-            const apiRes = await apiService.getTopicQuestions(topicSlug, {
-              limit: count,
-            })
-            if (apiRes?.questions && apiRes.questions.length > 0) {
-              rawQuestions = apiRes.questions.map((q) => ({
-                id: q.id,
-                stem: q.question || q.stem,
-                options: q.options,
-                correctIndex: q.correctIndex,
-                ruleOutExplanations: q.ruleOutExplanations,
-                pyqTag: q.pyqTag || 'NEET PG Pattern',
-              }))
-            }
-          } catch (e) {
-            console.warn('Backend questions fetch error, using local curated bank:', e)
-          }
-
-          // Fallback to local curated questions if API had no questions
-          if (rawQuestions.length === 0) {
-            rawQuestions =
-              CURATED_QUESTIONS[topicSlug] ||
-              CURATED_QUESTIONS['pharm-warfarin-doacs-reversal-agents'] ||
-              []
-          }
-        }
-
-        // Mode 3: Combined / Subject Drill
-        if (rawQuestions.length === 0) {
-          title =
-            subjectSlug === 'ALL'
-              ? 'Comprehensive Clinical High-Yield Drill'
-              : `${subjects.find((s) => s.slug === subjectSlug)?.name || 'Specialty'} Clinical Drill`
-
-          // Try to fetch questions from multiple topics in this subject
-          const targetTopics = analytics.topicBreakdown.filter((t) =>
-            subjectSlug === 'ALL' ? true : t.subjectSlug === subjectSlug
-          )
-
-          const sampleSlugs = targetTopics.slice(0, 3).map((t) => t.topicSlug)
-
-          const fetchedBatches = await Promise.allSettled(
-            sampleSlugs.map((slug) =>
-              apiService.getTopicQuestions(slug, { limit: 10 })
-            )
-          )
-
-          fetchedBatches.forEach((result) => {
-            if (
-              result.status === 'fulfilled' &&
-              result.value?.questions?.length > 0
-            ) {
-              const qs = result.value.questions.map((q) => ({
-                id: q.id,
-                stem: q.question || q.stem,
-                options: q.options,
-                correctIndex: q.correctIndex,
-                ruleOutExplanations: q.ruleOutExplanations,
-                pyqTag: q.pyqTag || 'NEET PG Pattern',
-              }))
-              rawQuestions.push(...qs)
-            }
-          })
-
-          // Curated fallback if API batches were empty
-          if (rawQuestions.length === 0) {
-            Object.values(CURATED_QUESTIONS).forEach((list) => {
-              rawQuestions.push(...list)
-            })
-          }
+        if (drillRes?.success && Array.isArray(drillRes.questions) && drillRes.questions.length > 0) {
+          title = drillRes.drillTitle || title
+          rawQuestions = drillRes.questions.map((q) => ({
+            id: q.id,
+            topicId: q.topicId || topicSlug,
+            topicSlug: q.topicSlug || topicSlug,
+            stem: q.question || q.stem,
+            options: q.options,
+            correctIndex: q.correctIndex,
+            ruleOutExplanations: q.ruleOutExplanations,
+            pyqTag: q.pyqTag || 'NEET PG Pattern',
+          }))
         }
       } catch (err) {
-        console.error('Failed to prepare question set:', err)
-        Object.values(CURATED_QUESTIONS).forEach((list) => {
-          rawQuestions.push(...list)
-        })
+        console.warn('Backend drill engine fetch failed, using fallback:', err)
+      }
+
+      // If drill engine returned no questions (e.g. offline or mistakes mode empty), fallback gracefully
+      if (rawQuestions.length === 0) {
+        if (topicSlug && topicSlug !== 'ALL' && CURATED_QUESTIONS[topicSlug]) {
+          rawQuestions = CURATED_QUESTIONS[topicSlug]
+        } else {
+          Object.values(CURATED_QUESTIONS).forEach((list) => {
+            rawQuestions.push(...list)
+          })
+        }
       }
 
       // Ensure the question set reaches the EXACT count requested (5, 10, or 20 questions)
@@ -567,7 +499,7 @@ export default function McqPracticeScreen({
       setActiveSetTitle(title)
       setIsLoadingQuestions(false)
     },
-    [analytics.topicBreakdown, subjects]
+    [analytics.topicBreakdown]
   )
 
   // React to initial navigation props (e.g. from Profile Screen Practice buttons)
@@ -648,6 +580,26 @@ export default function McqPracticeScreen({
     } else {
       setIsCompleted(true)
       setIsDrawerOpen(false)
+
+      // Batch sync all completed answers to the backend
+      const attempts = activeQuestions
+        .map((q, idx) => {
+          const ans = selectedAnswers[idx]
+          if (ans === undefined) return null
+          return {
+            topicId: q.topicId || q.topicSlug || (selectedTopic !== 'ALL' ? selectedTopic : 'pharm-warfarin-doacs-reversal-agents'),
+            mcqIndex: idx,
+            selectedOptionIndex: ans,
+            isCorrect: ans === q.correctIndex,
+            timeSpentMs: 6000,
+          }
+        })
+        .filter(Boolean)
+
+      if (attempts.length > 0) {
+        apiService.recordBatchAttempt(attempts).catch(() => {})
+        if (onUpdateCounts) onUpdateCounts()
+      }
     }
   }
 

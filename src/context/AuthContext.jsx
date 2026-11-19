@@ -117,9 +117,7 @@ export function AuthProvider({ children }) {
   const updateTargetExam = async (newExam) => {
     if (!user) return
     try {
-      const res = await apiService.login({
-        name: user.name,
-        email: user.email,
+      const res = await apiService.updateProfile({
         targetExam: newExam,
       })
       if (res?.success && res.user) {

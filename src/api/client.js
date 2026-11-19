@@ -56,7 +56,9 @@ export const apiService = {
   getTopicQuestions: (slug, params = {}) => api.get(`/topics/${slug}/questions`, { params }).then((r) => r.data),
 
   // Practice & Mistakes Deck
+  getPracticeDrill: (params = {}) => api.get('/practice/drill', { params }).then((r) => r.data),
   recordAttempt: (payload) => api.post('/progress/attempt', payload).then((r) => r.data),
+  recordBatchAttempt: (attempts) => api.post('/progress/batch-attempt', { attempts }).then((r) => r.data),
   getWrongDeck: (topicSlug) => api.get('/progress/wrong-deck', { params: { topicSlug } }).then((r) => r.data),
   getProgressSummary: () => api.get('/progress/summary').then((r) => r.data),
 
@@ -71,6 +73,7 @@ export const apiService = {
   // Auth
   login: (userData) => api.post('/auth/login', userData).then((r) => r.data),
   getMe: () => api.get('/auth/me').then((r) => r.data),
+  updateProfile: (profileData) => api.patch('/auth/profile', profileData).then((r) => r.data),
 }
 
 export default api
