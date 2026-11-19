@@ -70,6 +70,10 @@ export const apiService = {
   // Clinical Review & Audit
   flagError: (payload) => api.post('/review/flag', payload).then((r) => r.data),
 
+  // Analytics & Client Telemetry
+  trackEvents: (events, anonymousId) =>
+    api.post('/analytics/track', { events, anonymousId }).then((r) => r.data),
+
   // Auth
   login: (userData) => api.post('/auth/login', userData).then((r) => r.data),
   getMe: () => api.get('/auth/me').then((r) => r.data),
