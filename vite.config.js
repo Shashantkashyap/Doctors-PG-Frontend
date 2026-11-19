@@ -40,7 +40,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
-            urlPattern: /^\/api\/v1\/(topics|subjects|search)/i,
+            urlPattern: /\/api\/v1\/(topics|subjects|search)/i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-content-cache',

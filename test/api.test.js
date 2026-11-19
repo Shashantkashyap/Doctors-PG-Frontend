@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = 'http://localhost:5000/api/v1'
+const API_BASE = process.env.API_BASE || 'https://doctors-pg-backend-1001199295091.asia-south2.run.app/api/v1'
 
 async function runTests() {
   console.log('🧪 Starting Live Backend Integration Tests...\n')
