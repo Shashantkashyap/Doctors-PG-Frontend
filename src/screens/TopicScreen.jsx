@@ -117,26 +117,26 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
     <div className="space-y-4 animate-fade-in relative pb-16">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#162E22] text-[#FAF8F5] border border-[#234532] text-xs font-semibold shadow-float flex items-center gap-2 animate-fade-in">
-          <CheckCircle2 className="w-4 h-4 text-[#7FA38D]" />
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#053F5C] text-white border border-[#084869] text-xs font-semibold shadow-float flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 text-[#9FE7F5]" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Sticky Header: Remains pinned at top while scrolling */}
-      <header className="sticky top-0 z-30 bg-[#FAF8F5]/95 backdrop-blur-xl border-b border-[#E8E4DA] -mx-4 px-4 pt-2.5 pb-2.5 space-y-2 shadow-xs transition-all">
+      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-[#E2E8F0] -mx-4 px-4 pt-2.5 pb-2.5 space-y-2 shadow-xs transition-all">
         {/* Top Action Row: Back Button & Actions */}
         <div className="flex items-center justify-between">
           <button
             onClick={onBack}
-            className="flex items-center gap-1 py-1 px-2 -ml-1 rounded-xl text-xs font-semibold text-[#5C6860] hover:text-[#161B18] hover:bg-[#F2EFE8] transition-all active:scale-95"
+            className="flex items-center gap-1 py-1 px-2 -ml-1 rounded-xl text-xs font-semibold text-[#5C768D] hover:text-[#053F5C] hover:bg-[#F1F5F9] transition-all active:scale-95 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4 stroke-[2.2]" />
             <span>Explore</span>
           </button>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#EAE5DB] text-[#2F3731] uppercase tracking-wider">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#E2F3F8] text-[#053F5C] uppercase tracking-wider border border-[#C5E6F1]">
               {topic.subject?.name || 'Medical'}
             </span>
 
@@ -144,19 +144,19 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
               onClick={handleTogglePin}
               title={isPinned ? 'Remove from Notebook' : 'Save to Notebook'}
               className={cn(
-                'w-8 h-8 rounded-xl border flex items-center justify-center transition-all active:scale-95 shadow-xs',
+                'w-8 h-8 rounded-xl border flex items-center justify-center transition-all active:scale-95 shadow-xs cursor-pointer',
                 isPinned
-                  ? 'bg-[#FAF4E8] text-[#9C751E] border-[#E8D4A8]'
-                  : 'bg-[#FDFCF9] text-[#717E75] border-[#E5E0D5] hover:text-[#161B18]'
+                  ? 'bg-[#FEF6E7] text-[#F7AD19] border-[#FDEBC8]'
+                  : 'bg-white text-[#5C768D] border-[#E2E8F0] hover:text-[#053F5C]'
               )}
             >
-              <Bookmark className={cn('w-3.5 h-3.5', isPinned && 'fill-[#C29322] text-[#C29322]')} />
+              <Bookmark className={cn('w-3.5 h-3.5', isPinned && 'fill-[#F7AD19] text-[#F7AD19]')} />
             </button>
 
             <button
               onClick={() => setIsFlagDrawerOpen(true)}
               title="Flag Discrepancy"
-              className="w-8 h-8 rounded-xl bg-[#FDFCF9] border border-[#E5E0D5] shadow-xs flex items-center justify-center text-[#717E75] hover:text-[#161B18] transition-all active:scale-95"
+              className="w-8 h-8 rounded-xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-center text-[#5C768D] hover:text-[#053F5C] transition-all active:scale-95 cursor-pointer"
             >
               <Flag className="w-3.5 h-3.5 stroke-[1.8]" />
             </button>
@@ -165,20 +165,20 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
 
         {/* Topic Title */}
         <div className="px-0.5">
-          <h1 className="text-base sm:text-lg font-bold font-sans text-[#161B18] tracking-tight leading-snug line-clamp-1">
+          <h1 className="text-base sm:text-lg font-bold font-sans text-[#053F5C] tracking-tight leading-snug line-clamp-1">
             {topic.title}
           </h1>
         </div>
 
         {/* 3-Layer Segmented Switcher */}
-        <div className="grid grid-cols-3 gap-1 p-1 bg-[#EAE5DB] rounded-xl">
+        <div className="grid grid-cols-3 gap-1 p-1 bg-[#E2ECF2] rounded-xl">
           <button
             onClick={() => handleLayerSwitch('wardCard')}
             className={cn(
-              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation',
+              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer',
               activeLayer === 'wardCard'
-                ? 'bg-[#FDFCF9] text-[#161B18] shadow-xs font-bold'
-                : 'text-[#5C6860] hover:text-[#161B18]'
+                ? 'bg-white text-[#053F5C] shadow-xs font-bold'
+                : 'text-[#5C768D] hover:text-[#053F5C]'
             )}
           >
             Clinical Card
@@ -187,10 +187,10 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
           <button
             onClick={() => handleLayerSwitch('checklist')}
             className={cn(
-              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation',
+              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer',
               activeLayer === 'checklist'
-                ? 'bg-[#FDFCF9] text-[#161B18] shadow-xs font-bold'
-                : 'text-[#5C6860] hover:text-[#161B18]'
+                ? 'bg-white text-[#053F5C] shadow-xs font-bold'
+                : 'text-[#5C768D] hover:text-[#053F5C]'
             )}
           >
             5m Checklist
@@ -199,10 +199,10 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
           <button
             onClick={() => handleLayerSwitch('mcqDrill')}
             className={cn(
-              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation',
+              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer',
               activeLayer === 'mcqDrill'
-                ? 'bg-[#FDFCF9] text-[#161B18] shadow-xs font-bold'
-                : 'text-[#5C6860] hover:text-[#161B18]'
+                ? 'bg-white text-[#053F5C] shadow-xs font-bold'
+                : 'text-[#5C768D] hover:text-[#053F5C]'
             )}
           >
             10 MCQs

@@ -23,33 +23,33 @@ export default function RuleOutDrawer({
   const optionLetters = ['A', 'B', 'C', 'D']
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end bg-[#161B18]/40 backdrop-blur-xs animate-fade-in">
+    <div className="fixed inset-0 z-50 flex flex-col justify-end bg-[#053F5C]/40 backdrop-blur-xs animate-fade-in">
       {/* Backdrop tap to close */}
       <div className="flex-1" onClick={onClose} />
 
       {/* Drawer Surface */}
-      <div className="w-full max-w-lg mx-auto bg-[#FDFCF9] border-t border-[#E5E0D5] rounded-t-3xl shadow-sheet flex flex-col max-h-[85vh] animate-slide-up overflow-hidden">
+      <div className="w-full max-w-lg mx-auto bg-white border-t border-[#E2E8F0] rounded-t-3xl shadow-sheet flex flex-col max-h-[85vh] animate-slide-up overflow-hidden">
         {/* Drag Handle */}
-        <div className="w-9 h-1 bg-[#D5CFBF] rounded-full mx-auto mt-2.5 mb-1 cursor-grab" onClick={onClose} />
+        <div className="w-9 h-1 bg-[#CBD5E1] rounded-full mx-auto mt-2.5 mb-1 cursor-grab" onClick={onClose} />
 
         {/* Header */}
-        <div className="px-5 py-3 border-b border-[#EAE5DB] flex items-center justify-between">
+        <div className="px-5 py-3 border-b border-[#E2E8F0] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div
               className={cn(
                 'flex items-center justify-center w-6 h-6 rounded-lg font-bold text-xs',
                 isUserCorrect
-                  ? 'bg-[#EDF5F0] text-[#1A472A]'
-                  : 'bg-[#FAF0EE] text-[#78261C]'
+                  ? 'bg-[#EDF9FC] text-[#053F5C]'
+                  : 'bg-[#FEF2F2] text-[#991B1B]'
               )}
             >
-              {isUserCorrect ? <CheckCircle2 className="w-4 h-4 text-[#2E7D47]" /> : <XCircle className="w-4 h-4 text-[#A53425]" />}
+              {isUserCorrect ? <CheckCircle2 className="w-4 h-4 text-[#429EBD]" /> : <XCircle className="w-4 h-4 text-[#DC2626]" />}
             </div>
             <div>
-              <h3 className="text-xs font-bold text-[#161B18]">
+              <h3 className="text-xs font-bold text-[#053F5C]">
                 {isUserCorrect ? 'Correct Answer' : 'Incorrect Selection'}
               </h3>
-              <p className="text-[11px] text-[#717E75]">
+              <p className="text-[11px] text-[#5C768D]">
                 Clinical rationale for all 4 options
               </p>
             </div>
@@ -57,7 +57,7 @@ export default function RuleOutDrawer({
 
           <button
             onClick={onClose}
-            className="p-1 text-[#87928A] hover:text-[#161B18] rounded-full transition-colors"
+            className="p-1 text-[#5C768D] hover:text-[#053F5C] rounded-full transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -84,10 +84,10 @@ export default function RuleOutDrawer({
                 className={cn(
                   'p-3.5 rounded-xl border transition-all text-xs',
                   isThisCorrect
-                    ? 'bg-[#EDF5F0] border-[#B8DCB3] text-[#123620] shadow-xs'
+                    ? 'bg-[#EDF9FC] border-[#429EBD] text-[#053F5C] shadow-xs'
                     : isThisSelected
-                    ? 'bg-[#FAF0EE] border-[#E8C8C1] text-[#591B14] shadow-xs'
-                    : 'bg-[#FAF8F5] border-[#E5E0D5]'
+                    ? 'bg-[#FEF2F2] border-[#FCA5A5] text-[#991B1B] shadow-xs'
+                    : 'bg-[#F8FAFC] border-[#E2E8F0]'
                 )}
               >
                 {/* Option Header */}
@@ -97,15 +97,15 @@ export default function RuleOutDrawer({
                       className={cn(
                         'w-5 h-5 rounded-md flex items-center justify-center font-mono font-bold text-xs shrink-0 mt-0.5',
                         isThisCorrect
-                          ? 'bg-[#1A472A] text-white'
+                          ? 'bg-[#429EBD] text-white'
                           : isThisSelected
-                          ? 'bg-[#8C2B20] text-white'
-                          : 'bg-[#FDFCF9] text-[#5C6860] border border-[#D5CFBF]'
+                          ? 'bg-[#DC2626] text-white'
+                          : 'bg-white text-[#5C768D] border border-[#CBD5E1]'
                       )}
                     >
                       {optionLetters[optIdx]}
                     </span>
-                    <span className="text-xs font-bold text-[#161B18] leading-snug break-words">
+                    <span className="text-xs font-bold text-[#053F5C] leading-snug break-words">
                       {optionText}
                     </span>
                   </div>
@@ -114,10 +114,10 @@ export default function RuleOutDrawer({
                     className={cn(
                       'text-[10px] font-semibold px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0',
                       isThisCorrect
-                        ? 'bg-[#E2ECE5] text-[#1A3626]'
+                        ? 'bg-[#E2F3F8] text-[#053F5C] border border-[#C5E6F1]'
                         : isThisSelected
-                        ? 'bg-[#FAF0EE] text-[#78261C]'
-                        : 'bg-[#F2EFE8] text-[#5C6860]'
+                        ? 'bg-[#FEE2E2] text-[#991B1B] border border-[#FECACA]'
+                        : 'bg-[#F0F6F9] text-[#5C768D]'
                     )}
                   >
                     {isThisCorrect ? 'Correct' : isThisSelected ? 'Selected' : 'Distractor'}
@@ -125,7 +125,7 @@ export default function RuleOutDrawer({
                 </div>
 
                 {/* Clinical Rationale */}
-                <div className="text-[12px] text-[#202622] pl-7 leading-relaxed break-words font-medium">
+                <div className="text-[12px] text-[#183B4E] pl-7 leading-relaxed break-words font-medium">
                   {reasonText}
                 </div>
               </div>
@@ -134,10 +134,10 @@ export default function RuleOutDrawer({
         </div>
 
         {/* Bottom Actions */}
-        <div className="p-3.5 bg-[#F8F6F0] border-t border-[#EAE5DB] flex items-center gap-2.5">
+        <div className="p-3.5 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center gap-2.5">
           <button
             onClick={onClose}
-            className="flex-1 py-2 px-4 rounded-xl text-xs font-semibold bg-[#FDFCF9] border border-[#E5E0D5] text-[#2F3731] hover:bg-[#F4F0E8] transition-colors shadow-xs"
+            className="flex-1 py-2 px-4 rounded-xl text-xs font-semibold bg-white border border-[#E2E8F0] text-[#053F5C] hover:bg-[#F0F6F9] transition-colors shadow-xs cursor-pointer"
           >
             Review Question
           </button>
@@ -148,10 +148,10 @@ export default function RuleOutDrawer({
                 onClose()
                 onNextQuestion()
               }}
-              className="flex-1 py-2 px-4 rounded-xl text-xs font-semibold bg-[#1A3626] hover:bg-[#132B1E] text-[#FAF8F5] flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs border border-[#234532]"
+              className="flex-1 py-2 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs border border-[#084869] cursor-pointer"
             >
               <span>{isLastQuestion ? 'Finish' : 'Next Question'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#9FE7F5]" />
             </button>
           )}
         </div>

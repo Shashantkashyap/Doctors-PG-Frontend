@@ -59,16 +59,16 @@ export default function Checklist({ checklist = [] }) {
   return (
     <div className="space-y-3 pb-20 animate-fade-in">
       {/* Controls & Overall Progress Header */}
-      <div className="p-3.5 rounded-2xl bg-[#FDFCF9] border border-[#E5E0D5] shadow-xs flex items-center justify-between gap-2">
+      <div className="p-3.5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#E2ECE5] text-[#1A3626] border border-[#C5D8CC] flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.2] text-[#2E5740]" />
+          <div className="w-7 h-7 rounded-lg bg-[#E2F3F8] text-[#053F5C] border border-[#C5E6F1] flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.2] text-[#429EBD]" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-[#161B18]">
+            <h3 className="text-xs font-bold text-[#053F5C]">
               Clinical Domains ({checklist.length})
             </h3>
-            <span className="text-[10px] text-[#717E75] font-medium">
+            <span className="text-[10px] text-[#5C768D] font-medium">
               {totalChecked} of {totalBullets} items reviewed
             </span>
           </div>
@@ -77,14 +77,14 @@ export default function Checklist({ checklist = [] }) {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={expandAll}
-            className="text-[#5C6860] hover:text-[#161B18] transition-colors text-[11px] font-semibold"
+            className="text-[#5C768D] hover:text-[#053F5C] transition-colors text-[11px] font-semibold cursor-pointer"
           >
             Expand
           </button>
-          <span className="text-[#DDD6C8]">·</span>
+          <span className="text-[#E2E8F0]">·</span>
           <button
             onClick={collapseAll}
-            className="text-[#5C6860] hover:text-[#161B18] transition-colors text-[11px] font-semibold"
+            className="text-[#5C768D] hover:text-[#053F5C] transition-colors text-[11px] font-semibold cursor-pointer"
           >
             Collapse
           </button>
@@ -103,49 +103,49 @@ export default function Checklist({ checklist = [] }) {
             <div
               key={idx}
               className={cn(
-                'rounded-2xl border transition-all duration-150 overflow-hidden bg-[#FDFCF9]',
+                'rounded-2xl border transition-all duration-150 overflow-hidden bg-white',
                 isOpen
-                  ? 'border-[#D5CFBF] shadow-xs'
-                  : 'border-[#E5E0D5] hover:border-[#D5CFBF]'
+                  ? 'border-[#9FE7F5] shadow-xs'
+                  : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
               )}
             >
               {/* Accordion Header */}
               <button
                 onClick={() => toggleSection(idx)}
-                className="w-full p-3.5 flex items-center justify-between text-left transition-colors active:bg-[#F5F2EB] gap-2"
+                className="w-full p-3.5 flex items-center justify-between text-left transition-colors active:bg-[#F0F6F9] gap-2 cursor-pointer"
               >
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-xs sm:text-[13px] font-bold text-[#161B18] leading-snug break-words">
+                  <h4 className="text-xs sm:text-[13px] font-bold text-[#053F5C] leading-snug break-words">
                     {section.domain}
                   </h4>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
                   {isDomainComplete ? (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E2ECE5] text-[#1A3626] border border-[#C5D8CC]">
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E2F3F8] text-[#053F5C] border border-[#C5E6F1]">
                       Done
                     </span>
                   ) : domainCheckedCount > 0 ? (
-                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#F2EFE8] text-[#2F3731] border border-[#E5E0D5]">
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#F0F6F9] text-[#053F5C] border border-[#E1ECF2]">
                       {domainCheckedCount}/{bullets.length}
                     </span>
                   ) : (
-                    <span className="text-[10px] font-mono font-medium text-[#87928A]">
+                    <span className="text-[10px] font-mono font-medium text-[#889DA8]">
                       {bullets.length}
                     </span>
                   )}
 
                   {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-[#87928A]" />
+                    <ChevronUp className="w-4 h-4 text-[#889DA8]" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-[#87928A]" />
+                    <ChevronDown className="w-4 h-4 text-[#889DA8]" />
                   )}
                 </div>
               </button>
 
               {/* Accordion Body: Interactive bullets */}
               {isOpen && (
-                <div className="px-4 pb-4 pt-1 space-y-1.5 border-t border-[#EAE5DB]">
+                <div className="px-4 pb-4 pt-1 space-y-1.5 border-t border-[#E2E8F0]">
                   {bullets && bullets.length > 0 ? (
                     bullets.map((bullet, bIdx) => {
                       const isChecked = Boolean(checkedMap[`${idx}-${bIdx}`])
@@ -156,15 +156,15 @@ export default function Checklist({ checklist = [] }) {
                           className={cn(
                             'p-2 rounded-xl flex items-start gap-2.5 text-xs leading-relaxed transition-all cursor-pointer select-none active:scale-[0.99]',
                             isChecked
-                              ? 'bg-[#F2F6F3]/70 text-[#87928A] line-through'
-                              : 'hover:bg-[#F5F2EB] text-[#202622] font-medium'
+                              ? 'bg-[#EBF8FB]/60 text-[#889DA8] line-through'
+                              : 'hover:bg-[#F0F6F9] text-[#183B4E] font-medium'
                           )}
                         >
                           <div className="mt-0.5 shrink-0">
                             {isChecked ? (
-                              <CheckCircle2 className="w-4 h-4 text-[#2E5740]" />
+                              <CheckCircle2 className="w-4 h-4 text-[#429EBD]" />
                             ) : (
-                              <Circle className="w-4 h-4 text-[#C5D0C7] hover:text-[#717E75] transition-colors" />
+                              <Circle className="w-4 h-4 text-[#CBD5E1] hover:text-[#429EBD] transition-colors" />
                             )}
                           </div>
                           <span className="flex-1 break-words">{bullet}</span>
@@ -172,7 +172,7 @@ export default function Checklist({ checklist = [] }) {
                       )
                     })
                   ) : (
-                    <p className="text-xs text-[#87928A] italic">No items recorded.</p>
+                    <p className="text-xs text-[#889DA8] italic">No items recorded.</p>
                   )}
                 </div>
               )}

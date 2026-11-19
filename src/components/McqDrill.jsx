@@ -124,15 +124,15 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   if (isCompleted) {
     const accuracy = Math.round((correctCount / questions.length) * 100)
     return (
-      <div className="p-6 rounded-2xl bg-[#FDFCF9] border border-[#E5E0D5] text-center space-y-5 shadow-xs my-2 animate-fade-in">
+      <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] text-center space-y-5 shadow-xs my-2 animate-fade-in">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-widest text-[#717E75]">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-[#5C768D]">
             Session Summary
           </span>
-          <h3 className="text-xl font-bold text-[#161B18] mt-1">
+          <h3 className="text-xl font-bold text-[#053F5C] mt-1">
             {correctCount} / {questions.length} Correct
           </h3>
-          <p className="text-xs text-[#5C6860] mt-0.5">
+          <p className="text-xs text-[#5C768D] mt-0.5">
             Accuracy: {accuracy}%
           </p>
         </div>
@@ -150,12 +150,12 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                   setIsDrawerOpen(true)
                 }}
                 className={cn(
-                  'h-8 rounded-lg font-mono text-xs font-semibold border flex items-center justify-center transition-all',
+                  'h-8 rounded-lg font-mono text-xs font-semibold border flex items-center justify-center transition-all cursor-pointer',
                   chosen === undefined
-                    ? 'bg-[#F4F0E8] text-[#87928A] border-[#E5E0D5]'
+                    ? 'bg-[#F0F6F9] text-[#889DA8] border-[#E1ECF2]'
                     : isQCorrect
-                    ? 'bg-[#EDF5F0] text-[#1A472A] border-[#B8DCB3]'
-                    : 'bg-[#FAF0EE] text-[#78261C] border-[#E8C8C1]'
+                    ? 'bg-[#EDF9FC] text-[#053F5C] border-[#B8D5E3]'
+                    : 'bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]'
                 )}
               >
                 {idx + 1}
@@ -166,9 +166,9 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
 
         <button
           onClick={handleRestart}
-          className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold bg-[#1A3626] hover:bg-[#132B1E] text-[#FAF8F5] flex items-center justify-center gap-1.5 transition-all shadow-xs border border-[#234532]"
+          className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white flex items-center justify-center gap-1.5 transition-all shadow-xs border border-[#084869] cursor-pointer"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-3.5 h-3.5 text-[#9FE7F5]" />
           <span>Practice Again</span>
         </button>
       </div>
@@ -180,13 +180,13 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   return (
     <div className="space-y-3.5 pb-20 animate-fade-in">
       {/* Progress Header */}
-      <div className="flex items-center justify-between text-xs text-[#5C6860] px-0.5 font-medium">
-        <span className="font-semibold text-[#161B18]">
+      <div className="flex items-center justify-between text-xs text-[#5C768D] px-0.5 font-medium">
+        <span className="font-semibold text-[#053F5C]">
           Question {currentIndex + 1} of {questions.length}
         </span>
 
         {currentQ.pyqTag && (
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#F2EFE8] border border-[#E5E0D5] text-[#434D46] font-semibold">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#FEF6E7] border border-[#FDEBC8] text-[#8A5506] font-bold">
             {currentQ.pyqTag}
           </span>
         )}
@@ -205,11 +205,11 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
               key={i}
               onClick={() => setCurrentIndex(i)}
               className={cn(
-                'h-1.5 flex-1 rounded-full transition-all duration-150',
-                isCurrent && 'ring-2 ring-[#1A3626]/30',
-                !isDone && 'bg-[#EAE5DB]',
-                isDone && isQCorrect && 'bg-[#2E7D47]',
-                isDone && !isQCorrect && 'bg-[#A53425]'
+                'h-1.5 flex-1 rounded-full transition-all duration-150 cursor-pointer',
+                isCurrent && 'ring-2 ring-[#053F5C]/30',
+                !isDone && 'bg-[#E2ECF2]',
+                isDone && isQCorrect && 'bg-[#429EBD]',
+                isDone && !isQCorrect && 'bg-[#DC2626]'
               )}
             />
           )
@@ -217,9 +217,9 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
       </div>
 
       {/* Question Card */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-[#FDFCF9] border border-[#E5E0D5] shadow-xs space-y-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-4">
         {/* Question Stem */}
-        <p className="text-sm font-semibold text-[#161B18] leading-relaxed break-words">
+        <p className="text-sm font-semibold text-[#053F5C] leading-relaxed break-words">
           {currentQ.question}
         </p>
 
@@ -230,15 +230,15 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
             const isCorrectOption = optIdx === currentQ.correctIndex
 
             let optionStyle =
-              'bg-[#FAF8F5] hover:bg-[#F4F0E8] border-[#E5E0D5] text-[#202622]'
+              'bg-[#F8FAFC] hover:bg-[#F1F9FB] border-[#E2E8F0] text-[#183B4E]'
 
             if (hasAnsweredCurrent) {
               if (isCorrectOption) {
-                optionStyle = 'bg-[#EDF5F0] border-[#97CBA4] text-[#123620] font-semibold shadow-xs'
+                optionStyle = 'bg-[#EDF9FC] border-[#429EBD] text-[#053F5C] font-semibold shadow-xs'
               } else if (isChosen) {
-                optionStyle = 'bg-[#FAF0EE] border-[#DE9E95] text-[#591B14] font-semibold shadow-xs'
+                optionStyle = 'bg-[#FEF2F2] border-[#FCA5A5] text-[#991B1B] font-semibold shadow-xs'
               } else {
-                optionStyle = 'bg-[#FAF8F5]/60 border-[#EAE5DB] text-[#87928A] opacity-60'
+                optionStyle = 'bg-[#F8FAFC]/60 border-[#E2E8F0] text-[#889DA8] opacity-60'
               }
             }
 
@@ -247,7 +247,7 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                 key={optIdx}
                 onClick={() => handleSelectOption(optIdx)}
                 className={cn(
-                  'w-full p-3.5 rounded-xl border text-left flex items-start gap-3 transition-all duration-150 active:scale-[0.99] touch-manipulation',
+                  'w-full p-3.5 rounded-xl border text-left flex items-start gap-3 transition-all duration-150 active:scale-[0.99] touch-manipulation cursor-pointer',
                   optionStyle
                 )}
               >
@@ -255,10 +255,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                   className={cn(
                     'w-5 h-5 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border',
                     hasAnsweredCurrent && isCorrectOption
-                      ? 'bg-[#1A472A] text-white border-[#1A472A]'
+                      ? 'bg-[#429EBD] text-white border-[#429EBD]'
                       : hasAnsweredCurrent && isChosen
-                      ? 'bg-[#8C2B20] text-white border-[#8C2B20]'
-                      : 'bg-[#FDFCF9] text-[#5C6860] border-[#D5CFBF]'
+                      ? 'bg-[#DC2626] text-white border-[#DC2626]'
+                      : 'bg-white text-[#5C768D] border-[#CBD5E1]'
                   )}
                 >
                   {optionLetters[optIdx]}
@@ -269,10 +269,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                 </span>
 
                 {hasAnsweredCurrent && isCorrectOption && (
-                  <CheckCircle2 className="w-4 h-4 text-[#2E7D47] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-[#429EBD] shrink-0 mt-0.5" />
                 )}
                 {hasAnsweredCurrent && isChosen && !isCorrectOption && (
-                  <XCircle className="w-4 h-4 text-[#A53425] shrink-0 mt-0.5" />
+                  <XCircle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
                 )}
               </button>
             )
@@ -281,20 +281,20 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
 
         {/* View Rule Out Drawer trigger */}
         {hasAnsweredCurrent && (
-          <div className="pt-2 flex items-center justify-between gap-2 border-t border-[#EAE5DB]">
+          <div className="pt-2 flex items-center justify-between gap-2 border-t border-[#E2E8F0]">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="text-xs font-semibold text-[#1A3626] hover:underline"
+              className="text-xs font-semibold text-[#429EBD] hover:text-[#053F5C] hover:underline cursor-pointer"
             >
               View 4-Option Explanation &rarr;
             </button>
 
             <button
               onClick={handleNextQuestion}
-              className="py-1.5 px-3 rounded-xl bg-[#1A3626] hover:bg-[#132B1E] text-white text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-xs border border-[#234532]"
+              className="py-1.5 px-3 rounded-xl bg-[#053F5C] hover:bg-[#032B40] text-white text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-xs border border-[#084869] cursor-pointer"
             >
               <span>{currentIndex < questions.length - 1 ? 'Next' : 'Finish'}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5 text-[#9FE7F5]" />
             </button>
           </div>
         )}

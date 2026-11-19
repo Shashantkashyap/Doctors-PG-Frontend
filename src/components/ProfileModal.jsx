@@ -48,21 +48,21 @@ export default function ProfileModal({ isOpen, onClose }) {
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-950/30 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#053F5C]/30 backdrop-blur-xs transition-opacity"
       />
 
       {/* Apple-Style Bottom Sheet Surface */}
-      <div className="relative w-full max-w-[390px] bg-[#F2F4F8] rounded-t-[28px] sm:rounded-3xl border border-slate-200/80 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.18)] overflow-hidden z-10 animate-slide-up pb-8 sm:pb-6">
+      <div className="relative w-full max-w-[390px] bg-white rounded-t-[28px] sm:rounded-3xl border border-[#CBD5E1]/80 shadow-[0_20px_60px_-15px_rgba(5,63,92,0.22)] overflow-hidden z-10 animate-slide-up pb-8 sm:pb-6">
         {/* iOS Drag Handle */}
         <div className="pt-2.5 pb-1 flex justify-center sm:hidden">
-          <div className="w-9 h-1 rounded-full bg-slate-300" />
+          <div className="w-9 h-1 rounded-full bg-[#CBD5E1]" />
         </div>
 
         {/* Close Button in top right */}
         <div className="absolute top-3.5 right-3.5">
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-[#EAE5DB] hover:bg-[#DDD6C8] text-[#5C6860] hover:text-[#161B18] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-7 h-7 rounded-full bg-[#F0F6F9] hover:bg-[#E2F3F8] text-[#5C768D] hover:text-[#053F5C] flex items-center justify-center transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="w-4 h-4 stroke-[2]" />
@@ -71,15 +71,15 @@ export default function ProfileModal({ isOpen, onClose }) {
 
         {/* Centered Doctor Profile Hero */}
         <div className="pt-4 pb-5 px-6 text-center space-y-1">
-          <div className="w-16 h-16 rounded-full bg-[#1A3626] text-[#FAF8F5] font-sans font-bold text-xl flex items-center justify-center shadow-md shadow-[#1A3626]/20 mx-auto select-none border border-[#234532]">
+          <div className="w-16 h-16 rounded-full bg-[#053F5C] text-white font-sans font-bold text-xl flex items-center justify-center shadow-md shadow-[#053F5C]/25 mx-auto select-none border border-[#084869]">
             {initials}
           </div>
 
           <div className="pt-2">
-            <h3 className="text-[17px] font-bold font-sans text-[#161B18] tracking-tight">
+            <h3 className="text-[17px] font-bold font-sans text-[#053F5C] tracking-tight">
               {user.name}
             </h3>
-            <p className="text-[13px] text-[#5C6860] font-sans">
+            <p className="text-[13px] text-[#5C768D] font-sans">
               {user.email}
             </p>
           </div>
@@ -87,8 +87,8 @@ export default function ProfileModal({ isOpen, onClose }) {
 
         {/* Success toast if target exam changes */}
         {successNote && (
-          <div className="mx-4 mb-3 p-2.5 rounded-xl bg-[#EDF5F0] border border-[#B8DCB3] text-[#1A472A] text-xs font-medium flex items-center justify-center gap-1.5 animate-fade-in">
-            <Check className="w-3.5 h-3.5 text-[#2E7D47] shrink-0" />
+          <div className="mx-4 mb-3 p-2.5 rounded-xl bg-[#EDF9FC] border border-[#9FE7F5] text-[#053F5C] text-xs font-medium flex items-center justify-center gap-1.5 animate-fade-in">
+            <Check className="w-3.5 h-3.5 text-[#429EBD] shrink-0" />
             <span>{successNote}</span>
           </div>
         )}
@@ -96,17 +96,17 @@ export default function ProfileModal({ isOpen, onClose }) {
         {/* Apple Inset Grouped Section */}
         <div className="px-4 space-y-3">
           {/* Target Exam Group */}
-          <div className="bg-[#FAF8F5] rounded-2xl border border-[#E5E0D5] shadow-xs p-3 space-y-2">
+          <div className="bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] shadow-xs p-3 space-y-2">
             <div className="flex items-center justify-between px-1">
-              <span className="text-[12px] font-medium text-[#5C6860] font-sans">
+              <span className="text-[12px] font-medium text-[#5C768D] font-sans">
                 Target Examination
               </span>
-              <span className="text-[11px] font-semibold text-[#2E5740] font-sans">
+              <span className="text-[11px] font-semibold text-[#429EBD] font-sans">
                 {user.targetExam?.replace('_', ' ')}
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-1 p-1 bg-[#EAE5DB] rounded-xl">
+            <div className="grid grid-cols-3 gap-1 p-1 bg-[#E2ECF2] rounded-xl">
               {EXAMS.map((exam) => {
                 const isSelected = user.targetExam === exam.id
                 return (
@@ -117,8 +117,8 @@ export default function ProfileModal({ isOpen, onClose }) {
                     className={cn(
                       'py-1.5 px-2 text-[12px] font-semibold font-sans rounded-lg transition-all cursor-pointer active:scale-95',
                       isSelected
-                        ? 'bg-[#1A3626] text-[#FAF8F5] shadow-xs'
-                        : 'text-[#5C6860] hover:text-[#161B18] hover:bg-[#DDD6C8]/60'
+                        ? 'bg-[#053F5C] text-white shadow-xs'
+                        : 'text-[#5C768D] hover:text-[#053F5C] hover:bg-white/60'
                     )}
                   >
                     {exam.label}
@@ -129,12 +129,12 @@ export default function ProfileModal({ isOpen, onClose }) {
           </div>
 
           {/* Sync Status Group */}
-          <div className="bg-[#FAF8F5] rounded-2xl border border-[#E5E0D5] shadow-xs px-4 py-3 flex items-center justify-between">
-            <span className="text-[13px] font-medium text-[#434D46] font-sans">
+          <div className="bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] shadow-xs px-4 py-3 flex items-center justify-between">
+            <span className="text-[13px] font-medium text-[#053F5C] font-sans">
               Clinical Progress
             </span>
-            <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#2E7D47] font-sans">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D47] animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#429EBD] font-sans">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#429EBD] animate-pulse" />
               Synced to Cloud
             </span>
           </div>
@@ -142,7 +142,7 @@ export default function ProfileModal({ isOpen, onClose }) {
           {/* Sign Out */}
           <button
             onClick={handleLogout}
-            className="w-full py-3 px-4 rounded-2xl bg-[#FAF8F5] hover:bg-[#FAF0EE] text-[#9C3D32] hover:text-[#78261C] font-medium text-[14px] font-sans border border-[#E5E0D5] hover:border-[#EED7D2] transition-all flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer shadow-xs"
+            className="w-full py-3 px-4 rounded-2xl bg-[#FEF2F2] hover:bg-[#FEE2E2] text-[#991B1B] font-medium text-[14px] font-sans border border-[#FECACA] transition-all flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer shadow-xs"
           >
             <LogOut className="w-4 h-4 stroke-[2]" />
             <span>Sign Out</span>
