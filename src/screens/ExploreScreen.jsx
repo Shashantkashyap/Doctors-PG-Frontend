@@ -97,9 +97,9 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
           <button
             type="button"
             onClick={onOpenSearch}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200/80 text-[11px] font-semibold text-slate-600 shrink-0 transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EAE5DB] hover:bg-[#DDD6C8] text-[11px] font-semibold text-[#434D46] shrink-0 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-3 h-3 text-amber-500" />
+            <Sparkles className="w-3 h-3 text-[#64754B]" />
             <span>Trending:</span>
           </button>
           {trending.slice(0, 6).map((topic) => {
@@ -109,7 +109,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
                 key={topic.id}
                 type="button"
                 onClick={() => onSelectTopic(topic.slug)}
-                className="px-2.5 py-1 rounded-full bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-slate-300 text-[11px] font-medium text-slate-700 hover:text-indigo-600 shrink-0 shadow-xs transition-all active:scale-[0.98] cursor-pointer"
+                className="px-2.5 py-1 rounded-full bg-[#FDFCF9] hover:bg-[#F4F0E8] border border-[#E5E0D5] hover:border-[#D5CFBF] text-[11px] font-medium text-[#2F3731] hover:text-[#1A3626] shrink-0 shadow-xs transition-all active:scale-[0.98] cursor-pointer"
               >
                 {shortTitle}
               </button>
@@ -118,32 +118,32 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
         </div>
       )}
 
-      {/* 3. Featured Topic (Compact & Refined Surface with subtle gradient sheen) */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50/60 via-white to-purple-50/40 border border-indigo-100/80 p-3.5 shadow-xs hover:border-indigo-200 transition-all">
+      {/* 3. Featured Topic (Editorial Medical Card - Sage & Forest) */}
+      <div className="relative overflow-hidden rounded-2xl bg-[#F2F6F3] border border-[#D1E1D6] p-4 shadow-xs hover:border-[#B8CEBF] transition-all">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1 space-y-1">
             <div className="flex items-center gap-1.5">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10.5px] font-semibold font-inter border border-indigo-100">
-                <Sparkles className="w-3 h-3 text-indigo-600" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#E2ECE5] text-[#1A3626] text-[10.5px] font-semibold font-sans border border-[#C5D8CC]">
+                <Sparkles className="w-3 h-3 text-[#2E5740]" />
                 <span>Featured Topic</span>
               </span>
-              <span className="text-[11px] text-slate-300">·</span>
-              <span className="text-[11px] text-slate-500 font-inter font-medium">
+              <span className="text-[11px] text-[#A4B3A8]">·</span>
+              <span className="text-[11px] text-[#5C6860] font-sans font-medium">
                 10 Practice MCQs
               </span>
             </div>
 
-            <h2 className="text-[15px] font-bold font-outfit text-slate-900 tracking-tight leading-snug">
+            <h2 className="text-[15px] font-semibold font-sans text-[#161B18] tracking-tight leading-snug">
               Warfarin & DOAC Protocols
             </h2>
-            <p className="text-[12px] text-slate-500 font-inter line-clamp-1">
+            <p className="text-[12px] text-[#5C6860] font-sans line-clamp-1">
               Reversal agents, INR targets & high-yield differentiators
             </p>
           </div>
 
           <button
             onClick={() => onSelectTopic('pharm-warfarin-doacs-reversal-agents')}
-            className="py-2 px-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-xs transition-all shadow-md shadow-indigo-500/25 flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer"
+            className="py-2 px-3.5 rounded-xl bg-[#1A3626] hover:bg-[#132B1E] text-[#FAF8F5] font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer border border-[#234532]"
           >
             <span>Review</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -151,12 +151,12 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
         </div>
       </div>
 
-      {/* 4. Active Specialties (Apple iOS Fluid Segmented Control with Smooth Sliding Gradient Pill) */}
-      <div className="relative p-1 bg-slate-200/70 rounded-2xl flex items-center shadow-inner">
-        {/* Apple Sliding Gradient Pill */}
+      {/* 4. Active Specialties (Refined Segmented Control with Solid Forest Pill) */}
+      <div className="relative p-1 bg-[#EAE5DB] rounded-2xl flex items-center shadow-inner">
+        {/* Sliding Forest Pill */}
         {activeSubjects.length > 0 && (
           <div
-            className="absolute top-1 bottom-1 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 shadow-md shadow-indigo-500/25 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none"
+            className="absolute top-1 bottom-1 rounded-xl bg-[#1A3626] shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none"
             style={{
               width: `calc((100% - 8px) / ${activeSubjects.length})`,
               left: '4px',
@@ -178,10 +178,10 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
                 setCurrentPage(1)
               }}
               className={cn(
-                'relative z-10 flex-1 py-2 text-center text-xs font-semibold font-outfit transition-colors duration-200 cursor-pointer select-none rounded-xl active:scale-[0.98]',
+                'relative z-10 flex-1 py-2 text-center text-xs font-semibold font-sans transition-colors duration-200 cursor-pointer select-none rounded-xl active:scale-[0.98]',
                 isSelected
-                  ? 'text-white font-bold drop-shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'text-[#FAF8F5] font-bold'
+                  : 'text-[#5C6860] hover:text-[#161B18]'
               )}
             >
               {name}
@@ -195,8 +195,8 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
         {/* Loading State */}
         {isLoadingTopics ? (
           <div className="py-16 text-center space-y-2">
-            <div className="w-5 h-5 border-2 border-slate-300 border-t-indigo-600 rounded-full animate-spin mx-auto" />
-            <p className="text-xs text-slate-400 font-medium">Loading clinical topics...</p>
+            <div className="w-5 h-5 border-2 border-[#D1E1D6] border-t-[#1A3626] rounded-full animate-spin mx-auto" />
+            <p className="text-xs text-[#87928A] font-medium">Loading clinical topics...</p>
           </div>
         ) : (
           <div key={`${selectedSubjectSlug}-${currentPage}`} className="space-y-2 animate-fade-in">
@@ -206,35 +206,35 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
                 <button
                   key={topic.id}
                   onClick={() => onSelectTopic(topic.slug)}
-                  className="w-full p-3.5 rounded-xl bg-white border border-slate-200/70 hover:border-slate-300 shadow-card hover:shadow-card-hover text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
+                  className="w-full p-3.5 rounded-xl bg-[#FDFCF9] border border-[#E5E0D5] hover:border-[#D5CFBF] shadow-xs hover:shadow-card text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
                 >
                   <div className="min-w-0 flex-1">
                     {/* Meta row: Subtopic Tag + 90s Card */}
                     <div className="flex items-center gap-2 mb-1.5 text-[11px]">
-                      <span className="font-semibold text-slate-600 bg-slate-100/90 px-2 py-0.5 rounded-md font-inter">
+                      <span className="font-semibold text-[#434D46] bg-[#F2EFE8] px-2 py-0.5 rounded-md font-sans">
                         {topic.subtopic || 'General'}
                       </span>
-                      <span className="text-slate-400 flex items-center gap-1 font-normal font-inter">
-                        <Clock className="w-3 h-3 text-slate-400" />
+                      <span className="text-[#87928A] flex items-center gap-1 font-normal font-sans">
+                        <Clock className="w-3 h-3 text-[#87928A]" />
                         90s Card
                       </span>
                     </div>
 
                     {/* Topic Title */}
-                    <h3 className="text-[14px] font-semibold font-outfit text-slate-900 group-hover:text-indigo-600 transition-colors leading-snug">
+                    <h3 className="text-[14px] font-semibold font-sans text-[#161B18] group-hover:text-[#2E5740] transition-colors leading-snug">
                       {topic.title}
                     </h3>
 
                     {/* Acronyms rendered cleanly without raw HTML entities */}
                     {topic.acronyms && topic.acronyms.length > 0 && (
-                      <p className="text-[11px] font-mono text-slate-400 truncate mt-1">
+                      <p className="text-[11px] font-mono text-[#87928A] truncate mt-1">
                         {topic.acronyms.slice(0, 4).join('  ·  ')}
                       </p>
                     )}
                   </div>
 
                   {/* Right Chevron in soft circle */}
-                  <div className="w-7 h-7 rounded-full bg-slate-50 group-hover:bg-indigo-50 text-slate-400 group-hover:text-indigo-600 flex items-center justify-center transition-colors shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-[#F4F0E8] group-hover:bg-[#E2ECE5] text-[#87928A] group-hover:text-[#1A3626] flex items-center justify-center transition-colors shrink-0">
                     <ChevronRight className="w-3.5 h-3.5 stroke-[2]" />
                   </div>
                 </button>
@@ -244,8 +244,8 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
             {/* Apple-Style Refined Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between pt-2.5 pb-1 px-1">
-                <span className="text-xs text-slate-500 font-medium font-inter">
-                  Showing <span className="font-semibold text-slate-800">{startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, totalTopics)}</span> of <span className="font-semibold text-slate-800">{totalTopics}</span>
+                <span className="text-xs text-[#5C6860] font-medium font-sans">
+                  Showing <span className="font-semibold text-[#161B18]">{startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, totalTopics)}</span> of <span className="font-semibold text-[#161B18]">{totalTopics}</span>
                 </span>
 
                 <div className="flex items-center gap-1.5">
@@ -258,13 +258,13 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
                       }
                     }}
                     disabled={currentPage === 1}
-                    className="p-1.5 rounded-lg bg-white border border-slate-200/80 text-slate-600 disabled:opacity-30 disabled:pointer-events-none hover:bg-slate-50 transition-all active:scale-95 shadow-xs cursor-pointer"
+                    className="p-1.5 rounded-lg bg-[#FDFCF9] border border-[#E5E0D5] text-[#434D46] disabled:opacity-30 disabled:pointer-events-none hover:bg-[#F4F0E8] transition-all active:scale-95 shadow-xs cursor-pointer"
                     aria-label="Previous Page"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
 
-                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200/80 text-[11px] font-semibold text-slate-700 font-inter shadow-xs">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#FDFCF9] border border-[#E5E0D5] text-[11px] font-semibold text-[#2F3731] font-sans shadow-xs">
                     {currentPage} / {totalPages}
                   </span>
 
@@ -277,7 +277,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
                       }
                     }}
                     disabled={currentPage === totalPages}
-                    className="p-1.5 rounded-lg bg-white border border-slate-200/80 text-slate-600 disabled:opacity-30 disabled:pointer-events-none hover:bg-slate-50 transition-all active:scale-95 shadow-xs cursor-pointer"
+                    className="p-1.5 rounded-lg bg-[#FDFCF9] border border-[#E5E0D5] text-[#434D46] disabled:opacity-30 disabled:pointer-events-none hover:bg-[#F4F0E8] transition-all active:scale-95 shadow-xs cursor-pointer"
                     aria-label="Next Page"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -291,8 +291,8 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
 
       {/* 6. Upcoming Specialties (Subtle Horizontal Scroll) */}
       {lockedSubjects.length > 0 && (
-        <div className="pt-4 border-t border-slate-200/60 space-y-2">
-          <div className="px-0.5 text-[12px] font-medium text-slate-400">
+        <div className="pt-4 border-t border-[#E8E4DA] space-y-2">
+          <div className="px-0.5 text-[12px] font-medium text-[#717E75]">
             Upcoming Specialties (16)
           </div>
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
@@ -300,9 +300,9 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
               <button
                 key={subj.id}
                 onClick={() => setLockedModalSubject(subj.name)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/70 hover:border-slate-300 text-xs font-medium text-slate-600 whitespace-nowrap active:scale-[0.98] transition-all shadow-xs"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FDFCF9] hover:bg-[#F4F0E8] border border-[#E5E0D5] hover:border-[#D5CFBF] text-xs font-medium text-[#434D46] whitespace-nowrap active:scale-[0.98] transition-all shadow-xs"
               >
-                <Lock className="w-3 h-3 text-slate-400" />
+                <Lock className="w-3 h-3 text-[#87928A]" />
                 <span>{subj.name}</span>
               </button>
             ))}

@@ -26,7 +26,7 @@ export default function BottomNav({ activeTab, setActiveTab, wrongCount = 0, not
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="w-full max-w-[430px] mx-auto px-4 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] pt-2 bg-white/95 backdrop-blur-2xl border-t border-slate-200/80 shadow-[0_-4px_24px_rgba(15,23,42,0.06)] pointer-events-auto">
+      <div className="w-full max-w-[430px] mx-auto px-4 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] pt-2 bg-[#FDFCF9]/95 backdrop-blur-2xl border-t border-[#E8E4DA] shadow-[0_-4px_24px_rgba(22,27,24,0.05)] pointer-events-auto">
         <nav className="flex items-center justify-between gap-2">
           {tabs.map((tab) => {
             const Icon = tab.icon
@@ -39,8 +39,8 @@ export default function BottomNav({ activeTab, setActiveTab, wrongCount = 0, not
                 className={cn(
                   'relative flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl transition-all duration-200 touch-manipulation active:scale-[0.96] cursor-pointer',
                   isActive
-                    ? 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white font-semibold shadow-md shadow-indigo-500/20'
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100/70 font-medium'
+                    ? 'bg-[#1A3626] text-[#FAF8F5] font-semibold shadow-sm border border-[#234532]'
+                    : 'text-[#5C6860] hover:text-[#161B18] hover:bg-[#F2EFE8]/70 font-medium'
                 )}
               >
                 <div className="relative flex items-center justify-center">
@@ -51,7 +51,7 @@ export default function BottomNav({ activeTab, setActiveTab, wrongCount = 0, not
                     )}
                   />
                   {!isActive && tab.badge !== null && (
-                    <span className="absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 text-[9px] font-semibold bg-rose-500 text-white rounded-full flex items-center justify-center shadow-xs">
+                    <span className="absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 text-[9px] font-semibold bg-[#9C3D32] text-white rounded-full flex items-center justify-center shadow-xs">
                       {tab.badge}
                     </span>
                   )}

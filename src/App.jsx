@@ -143,12 +143,12 @@ export default function App() {
   // 1. Initial Session Verification Screen
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F2F4F8] flex flex-col items-center justify-center p-4">
-        <div className="w-12 h-12 rounded-2xl bg-[#111D35] flex items-center justify-center shadow-md shadow-indigo-500/10 mb-4 animate-pulse">
+      <div className="min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center p-4">
+        <div className="w-12 h-12 rounded-2xl bg-[#162E22] flex items-center justify-center shadow-md shadow-forest-900/10 mb-4 animate-pulse">
           <LogoIcon className="w-9 h-9" />
         </div>
-        <div className="w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
-        <p className="text-xs font-semibold text-slate-500 font-inter mt-3">Restoring resident session...</p>
+        <div className="w-5 h-5 border-2 border-forest-200 border-t-forest-700 rounded-full animate-spin" />
+        <p className="text-xs font-semibold text-charcoal-500 font-inter mt-3">Restoring resident session...</p>
       </div>
     )
   }
@@ -160,13 +160,13 @@ export default function App() {
 
   // 3. Authenticated App Experience
   return (
-    <div className="min-h-screen bg-[#E8EBF2] text-slate-900 flex flex-col items-center justify-start selection:bg-indigo-100 selection:text-indigo-900 font-sans">
+    <div className="min-h-screen bg-[#EFECE4] text-[#161B18] flex flex-col items-center justify-start selection:bg-[#D7E4DC] selection:text-[#132B1E] font-sans">
       {/* Mobile-First App Shell (Max 430px iPhone 16 Pro width) */}
-      <div className="w-full max-w-[430px] min-h-screen bg-[#F2F4F8] sm:border-x sm:border-slate-200/80 sm:shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] flex flex-col relative px-4 scroll-touch">
+      <div className="w-full max-w-[430px] min-h-screen bg-[#FAF8F5] sm:border-x sm:border-[#E5E0D5] sm:shadow-[0_20px_50px_-15px_rgba(22,27,24,0.06)] flex flex-col relative px-4 scroll-touch">
         {/* Offline Pill Alert */}
         {!isOnline && (
-          <div className="sticky top-2 z-50 py-1.5 px-3.5 bg-slate-900 text-white rounded-full text-xs font-medium flex items-center justify-center gap-2 shadow-float mx-auto w-fit animate-fade-in">
-            <WifiOff className="w-3.5 h-3.5 text-amber-400" />
+          <div className="sticky top-2 z-50 py-1.5 px-3.5 bg-[#162E22] text-[#FAF8F5] rounded-full text-xs font-medium flex items-center justify-center gap-2 shadow-float mx-auto w-fit animate-fade-in border border-[#234532]">
+            <WifiOff className="w-3.5 h-3.5 text-amber-300" />
             <span>Offline mode · Cached clinical cards available</span>
           </div>
         )}

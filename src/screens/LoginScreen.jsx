@@ -51,11 +51,11 @@ export default function LoginScreen({ onLoginSuccess }) {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8 bg-[#F9FAFB] text-[#111827] font-sans antialiased">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-8 bg-[#EFECE4] text-[#161B18] font-sans antialiased">
       <div className="w-full max-w-[380px]">
         
-        {/* Clean, calm card */}
-        <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-[0_2px_12px_rgba(0,0,0,0.04)] p-6 sm:p-7">
+        {/* Editorial ivory card */}
+        <div className="bg-[#FDFCF9] rounded-2xl border border-[#E5E0D5] shadow-[0_4px_24px_rgba(22,27,24,0.06)] p-6 sm:p-7">
           
           {/* Brand & Heading */}
           <div className="text-center">
@@ -63,16 +63,16 @@ export default function LoginScreen({ onLoginSuccess }) {
               <LogoIcon className="w-10 h-10 rounded-xl" />
             </div>
 
-            <div className="flex items-center justify-center gap-1 mb-2">
-              <span className="text-[17px] font-bold text-[#111827] tracking-tight">Clinical</span>
-              <span className="text-[17px] font-bold text-[#2563EB] tracking-tight">Recall</span>
+            <div className="flex items-center justify-center gap-1.5 mb-2">
+              <span className="text-[17px] font-serif font-bold text-[#161B18] tracking-tight">Clinical</span>
+              <span className="text-[17px] font-serif font-bold text-[#2E5740] tracking-tight">Recall</span>
             </div>
 
-            <h1 className="text-[20px] font-semibold text-[#111827] tracking-tight">
+            <h1 className="text-[20px] font-serif font-bold text-[#161B18] tracking-tight">
               Welcome to Clinical Recall
             </h1>
-            <p className="text-[13px] text-[#6B7280] mt-1">
-              Your focused companion for clinical excellence.
+            <p className="text-[13px] text-[#5C6860] mt-1 font-normal">
+              Focused learning. Lasting knowledge.
             </p>
           </div>
 
@@ -83,7 +83,7 @@ export default function LoginScreen({ onLoginSuccess }) {
             <div>
               <label 
                 htmlFor="full-name" 
-                className="block text-[13px] font-medium text-[#374151] mb-1.5"
+                className="block text-[13px] font-medium text-[#202622] mb-1.5"
               >
                 Name
               </label>
@@ -95,7 +95,7 @@ export default function LoginScreen({ onLoginSuccess }) {
                 placeholder="Dr. Aarav Sharma"
                 autoComplete="name"
                 required
-                className="w-full h-10 px-3 bg-white border border-[#D1D5DB] rounded-lg text-[14px] text-[#111827] placeholder:text-[#9CA3AF] transition-colors focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 outline-none"
+                className="w-full h-10 px-3 bg-[#FAF8F5] border border-[#DCD6C9] rounded-lg text-[14px] text-[#161B18] placeholder:text-[#8A958E] transition-all focus:bg-[#FDFCF9] focus:border-[#2E5740] focus:ring-2 focus:ring-[#2E5740]/15 outline-none"
               />
             </div>
 
@@ -103,7 +103,7 @@ export default function LoginScreen({ onLoginSuccess }) {
             <div>
               <label 
                 htmlFor="email-address" 
-                className="block text-[13px] font-medium text-[#374151] mb-1.5"
+                className="block text-[13px] font-medium text-[#202622] mb-1.5"
               >
                 Email
               </label>
@@ -115,16 +115,16 @@ export default function LoginScreen({ onLoginSuccess }) {
                 placeholder="aarav@hospital.edu"
                 autoComplete="email"
                 required
-                className="w-full h-10 px-3 bg-white border border-[#D1D5DB] rounded-lg text-[14px] text-[#111827] placeholder:text-[#9CA3AF] transition-colors focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 outline-none"
+                className="w-full h-10 px-3 bg-[#FAF8F5] border border-[#DCD6C9] rounded-lg text-[14px] text-[#161B18] placeholder:text-[#8A958E] transition-all focus:bg-[#FDFCF9] focus:border-[#2E5740] focus:ring-2 focus:ring-[#2E5740]/15 outline-none"
               />
             </div>
 
             {/* Target Examination */}
             <div>
-              <label className="block text-[13px] font-medium text-[#374151] mb-1.5">
+              <label className="block text-[13px] font-medium text-[#202622] mb-1.5">
                 Target Exam
               </label>
-              <div className="grid grid-cols-3 gap-1 p-1 bg-[#F3F4F6] rounded-lg border border-[#E5E7EB]">
+              <div className="grid grid-cols-3 gap-1 p-1 bg-[#EAE5DB] rounded-lg border border-[#DDD6C8]">
                 {EXAMS.map((exam) => {
                   const isSelected = targetExam === exam.id
                   return (
@@ -135,8 +135,8 @@ export default function LoginScreen({ onLoginSuccess }) {
                       className={cn(
                         "py-1.5 text-center text-[13px] font-medium rounded-md transition-all cursor-pointer select-none",
                         isSelected 
-                          ? "bg-white text-[#111827] font-semibold shadow-sm" 
-                          : "text-[#6B7280] hover:text-[#111827]"
+                          ? "bg-[#1A3626] text-[#FAF8F5] font-semibold shadow-xs" 
+                          : "text-[#5C6860] hover:text-[#161B18]"
                       )}
                     >
                       {exam.label}
@@ -148,7 +148,7 @@ export default function LoginScreen({ onLoginSuccess }) {
 
             {/* Validation / Error Alert */}
             {validationDetails && (
-              <div className="p-2.5 rounded-lg bg-[#FEF2F2] border border-[#FEE2E2] text-[#991B1B] text-[12px] space-y-0.5">
+              <div className="p-2.5 rounded-lg bg-[#FAF0EE] border border-[#EED7D2] text-[#8C2B20] text-[12px] space-y-0.5">
                 {Object.values(validationDetails).flat().map((msg, i) => (
                   <p key={i}>• {msg}</p>
                 ))}
@@ -156,8 +156,8 @@ export default function LoginScreen({ onLoginSuccess }) {
             )}
 
             {errorMessage && !validationDetails && (
-              <div className="p-2.5 rounded-lg bg-[#FEF2F2] border border-[#FEE2E2] text-[#991B1B] text-[12px] flex items-center gap-2">
-                <AlertCircle size={14} className="shrink-0 text-[#DC2626]" />
+              <div className="p-2.5 rounded-lg bg-[#FAF0EE] border border-[#EED7D2] text-[#8C2B20] text-[12px] flex items-center gap-2">
+                <AlertCircle size={14} className="shrink-0 text-[#8C2B20]" />
                 <span>{errorMessage}</span>
               </div>
             )}
@@ -167,11 +167,11 @@ export default function LoginScreen({ onLoginSuccess }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-10 bg-[#111827] hover:bg-[#1F2937] active:bg-[#030712] text-white font-medium text-[14px] rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                className="w-full h-10 bg-[#1A3626] hover:bg-[#132B1E] active:bg-[#0E2016] text-[#FAF8F5] font-medium text-[14px] rounded-lg border border-[#234532] transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 size={16} className="animate-spin text-white/80" />
+                    <Loader2 size={16} className="animate-spin text-[#FAF8F5]/80" />
                     <span>Signing in...</span>
                   </>
                 ) : (
@@ -182,8 +182,8 @@ export default function LoginScreen({ onLoginSuccess }) {
           </form>
 
           {/* Simple, peaceful footer */}
-          <div className="mt-5 pt-4 border-t border-[#F3F4F6] text-center">
-            <p className="text-[12px] text-[#6B7280] leading-relaxed">
+          <div className="mt-5 pt-4 border-t border-[#EAE5DB] text-center">
+            <p className="text-[12px] text-[#5C6860] leading-relaxed">
               Your clinical progress syncs automatically across devices.
             </p>
           </div>
