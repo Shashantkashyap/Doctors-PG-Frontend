@@ -89,7 +89,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
   return (
     <div className="space-y-4 pb-16 animate-fade-in">
       {/* 1. Sticky Professional Navbar with Official Logo & Integrated Search Bar */}
-      <TopNavbar onOpenSearch={onOpenSearch} onOpenProfile={onOpenProfile} />
+      <TopNavbar onOpenSearch={onOpenSearch} />
 
       {/* 2. Trending High-Yield Topics (Contained inside app margins) */}
       {trending && trending.length > 0 && (

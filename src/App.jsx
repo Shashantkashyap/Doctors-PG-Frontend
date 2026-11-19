@@ -4,22 +4,21 @@ import BottomNav from './components/BottomNav'
 import ExploreScreen from './screens/ExploreScreen'
 import TopicScreen from './screens/TopicScreen'
 import NotebookScreen from './screens/NotebookScreen'
-import MistakesDeckScreen from './screens/MistakesDeckScreen'
+import McqPracticeScreen from './screens/McqPracticeScreen'
+import ProfileScreen from './screens/ProfileScreen'
 import SearchScreen from './screens/SearchScreen'
 import LoginScreen from './screens/LoginScreen'
-import ProfileModal from './components/ProfileModal'
 import { LogoIcon } from './components/Logo'
 import { apiService } from './api/client'
 import { useAuth } from './context/AuthContext'
 
 export default function App() {
   const { user, isAuthenticated, isLoading } = useAuth()
-  const [isProfileOpen, setIsProfileOpen] = useState(() => {
-    return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('profile') === 'true'
-  })
   const [activeTab, setActiveTab] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '')
-    if (path === 'notebook' || path === 'mistakes') return path
+    if (path === 'notebook' || path === 'mcqs' || path === 'mistakes' || path === 'profile') {
+      return path === 'mistakes' ? 'mcqs' : path
+    }
     return 'explore'
   })
   const [currentTopicSlug, setCurrentTopicSlug] = useState(() => {
@@ -28,6 +27,10 @@ export default function App() {
   })
   const [isSearchOpen, setIsSearchOpen] = useState(() => {
     return window.location.pathname === '/search'
+  })
+  const [mcqPracticeConfig, setMcqPracticeConfig] = useState({
+    topicSlug: null,
+    subjectSlug: null,
   })
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [notebookCount, setNotebookCount] = useState(0)
@@ -57,8 +60,8 @@ export default function App() {
         } else {
           setCurrentTopicSlug(null)
           const path = window.location.pathname.replace(/^\//, '')
-          if (path === 'notebook' || path === 'mistakes') {
-            setActiveTab(path)
+          if (path === 'notebook' || path === 'mcqs' || path === 'mistakes' || path === 'profile') {
+            setActiveTab(path === 'mistakes' ? 'mcqs' : path)
           } else if (e.state?.tab) {
             setActiveTab(e.state.tab)
           } else {
@@ -131,10 +134,32 @@ export default function App() {
     refreshCounters()
   }
 
+  const handlePracticeTopicFromProfile = (topicSlug, subjectSlug) => {
+    setMcqPracticeConfig({ topicSlug, subjectSlug })
+    setActiveTab('mcqs')
+    setCurrentTopicSlug(null)
+    setIsSearchOpen(false)
+    window.history.pushState({ tab: 'mcqs' }, '', '/mcqs')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handlePracticeSubjectFromProfile = (subjectSlug) => {
+    setMcqPracticeConfig({ topicSlug: 'ALL', subjectSlug })
+    setActiveTab('mcqs')
+    setCurrentTopicSlug(null)
+    setIsSearchOpen(false)
+    window.history.pushState({ tab: 'mcqs' }, '', '/mcqs')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const handleTabChange = (tabId) => {
     setActiveTab(tabId)
     setCurrentTopicSlug(null)
     setIsSearchOpen(false)
+    // Clear practice config when switching tabs manually
+    if (tabId !== 'mcqs') {
+      setMcqPracticeConfig({ topicSlug: null, subjectSlug: null })
+    }
     window.history.pushState({ tab: tabId }, '', `/${tabId === 'explore' ? '' : tabId}`)
     window.scrollTo({ top: 0, behavior: 'smooth' })
     refreshCounters()
@@ -188,17 +213,24 @@ export default function App() {
             <ExploreScreen
               onSelectTopic={navigateToTopic}
               onOpenSearch={handleOpenSearch}
-              onOpenProfile={() => setIsProfileOpen(true)}
+            />
+          ) : activeTab === 'mcqs' || activeTab === 'mistakes' ? (
+            <McqPracticeScreen
+              onSelectTopic={navigateToTopic}
+              onUpdateCounts={refreshCounters}
+              initialTopicSlug={mcqPracticeConfig.topicSlug}
+              initialSubjectSlug={mcqPracticeConfig.subjectSlug}
             />
           ) : activeTab === 'notebook' ? (
             <NotebookScreen
               onSelectTopic={navigateToTopic}
               onUpdateCounts={(count) => setNotebookCount(count)}
             />
-          ) : activeTab === 'mistakes' ? (
-            <MistakesDeckScreen
+          ) : activeTab === 'profile' ? (
+            <ProfileScreen
               onSelectTopic={navigateToTopic}
-              onUpdateCounts={(count) => setWrongCount(count)}
+              onStartPracticeSubject={handlePracticeSubjectFromProfile}
+              onStartPracticeTopic={handlePracticeTopicFromProfile}
             />
           ) : null}
         </main>
@@ -212,12 +244,6 @@ export default function App() {
             notebookCount={notebookCount}
           />
         )}
-
-        {/* Resident Profile Slide-over Modal */}
-        <ProfileModal
-          isOpen={isProfileOpen}
-          onClose={() => setIsProfileOpen(false)}
-        />
       </div>
     </div>
   )
