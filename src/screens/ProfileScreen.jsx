@@ -71,10 +71,12 @@ export default function ProfileScreen({
               })
             }
 
-            let updatedTopics = prev.topicBreakdown
+            let updatedTopics = [...prev.topicBreakdown]
             if (Array.isArray(res.topicProgressList) && res.topicProgressList.length > 0) {
               const remoteMap = new Map(res.topicProgressList.map((p) => [p.topicSlug, p]))
-              updatedTopics = prev.topicBreakdown.map((t) => {
+              
+              // 1. Update existing topics
+              updatedTopics = updatedTopics.map((t) => {
                 const remote = remoteMap.get(t.topicSlug)
                 if (remote) {
                   return {
@@ -92,6 +94,31 @@ export default function ProfileScreen({
                 }
                 return t
               })
+
+              // 2. Prepend any newly practiced topics not in initial list
+              const existingSlugs = new Set(updatedTopics.map((t) => t.topicSlug))
+              for (const remote of res.topicProgressList) {
+                if (!existingSlugs.has(remote.topicSlug)) {
+                  updatedTopics.unshift({
+                    topicId: remote.topicId,
+                    topicSlug: remote.topicSlug,
+                    title: remote.topicTitle,
+                    subjectCode: remote.subject?.code || 'PHARM',
+                    subjectName: remote.subject?.name || 'Pharmacology',
+                    subjectSlug: remote.subject?.slug || 'pharmacology',
+                    attempted: remote.attemptedCount,
+                    correct: Math.max(0, remote.attemptedCount - remote.wrongCount),
+                    accuracy: remote.accuracyPercent,
+                    status:
+                      remote.masteryStatus === 'mastered'
+                        ? 'Mastered'
+                        : remote.accuracyPercent >= 60
+                        ? 'Solid'
+                        : 'Needs Revision',
+                  })
+                  existingSlugs.add(remote.topicSlug)
+                }
+              }
             }
 
             return {
