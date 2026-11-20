@@ -12,6 +12,7 @@ import WardCard from '../components/WardCard'
 import Checklist from '../components/Checklist'
 import McqDrill from '../components/McqDrill'
 import FlagErrorDrawer from '../components/FlagErrorDrawer'
+import ErrorBoundary from '../components/ErrorBoundary'
 import { apiService } from '../api/client'
 import { cn } from '../utils/cn'
 
@@ -212,15 +213,17 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
 
       {/* Active Layer View */}
       <div className="pt-1">
-        {activeLayer === 'wardCard' && <WardCard topic={topic} />}
-        {activeLayer === 'checklist' && <Checklist checklist={topic.completeChecklist} />}
-        {activeLayer === 'mcqDrill' && (
-          <McqDrill
-            topic={topic}
-            topicSlug={topicSlug}
-            onAttemptDone={onAttemptDone}
-          />
-        )}
+        <ErrorBoundary>
+          {activeLayer === 'wardCard' && <WardCard topic={topic} />}
+          {activeLayer === 'checklist' && <Checklist checklist={topic.completeChecklist} />}
+          {activeLayer === 'mcqDrill' && (
+            <McqDrill
+              topic={topic}
+              topicSlug={topicSlug}
+              onAttemptDone={onAttemptDone}
+            />
+          )}
+        </ErrorBoundary>
       </div>
 
       {/* Flag Drawer */}

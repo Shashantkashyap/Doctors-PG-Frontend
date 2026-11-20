@@ -4,8 +4,10 @@ import {
   XCircle,
   ArrowRight,
   RotateCcw,
+  ChevronRight,
 } from 'lucide-react'
 import { apiService } from '../api/client'
+import { analyticsStore } from '../utils/analyticsStore'
 import RuleOutDrawer from './RuleOutDrawer'
 import { cn } from '../utils/cn'
 
@@ -66,8 +68,20 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
     setIsDrawerOpen(true)
 
     try {
+      analyticsStore.recordAttempt({
+        topicId: topic?.id || topic?._id,
+        topicSlug: topicSlug,
+        topicTitle: topic?.title,
+        subjectCode: topic?.subject?.code || 'PHARM',
+        isCorrect,
+      })
+    } catch (e) {
+      console.warn('Local analytics store error:', e)
+    }
+
+    try {
       await apiService.recordAttempt({
-        topicId: topic?.id,
+        topicId: topic?.id || topic?._id || topicSlug,
         mcqIndex: currentIndex,
         selectedOptionIndex: optionIdx,
         isCorrect,
