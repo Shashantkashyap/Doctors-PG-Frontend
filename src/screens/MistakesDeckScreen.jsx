@@ -68,10 +68,7 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
       [currentIndex]: optionIdx,
     }))
 
-    // Decelerated micro-delay to let the student register the visual feedback
-    drawerTimerRef.current = setTimeout(() => {
-      setIsDrawerOpen(true)
-    }, 360)
+    setIsDrawerOpen(true)
 
     try {
       await apiService.recordAttempt({

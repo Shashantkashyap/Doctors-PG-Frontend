@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   X,
   CheckCircle2,
   XCircle,
   ArrowRight,
-  BookOpen,
 } from 'lucide-react'
 import { cn } from '../utils/cn'
 
@@ -16,138 +15,77 @@ export default function RuleOutDrawer({
   onNextQuestion,
   isLastQuestion,
 }) {
-  const [shouldRender, setShouldRender] = useState(isOpen)
-  const [isPresented, setIsPresented] = useState(false)
-
-  // Two-stage mounting & unmounting for silky smooth native sheet animation
-  useEffect(() => {
-    let animFrame
-    let timer
-
-    if (isOpen) {
-      setShouldRender(true)
-      // Ensure element is in DOM before triggering transform transition
-      animFrame = requestAnimationFrame(() => {
-        animFrame = requestAnimationFrame(() => {
-          setIsPresented(true)
-        })
-      })
-    } else {
-      setIsPresented(false)
-      // Wait for exit transition (340ms) before unmounting DOM
-      timer = setTimeout(() => {
-        setShouldRender(false)
-      }, 340)
-    }
-
-    return () => {
-      if (animFrame) cancelAnimationFrame(animFrame)
-      if (timer) clearTimeout(timer)
-    }
-  }, [isOpen])
-
-  // Prevent background body scroll when sheet is open
-  useEffect(() => {
-    if (shouldRender) {
-      const originalOverflow = document.body.style.overflow
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = originalOverflow
-      }
-    }
-  }, [shouldRender])
-
-  // Close smoothly on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose?.()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
-
-  if (!shouldRender || !question) return null
+  if (!question) return null
 
   const isUserCorrect = selectedIndex === question.correctIndex
   const options = question.options || []
   const explanations = question.ruleOutExplanations || []
   const optionLetters = ['A', 'B', 'C', 'D']
-  const questionStem = question.stem || question.question || ''
 
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex flex-col justify-end bg-black/75 backdrop-blur-xs sheet-backdrop',
-        isPresented ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        'fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs sheet-backdrop',
+        isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       )}
     >
       {/* Backdrop tap to close */}
       <div
         className="flex-1 cursor-pointer"
         onClick={onClose}
-        aria-label="Close rule out sheet"
+        aria-label="Close drawer"
       />
 
-      {/* Drawer Surface */}
+      {/* Drawer Surface - Buttery smooth GPU slide */}
       <div
         className={cn(
-          'w-full max-w-lg mx-auto bg-obsidian-900 border-t border-obsidian-700/90 rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh] sheet-surface overflow-hidden',
-          isPresented ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-90'
+          'w-full max-w-lg mx-auto bg-obsidian-900 border-t border-obsidian-700/80 rounded-t-3xl shadow-2xl flex flex-col max-h-[74vh] sheet-surface overflow-hidden',
+          isOpen ? 'translate-y-0 pointer-events-auto' : 'translate-y-full pointer-events-none'
         )}
       >
-        {/* Drag / Dismiss Indicator */}
+        {/* Drag / Dismiss Pill */}
         <div
           className="pt-2.5 pb-1 flex justify-center cursor-pointer group"
           onClick={onClose}
         >
-          <div className="w-10 h-1.5 bg-obsidian-600 group-hover:bg-obsidian-500 rounded-full transition-colors" />
+          <div className="w-10 h-1 bg-obsidian-600 group-hover:bg-obsidian-500 rounded-full transition-colors" />
         </div>
 
-        {/* Header */}
-        <div className="px-5 py-3 border-b border-obsidian-700/80 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
+        {/* Clean, Uncluttered Header */}
+        <div className="px-5 py-2.5 border-b border-obsidian-700/80 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
             <div
               className={cn(
-                'flex items-center justify-center w-8 h-8 rounded-xl font-bold text-xs shrink-0 transition-transform duration-300',
+                'flex items-center justify-center w-7 h-7 rounded-lg font-bold text-xs shrink-0',
                 isUserCorrect
                   ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                   : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
               )}
             >
               {isUserCorrect ? (
-                <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               ) : (
-                <XCircle className="w-4.5 h-4.5 text-rose-400" />
+                <XCircle className="w-4 h-4 text-rose-400" />
               )}
             </div>
-            <div className="min-w-0">
-              <h3 className="text-xs font-bold text-white truncate">
-                {isUserCorrect ? 'Correct Decision · NBE Consensus' : 'Distractor Analysis · High-Yield Rule-Out'}
+            <div>
+              <h3 className="text-xs font-bold text-white">
+                {isUserCorrect ? 'Correct Decision' : 'Distractor Analysis'}
               </h3>
-              <p className="text-[11px] text-obsidian-400 truncate">
-                4-Option differential breakdown with textbook consensus
+              <p className="text-[11px] text-obsidian-400">
+                Clinical rule-out rationale
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 text-obsidian-400 hover:text-white hover:bg-obsidian-800 rounded-lg transition-colors cursor-pointer shrink-0"
+            className="p-1.5 text-obsidian-400 hover:text-white hover:bg-obsidian-800 rounded-lg transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Question Vignette Snippet */}
-        {questionStem && (
-          <div className="px-5 py-2.5 bg-obsidian-850/60 border-b border-obsidian-800 text-[11.5px] text-obsidian-300 line-clamp-2 leading-relaxed flex items-start gap-2">
-            <BookOpen className="w-3.5 h-3.5 text-obsidian-400 shrink-0 mt-0.5" />
-            <span className="italic">{questionStem}</span>
-          </div>
-        )}
 
         {/* Scrollable Explanations */}
         <div className="p-4 overflow-y-auto overscroll-contain space-y-2.5 flex-1">
@@ -168,7 +106,7 @@ export default function RuleOutDrawer({
               <div
                 key={optIdx}
                 className={cn(
-                  'p-3.5 rounded-xl border transition-all text-xs',
+                  'p-3 rounded-xl border transition-colors text-xs',
                   isThisCorrect
                     ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
                     : isThisSelected
@@ -177,7 +115,7 @@ export default function RuleOutDrawer({
                 )}
               >
                 {/* Option Header */}
-                <div className="flex items-start justify-between gap-2 mb-1.5">
+                <div className="flex items-start justify-between gap-2 mb-1">
                   <div className="flex items-start gap-2 min-w-0 flex-1">
                     <span
                       className={cn(
@@ -206,7 +144,7 @@ export default function RuleOutDrawer({
                         : 'bg-obsidian-800 text-obsidian-400 border-obsidian-700'
                     )}
                   >
-                    {isThisCorrect ? '✓ Correct' : isThisSelected ? '✗ Selected Trap' : 'Ruled Out'}
+                    {isThisCorrect ? '✓ Correct' : isThisSelected ? '✗ Selected' : 'Ruled Out'}
                   </span>
                 </div>
 
@@ -220,10 +158,10 @@ export default function RuleOutDrawer({
         </div>
 
         {/* Bottom Actions */}
-        <div className="p-3.5 bg-obsidian-850 border-t border-obsidian-700 flex items-center gap-2.5">
+        <div className="p-3 bg-obsidian-850 border-t border-obsidian-700 flex items-center gap-2.5 shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold bg-obsidian-800 border border-obsidian-700 text-obsidian-200 hover:text-white hover:bg-obsidian-750 transition-colors shadow-xs cursor-pointer active:scale-95"
+            className="flex-1 py-2 px-4 rounded-xl text-xs font-semibold bg-obsidian-800 border border-obsidian-700 text-obsidian-200 hover:text-white hover:bg-obsidian-750 transition-colors shadow-xs cursor-pointer active:scale-95"
           >
             Review Question
           </button>
@@ -234,9 +172,9 @@ export default function RuleOutDrawer({
                 onClose()
                 onNextQuestion()
               }}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
+              className="flex-1 py-2 px-4 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
             >
-              <span>{isLastQuestion ? 'Finish Drill' : 'Next Question'}</span>
+              <span>{isLastQuestion ? 'Finish' : 'Next Question'}</span>
               <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
             </button>
           )}

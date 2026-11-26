@@ -99,12 +99,12 @@
 
 /* Apple-style Fluid Sheet Transitions (Zero Jerk, Decelerated Arrival) */
 .sheet-backdrop {
-  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 320ms ease;
+  transition: opacity 280ms cubic-bezier(0.32, 0.72, 0, 1);
   will-change: opacity;
 }
 
 .sheet-surface {
-  transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease;
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
   will-change: transform;
 }
 

@@ -561,11 +561,7 @@ export default function McqPracticeScreen({
       [currentIndex]: optionIdx,
     }))
 
-    // Subtle micro-delay (360ms) gives the student a moment to absorb the color feedback
-    // before the sheet glides up smoothly with Apple-style decelerated easing
-    drawerTimerRef.current = setTimeout(() => {
-      setIsDrawerOpen(true)
-    }, 360)
+    setIsDrawerOpen(true)
 
     // Sync to local analytics store
     analyticsStore.recordAttempt({

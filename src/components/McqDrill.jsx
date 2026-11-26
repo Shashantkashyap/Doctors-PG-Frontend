@@ -80,10 +80,7 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
       [currentIndex]: optionIdx,
     }))
 
-    // Smooth decelerated sheet open
-    drawerTimerRef.current = setTimeout(() => {
-      setIsDrawerOpen(true)
-    }, 360)
+    setIsDrawerOpen(true)
 
     try {
       analyticsStore.recordAttempt({
