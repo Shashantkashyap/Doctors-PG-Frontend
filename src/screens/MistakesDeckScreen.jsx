@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   CheckCircle2,
   XCircle,
@@ -16,6 +16,14 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
   const [selectedAnswers, setSelectedAnswers] = useState({})
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+
+  const drawerTimerRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (drawerTimerRef.current) clearTimeout(drawerTimerRef.current)
+    }
+  }, [])
 
   const fetchWrongDeck = () => {
     setIsLoading(true)
@@ -42,6 +50,11 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
   const handleSelectOption = async (optionIdx) => {
     if (!currentCard) return
 
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
+
     if (hasAnsweredCurrent) {
       setIsDrawerOpen(true)
       return
@@ -49,12 +62,16 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
 
     const isCorrect = optionIdx === currentCard.correctIndex
 
+    // Highlight option immediately
     setSelectedAnswers((prev) => ({
       ...prev,
       [currentIndex]: optionIdx,
     }))
 
-    setIsDrawerOpen(true)
+    // Decelerated micro-delay to let the student register the visual feedback
+    drawerTimerRef.current = setTimeout(() => {
+      setIsDrawerOpen(true)
+    }, 360)
 
     try {
       await apiService.recordAttempt({
@@ -70,6 +87,10 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
   }
 
   const handleNext = () => {
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
     if (currentIndex < deck.length - 1) {
       setCurrentIndex((i) => i + 1)
       setIsDrawerOpen(false)

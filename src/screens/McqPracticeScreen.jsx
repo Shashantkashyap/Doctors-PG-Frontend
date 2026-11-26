@@ -443,6 +443,15 @@ export default function McqPracticeScreen({
   const [isCompleted, setIsCompleted] = useState(false)
   const [activeSetTitle, setActiveSetTitle] = useState('')
 
+  const drawerTimerRef = useRef(null)
+
+  // Cleanup pending drawer timer on unmount
+  useEffect(() => {
+    return () => {
+      if (drawerTimerRef.current) clearTimeout(drawerTimerRef.current)
+    }
+  }, [])
+
   const analytics = analyticsStore.getAnalyticsSummary()
 
   // Dynamic available topics based on selected subject
@@ -529,6 +538,13 @@ export default function McqPracticeScreen({
 
   // Answer handler
   const handleSelectOption = async (optionIdx) => {
+    // Clear any prior timer
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
+
+    // If already answered, open drawer immediately without delay
     if (selectedAnswers[currentIndex] !== undefined) {
       setIsDrawerOpen(true)
       return
@@ -539,12 +555,17 @@ export default function McqPracticeScreen({
 
     const isCorrect = optionIdx === currentQ.correctIndex
 
+    // Immediately highlight the option chosen (green/red feedback)
     setSelectedAnswers((prev) => ({
       ...prev,
       [currentIndex]: optionIdx,
     }))
 
-    setIsDrawerOpen(true)
+    // Subtle micro-delay (360ms) gives the student a moment to absorb the color feedback
+    // before the sheet glides up smoothly with Apple-style decelerated easing
+    drawerTimerRef.current = setTimeout(() => {
+      setIsDrawerOpen(true)
+    }, 360)
 
     // Sync to local analytics store
     analyticsStore.recordAttempt({
@@ -582,6 +603,11 @@ export default function McqPracticeScreen({
   }
 
   const handleNextQuestion = () => {
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
+
     if (currentIndex < activeQuestions.length - 1) {
       setCurrentIndex((i) => i + 1)
       setIsDrawerOpen(false)
@@ -612,6 +638,10 @@ export default function McqPracticeScreen({
   }
 
   const handleRestart = () => {
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
     setCurrentIndex(0)
     setSelectedAnswers({})
     setIsCompleted(false)

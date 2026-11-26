@@ -22,6 +22,13 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   const [isCompleted, setIsCompleted] = useState(false)
 
   const questionStartTimeRef = useRef(Date.now())
+  const drawerTimerRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (drawerTimerRef.current) clearTimeout(drawerTimerRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -51,6 +58,11 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   }, [currentIndex])
 
   const handleSelectOption = async (optionIdx) => {
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
+
     if (selectedAnswers[currentIndex] !== undefined) {
       setIsDrawerOpen(true)
       return
@@ -62,12 +74,16 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
     const isCorrect = optionIdx === currentQ.correctIndex
     const timeSpentMs = Math.max(1000, Date.now() - questionStartTimeRef.current)
 
+    // Highlight immediately
     setSelectedAnswers((prev) => ({
       ...prev,
       [currentIndex]: optionIdx,
     }))
 
-    setIsDrawerOpen(true)
+    // Smooth decelerated sheet open
+    drawerTimerRef.current = setTimeout(() => {
+      setIsDrawerOpen(true)
+    }, 360)
 
     try {
       analyticsStore.recordAttempt({
@@ -96,6 +112,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   }
 
   const handleNextQuestion = () => {
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((i) => i + 1)
       setIsDrawerOpen(false)
@@ -106,6 +126,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   }
 
   const handleRestart = () => {
+    if (drawerTimerRef.current) {
+      clearTimeout(drawerTimerRef.current)
+      drawerTimerRef.current = null
+    }
     setSelectedAnswers({})
     setCurrentIndex(0)
     setIsCompleted(false)

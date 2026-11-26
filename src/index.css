@@ -90,9 +90,21 @@
 }
 
 .animate-slide-up {
-  animation: iosSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: iosSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-fade-in {
-  animation: iosFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: iosFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Apple-style Fluid Sheet Transitions (Zero Jerk, Decelerated Arrival) */
+.sheet-backdrop {
+  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 320ms ease;
+  will-change: opacity;
+}
+
+.sheet-surface {
+  transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease;
+  will-change: transform;
+}
+
