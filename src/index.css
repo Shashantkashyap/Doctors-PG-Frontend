@@ -108,3 +108,17 @@
   will-change: transform;
 }
 
+@keyframes doctorBreathe {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-2.5px) scale(1.015);
+  }
+}
+
+.animate-doctor-breathe {
+  animation: doctorBreathe 3.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+

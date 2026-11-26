@@ -10,11 +10,14 @@ import {
   Target,
   AlertTriangle,
   ShieldAlert,
+  ArrowRight,
 } from 'lucide-react'
 import WardCard from '../components/WardCard'
 import Checklist from '../components/Checklist'
 import McqDrill from '../components/McqDrill'
 import FlagErrorDrawer from '../components/FlagErrorDrawer'
+import AnimatedDoctorGuide from '../components/AnimatedDoctorGuide'
+import GuidelinesSheet from '../components/GuidelinesSheet'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { apiService } from '../api/client'
 import { cn } from '../utils/cn'
@@ -40,6 +43,7 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
   const [isPinned, setIsPinned] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isFlagDrawerOpen, setIsFlagDrawerOpen] = useState(false)
+  const [isGuidelinesSheetOpen, setIsGuidelinesSheetOpen] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
 
   useEffect(() => {
@@ -235,31 +239,52 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
         </div>
       </header>
 
-      {/* Tier 3: National Guidelines & Exam Controversy Quarantine Alert */}
+      {/* Tier 3: Interactive National Guidelines & Exam Controversy with Animated Doctor Guide */}
       {guidelines && (
-        <div className="p-3.5 rounded-2xl bg-[#181612] border border-amber-600/30 space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-400">
-              Tier 3 · National Program Guidelines & Controversy Alert
-            </span>
+        <div
+          onClick={() => setIsGuidelinesSheetOpen(true)}
+          className="p-3.5 rounded-2xl bg-[#17140E] hover:bg-[#1E1912] border border-amber-600/35 hover:border-amber-500/60 shadow-sm transition-all cursor-pointer group active:scale-[0.99] flex items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Animated Doctor with Medical Clipboard */}
+            <div className="shrink-0 relative">
+              <AnimatedDoctorGuide
+                className="w-12 h-14"
+                hasAlert={Boolean(guidelines.examControversyAlert)}
+              />
+            </div>
+
+            <div className="min-w-0 space-y-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-400">
+                  Tier 3 · Guidelines & Controversy
+                </span>
+                {guidelines.examControversyAlert && (
+                  <span className="text-[9.5px] font-mono font-semibold px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                    ⚡ Resolver
+                  </span>
+                )}
+              </div>
+
+              <h4 className="text-xs font-bold text-white group-hover:text-amber-200 transition-colors leading-snug line-clamp-1">
+                {guidelines.program || guidelines.title || 'National Health Program Protocol'}
+              </h4>
+
+              <p className="text-[11px] text-zinc-300 line-clamp-1 font-sans">
+                {guidelines.examControversyAlert || guidelines.keyUpdates || 'Tap to consult clinical guidelines sheet'}
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <h4 className="text-xs font-bold text-white">
-              {guidelines.program || guidelines.title || 'National Health Program'}
-            </h4>
-            {guidelines.examControversyAlert && (
-              <div className="p-2.5 rounded-xl bg-[#14120E] border border-amber-600/25 text-xs text-amber-200/90 leading-relaxed font-mono">
-                <span className="font-bold text-amber-400">⚡ Exam Resolver: </span>
-                <span>{guidelines.examControversyAlert}</span>
-              </div>
-            )}
-            {guidelines.keyUpdates && (
-              <p className="text-[11px] text-zinc-300 leading-relaxed">
-                {guidelines.keyUpdates}
-              </p>
-            )}
+          {/* Action indicator on Right */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="hidden sm:inline text-[11px] text-amber-300 font-semibold group-hover:underline">
+              Consult Sheet
+            </span>
+            <div className="w-7 h-7 rounded-xl bg-amber-500/10 group-hover:bg-amber-500/20 text-amber-400 flex items-center justify-center transition-colors border border-amber-500/25">
+              <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
+            </div>
           </div>
         </div>
       )}
@@ -278,6 +303,49 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
           )}
         </ErrorBoundary>
       </div>
+
+      {/* Floating Side Doctor Companion (Docked to right, accessible across all 3 modes) */}
+      {guidelines && (
+        <div className="fixed bottom-24 right-3.5 sm:right-6 z-40 animate-fade-in">
+          <button
+            type="button"
+            onClick={() => setIsGuidelinesSheetOpen(true)}
+            className="relative flex items-center gap-2 p-1.5 pr-3 rounded-full bg-[#121624]/95 hover:bg-[#182034] backdrop-blur-md border border-[#2B3754] shadow-2xl hover:border-amber-500/50 transition-all cursor-pointer active:scale-90 group"
+            title="Open National Guidelines Sheet"
+          >
+            {/* Animated Doctor Avatar */}
+            <div className="w-10 h-12 -my-2 -ml-1">
+              <AnimatedDoctorGuide
+                className="w-full h-full"
+                hasAlert={Boolean(guidelines.examControversyAlert)}
+              />
+            </div>
+
+            {/* Compact Label */}
+            <div className="flex flex-col text-left">
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] font-bold text-white group-hover:text-amber-200 transition-colors">
+                  Guidelines
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              </div>
+              <span className="text-[9px] font-mono text-zinc-400 leading-none">
+                Sheet & Resolver
+              </span>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Guidelines Bottom Sheet */}
+      <GuidelinesSheet
+        isOpen={isGuidelinesSheetOpen}
+        onClose={() => setIsGuidelinesSheetOpen(false)}
+        guidelines={guidelines}
+        topicTitle={topic.title}
+        subjectCode={topic.subject?.code || 'PHARM'}
+        onStartMcqs={() => handleLayerSwitch('mcqDrill')}
+      />
 
       {/* Flag Drawer */}
       <FlagErrorDrawer
