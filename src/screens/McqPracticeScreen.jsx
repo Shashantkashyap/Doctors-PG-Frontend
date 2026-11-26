@@ -7,7 +7,6 @@ import {
   XCircle,
   ArrowRight,
   Clock,
-  Sparkles,
   Filter,
   Layers,
   ChevronRight,
@@ -719,8 +718,7 @@ export default function McqPracticeScreen({
             className="p-4 rounded-2xl bg-[#121622] hover:bg-[#161C2C] border border-[#242C3E] hover:border-[#38435E] transition-all cursor-pointer shadow-sm group active:scale-[0.99] space-y-2.5"
           >
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10.5px] font-medium border border-blue-500/20">
-                <Sparkles className="w-3 h-3 text-blue-400" />
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10.5px] font-medium border border-blue-500/20">
                 <span>High-Yield Mixed Sprint</span>
               </span>
               <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#181F30] text-zinc-300 border border-[#283550]">
@@ -1062,8 +1060,8 @@ export default function McqPracticeScreen({
           </div>
 
           {/* Performance tag */}
-          <div className="p-3 rounded-xl bg-obsidian-850 border border-obsidian-700 text-xs text-obsidian-300 flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4 text-cliniq-trap" />
+          <div className="p-3 rounded-xl bg-[#141A29] border border-[#20283C] text-xs text-zinc-300 flex items-center justify-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
               {accuracy >= 80
                 ? 'Clinical mastery achieved for this set!'

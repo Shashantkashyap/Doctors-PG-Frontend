@@ -3,7 +3,6 @@ import {
   Layers,
   Search,
   Clock,
-  Sparkles,
   ChevronRight,
   BookOpen,
   CheckCircle2,

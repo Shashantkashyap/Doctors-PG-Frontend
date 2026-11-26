@@ -4,7 +4,6 @@ import {
   XCircle,
   ArrowRight,
   Target,
-  Sparkles,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import RuleOutDrawer from '../components/RuleOutDrawer'

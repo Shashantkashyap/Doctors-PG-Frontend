@@ -6,7 +6,6 @@ import {
   RotateCcw,
   ChevronRight,
   Target,
-  Sparkles,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import { analyticsStore } from '../utils/analyticsStore'

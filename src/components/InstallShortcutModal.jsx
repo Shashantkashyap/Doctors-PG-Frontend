@@ -7,7 +7,6 @@ import {
   Laptop,
   CheckCircle2,
   X,
-  Sparkles,
   Download,
 } from 'lucide-react'
 import { cn } from '../utils/cn'
@@ -282,7 +281,7 @@ export default function InstallShortcutModal({ isOpen, onClose }) {
           {/* Benefits Callout */}
           <div className="p-3 bg-[#F4F7F9] rounded-xl border border-[#E2E8F0] space-y-1">
             <div className="flex items-center gap-1.5 text-xs font-bold text-[#053F5C]">
-              <Sparkles className="w-3.5 h-3.5 text-[#F7AD19]" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
               <span>Why install as a shortcut?</span>
             </div>
             <ul className="text-[11px] text-[#5C768D] space-y-0.5 pl-5 list-disc">

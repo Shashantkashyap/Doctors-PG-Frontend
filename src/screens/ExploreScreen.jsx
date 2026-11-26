@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   ArrowRight,
   Clock,
-  Sparkles,
   RotateCcw,
   Target,
 } from 'lucide-react'
@@ -249,14 +248,9 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
       {/* 2. Trending High-Yield Topics */}
       {trending && trending.length > 0 && (
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <button
-            type="button"
-            onClick={onOpenSearch}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-750 text-[11px] font-semibold text-blue-400 shrink-0 transition-colors cursor-pointer border border-obsidian-700"
-          >
-            <Sparkles className="w-3 h-3 text-amber-400" />
-            <span>High-Yield:</span>
-          </button>
+          <span className="text-[11px] font-mono font-medium text-zinc-400 shrink-0 px-1">
+            High-Yield:
+          </span>
           {trending.slice(0, 6).map((topic) => {
             const shortTitle = topic.title.split(':')[0].split(',')[0]
             return (
@@ -276,54 +270,59 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
       {/* 3. Daily Clinical MCQ Challenge (Rotates Daily + Direct 10 MCQs Launch) */}
       <div
         onClick={() => onSelectTopic(featuredTopic.slug, 'mcqDrill')}
-        className="relative overflow-hidden rounded-2xl bg-[#121622] hover:bg-[#161C2C] border border-[#242C3E] hover:border-[#38435E] p-4.5 shadow-sm transition-all cursor-pointer group active:scale-[0.99]"
+        className="relative overflow-hidden rounded-2xl bg-[#121622] hover:bg-[#161C2C] border border-[#242C3E] hover:border-[#38435E] p-4 shadow-sm transition-all cursor-pointer group active:scale-[0.99] space-y-2.5"
       >
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0 flex-1 space-y-1">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10.5px] font-semibold border border-blue-500/20">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>Daily MCQ Challenge</span>
-              </span>
-              <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#182030] text-zinc-300 border border-[#252E44]">
-                {featuredTopic.subject}
-              </span>
-              <span className="text-[11px] text-zinc-500">·</span>
-              <span className="text-[11px] text-zinc-400 font-medium">
-                10 Clinical MCQs
-              </span>
-            </div>
-
-            <h2 className="text-[15px] font-bold text-white tracking-tight leading-snug group-hover:text-blue-300 transition-colors">
-              {featuredTopic.title}
-            </h2>
-            <p className="text-[12px] text-zinc-400 line-clamp-1">
-              {featuredTopic.subtitle}
-            </p>
+        {/* Top Header Row: Badges & Shuffle Button */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10.5px] font-semibold border border-blue-500/20">
+              Daily Challenge
+            </span>
+            <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#182030] text-zinc-300 border border-[#252E44]">
+              {featuredTopic.subject}
+            </span>
+            <span className="text-[11px] text-zinc-400 font-medium">
+              · 10 MCQs
+            </span>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={handleShuffleFeatured}
-              title="Shuffle to another high-yield topic"
-              className="w-8 h-8 rounded-xl bg-[#181F30] hover:bg-[#20293E] text-zinc-400 hover:text-white border border-[#283550] flex items-center justify-center transition-all cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
+          <button
+            type="button"
+            onClick={handleShuffleFeatured}
+            title="Shuffle to another high-yield topic"
+            className="w-7 h-7 rounded-lg bg-[#181F30] hover:bg-[#20293E] text-zinc-400 hover:text-white border border-[#283550] flex items-center justify-center transition-all cursor-pointer shrink-0"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+        </div>
 
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                onSelectTopic(featuredTopic.slug, 'mcqDrill')
-              }}
-              className="py-2 px-3.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer"
-            >
-              <span>Solve MCQs</span>
-              <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
-            </button>
-          </div>
+        {/* Title & Subtitle - Full Width Breathing Room */}
+        <div className="space-y-1">
+          <h2 className="text-[15px] font-bold text-white tracking-tight leading-snug group-hover:text-blue-300 transition-colors">
+            {featuredTopic.title}
+          </h2>
+          <p className="text-[12px] text-zinc-400 line-clamp-1">
+            {featuredTopic.subtitle}
+          </p>
+        </div>
+
+        {/* Bottom CTA Row */}
+        <div className="flex items-center justify-between pt-1 border-t border-[#1C2334]">
+          <span className="text-[11px] text-zinc-400 font-medium">
+            Standard Exam Pattern · 4 Options
+          </span>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onSelectTopic(featuredTopic.slug, 'mcqDrill')
+            }}
+            className="py-1.5 px-3.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 cursor-pointer"
+          >
+            <span>Solve MCQs</span>
+            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          </button>
         </div>
       </div>
 

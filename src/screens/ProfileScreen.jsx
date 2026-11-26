@@ -10,7 +10,6 @@ import {
   ChevronRight,
   AlertTriangle,
   RotateCcw,
-  Sparkles,
   Filter,
   Smartphone,
   PlusSquare,
@@ -337,7 +336,6 @@ export default function ProfileScreen({
               {readinessBadge.subtitle}
             </p>
           </div>
-          <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
         </div>
 
         {/* Target Examination Switcher */}
@@ -562,7 +560,6 @@ export default function ProfileScreen({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-0.5">
           <div>
             <h3 className="text-sm font-semibold text-white font-sans flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-400" />
               <span>Topic-Wise Clinical Retention</span>
             </h3>
             <p className="text-[11px] text-zinc-400 font-sans font-normal">

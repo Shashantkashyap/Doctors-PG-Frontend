@@ -6,7 +6,6 @@ import {
   ChevronRight,
   TrendingUp,
   Clock,
-  Sparkles,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import { cn } from '../utils/cn'
@@ -167,8 +166,8 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
           {trending.length > 0 && (
             <div className="space-y-2.5">
               <div className="flex items-center gap-1.5 px-0.5 text-xs font-semibold text-white">
-                <Sparkles className="w-3.5 h-3.5 text-cliniq-trap" />
-                <span className="font-bold text-xs uppercase tracking-wider text-obsidian-400">
+                <TrendingUp className="w-3.5 h-3.5 text-zinc-400" />
+                <span className="font-bold text-xs uppercase tracking-wider text-zinc-400">
                   High-Yield Trending Topics
                 </span>
               </div>
@@ -178,7 +177,7 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
                   <button
                     key={topic.id}
                     onClick={() => onSelectTopic(topic.slug)}
-                    className="w-full p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 hover:border-cliniq-pharm/50 shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
+                    className="w-full p-3.5 rounded-xl bg-[#121622] hover:bg-[#161C2C] border border-[#20283C] hover:border-[#38435E] shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1 text-[11px]">

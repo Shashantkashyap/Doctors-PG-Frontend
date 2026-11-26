@@ -54,7 +54,6 @@ export function LogoFull({ className = 'h-8 w-auto', ...props }) {
           <span className="text-[16px] font-extrabold font-sans tracking-tight text-blue-400">
             IQ
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 ml-0.5 mb-1 shrink-0" />
         </div>
         <span className="text-[8.5px] font-mono tracking-widest uppercase text-zinc-400 -mt-1 font-semibold">
           MedRecall

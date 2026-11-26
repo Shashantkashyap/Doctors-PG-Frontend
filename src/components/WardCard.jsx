@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   Clock,
   GitCompare,
-  Sparkles,
   AlertTriangle,
   ArrowRight,
   Share2,
