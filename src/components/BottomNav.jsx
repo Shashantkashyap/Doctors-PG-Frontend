@@ -64,8 +64,15 @@ export default function BottomNav({ activeTab, setActiveTab, wrongCount = 0, not
                       isActive ? 'stroke-[2.2] text-cliniq-pharm' : 'stroke-[1.8]'
                     )}
                   />
-                  {!isActive && tab.badge !== null && (
-                    <span className="absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 text-[9px] font-bold bg-cliniq-trap text-obsidian-950 rounded-full flex items-center justify-center shadow-xs">
+                  {tab.badge !== null && (
+                    <span
+                      className={cn(
+                        'absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 text-[9px] font-bold rounded-full flex items-center justify-center shadow-xs transition-colors',
+                        isActive
+                          ? 'bg-cliniq-pharm text-obsidian-950 font-black ring-1 ring-obsidian-900'
+                          : 'bg-cliniq-trap text-obsidian-950'
+                      )}
+                    >
                       {tab.badge}
                     </span>
                   )}

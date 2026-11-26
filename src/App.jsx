@@ -229,6 +229,7 @@ export default function App() {
               onUpdateCounts={refreshCounters}
               initialTopicSlug={mcqPracticeConfig.topicSlug}
               initialSubjectSlug={mcqPracticeConfig.subjectSlug}
+              wrongCount={wrongCount}
             />
           ) : activeTab === 'notebook' ? (
             <NotebookScreen

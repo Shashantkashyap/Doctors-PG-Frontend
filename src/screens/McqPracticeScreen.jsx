@@ -413,6 +413,7 @@ export default function McqPracticeScreen({
   onUpdateCounts,
   initialTopicSlug,
   initialSubjectSlug,
+  wrongCount = 0,
 }) {
   const [subjects] = useState([
     { id: 'pharm', name: 'Pharmacology', slug: 'pharmacology', code: 'PHARM' },
@@ -811,13 +812,25 @@ export default function McqPracticeScreen({
                   type="button"
                   onClick={() => setSelectedMode('MISTAKES')}
                   className={cn(
-                    'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
+                    'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center flex items-center justify-center gap-1.5',
                     selectedMode === 'MISTAKES'
                       ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
                       : 'text-obsidian-400 hover:text-white'
                   )}
                 >
-                  Mistakes Only
+                  <span>Mistakes Only</span>
+                  {wrongCount > 0 && (
+                    <span
+                      className={cn(
+                        'px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold leading-none',
+                        selectedMode === 'MISTAKES'
+                          ? 'bg-obsidian-950 text-cliniq-pharm'
+                          : 'bg-cliniq-trap text-obsidian-950'
+                      )}
+                    >
+                      {wrongCount}
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
