@@ -8,6 +8,9 @@ import {
   Award,
   BookOpen,
   ChevronRight,
+  ChevronLeft,
+  Search,
+  X,
   AlertTriangle,
   RotateCcw,
   Filter,
@@ -43,6 +46,9 @@ export default function ProfileScreen({
   const [isUpdatingExam, setIsUpdatingExam] = useState(false)
   const [successNote, setSuccessNote] = useState('')
   const [topicFilter, setTopicFilter] = useState('ALL') // 'ALL' | 'PHARM' | 'PATH' | 'PSM' | 'WEAK'
+  const [topicSearch, setTopicSearch] = useState('')
+  const [topicPage, setTopicPage] = useState(1)
+  const TOPICS_PER_PAGE = 6
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
   const [analytics, setAnalytics] = useState(() =>
@@ -182,12 +188,37 @@ export default function ProfileScreen({
     }
   }
 
-  // Filter topics based on active tab
-  const filteredTopics = analytics.topicBreakdown.filter((t) => {
-    if (topicFilter === 'ALL') return true
-    if (topicFilter === 'WEAK') return t.attempted > 0 && t.accuracy < 70
-    return t.subjectCode === topicFilter
-  })
+  // Filter topics based on active tab, search, and prioritize weak topics
+  const filteredTopics = analytics.topicBreakdown
+    .filter((t) => {
+      // Search filter
+      if (topicSearch.trim()) {
+        const query = topicSearch.toLowerCase().trim()
+        const matchesTitle = t.title?.toLowerCase().includes(query)
+        const matchesSubtopic = t.subtopic?.toLowerCase().includes(query)
+        const matchesSubject = t.subjectName?.toLowerCase().includes(query)
+        if (!matchesTitle && !matchesSubtopic && !matchesSubject) return false
+      }
+
+      // Subject / status filter
+      if (topicFilter === 'ALL') return true
+      if (topicFilter === 'WEAK') return t.attempted > 0 && t.accuracy < 70
+      return t.subjectCode === topicFilter
+    })
+    .sort((a, b) => {
+      // Prioritize weak/attempted topics first so the most actionable items appear on page 1
+      const aWeak = a.attempted > 0 && a.accuracy < 70 ? 2 : a.attempted > 0 ? 1 : 0
+      const bWeak = b.attempted > 0 && b.accuracy < 70 ? 2 : b.attempted > 0 ? 1 : 0
+      if (aWeak !== bWeak) return bWeak - aWeak
+      return 0
+    })
+
+  const totalTopicPages = Math.ceil(filteredTopics.length / TOPICS_PER_PAGE) || 1
+  const topicStartIndex = (topicPage - 1) * TOPICS_PER_PAGE
+  const paginatedTopics = filteredTopics.slice(
+    topicStartIndex,
+    topicStartIndex + TOPICS_PER_PAGE
+  )
 
   const getSubjectBadgeStyle = (code) => {
     switch (code) {
@@ -558,13 +589,18 @@ export default function ProfileScreen({
       {/* 4. Topic-Wise Detailed Breakdown */}
       <div className="space-y-3 pt-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-0.5">
-          <div>
-            <h3 className="text-sm font-semibold text-white font-sans flex items-center gap-1.5">
-              <span>Topic-Wise Clinical Retention</span>
-            </h3>
-            <p className="text-[11px] text-zinc-400 font-sans font-normal">
-              Accuracy and recall status per clinical capsule
-            </p>
+          <div className="flex items-center justify-between sm:justify-start gap-2">
+            <div>
+              <h3 className="text-sm font-semibold text-white font-sans flex items-center gap-1.5">
+                <span>Topic-Wise Clinical Retention</span>
+              </h3>
+              <p className="text-[11px] text-zinc-400 font-sans font-normal">
+                Accuracy and recall status per clinical capsule
+              </p>
+            </div>
+            <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-[#182030] text-zinc-300 border border-[#252E44] shrink-0">
+              {filteredTopics.length} Topics
+            </span>
           </div>
 
           {/* Filter Pills with Highlighted Weak Topics Pill */}
@@ -582,7 +618,10 @@ export default function ProfileScreen({
                 <button
                   key={f.id}
                   type="button"
-                  onClick={() => setTopicFilter(f.id)}
+                  onClick={() => {
+                    setTopicFilter(f.id)
+                    setTopicPage(1)
+                  }}
                   className={cn(
                     'px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap transition-all cursor-pointer border active:scale-95',
                     isSelected
@@ -601,16 +640,43 @@ export default function ProfileScreen({
           </div>
         </div>
 
-        {/* Topics List */}
-        <div className="space-y-2">
-          {filteredTopics.length > 0 ? (
-            filteredTopics.map((topic) => (
+        {/* Search Input Filter */}
+        <div className="relative">
+          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={topicSearch}
+            onChange={(e) => {
+              setTopicSearch(e.target.value)
+              setTopicPage(1)
+            }}
+            placeholder="Search topic (e.g., Warfarin, Malaria, Myeloma)..."
+            className="w-full bg-[#121622] border border-[#20283C] focus:border-blue-500/50 rounded-xl pl-8 pr-8 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none transition-colors"
+          />
+          {topicSearch && (
+            <button
+              type="button"
+              onClick={() => {
+                setTopicSearch('')
+                setTopicPage(1)
+              }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-0.5 rounded cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Compact Paginated Topics List */}
+        <div className="space-y-1.5">
+          {paginatedTopics.length > 0 ? (
+            paginatedTopics.map((topic) => (
               <div
                 key={topic.topicId}
-                className="p-3.5 rounded-2xl bg-obsidian-800 border border-obsidian-700/80 hover:border-obsidian-600 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 group transition-all"
+                className="p-3 rounded-xl bg-[#121622] hover:bg-[#161C2C] border border-[#20283C] hover:border-[#38435E] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 group transition-all"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 mb-1.5 text-[11px] flex-wrap">
+                  <div className="flex items-center gap-1.5 mb-1 text-[11px] flex-wrap">
                     <span
                       className={cn(
                         'font-bold px-1.5 py-0.5 rounded border font-mono text-[10px]',
@@ -625,12 +691,12 @@ export default function ProfileScreen({
                   <button
                     type="button"
                     onClick={() => onSelectTopic(topic.topicSlug)}
-                    className="text-left font-semibold text-[13px] text-white hover:text-blue-300 transition-colors leading-snug cursor-pointer line-clamp-1"
+                    className="text-left font-semibold text-[13px] text-white group-hover:text-blue-300 transition-colors leading-snug cursor-pointer line-clamp-1"
                   >
                     {topic.title}
                   </button>
 
-                  <div className="flex items-center gap-3 mt-1.5 text-[11px] text-zinc-400">
+                  <div className="flex items-center gap-3 mt-1 text-[11px] text-zinc-400">
                     <span>
                       Recall: <strong className="text-white">{topic.correct} / {topic.attempted}</strong> correct
                     </span>
@@ -661,7 +727,7 @@ export default function ProfileScreen({
                         onStartPracticeTopic(topic.topicSlug, topic.subjectSlug)
                       }
                     }}
-                    className="py-1.5 px-3 rounded-xl bg-[#181F30] hover:bg-[#20283C] text-white text-xs font-medium border border-[#283550] transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-xs"
+                    className="py-1 px-2.5 rounded-lg bg-[#181F30] hover:bg-[#20283C] text-white text-[11px] font-medium border border-[#283550] transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-xs"
                   >
                     <RotateCcw className="w-3 h-3 text-zinc-300" />
                     <span>Practice</span>
@@ -670,16 +736,53 @@ export default function ProfileScreen({
               </div>
             ))
           ) : (
-            <div className="py-8 text-center bg-obsidian-800 rounded-2xl border border-obsidian-700 p-6 space-y-1">
-              <p className="text-xs font-bold text-white">
-                No topics in this filter
+            <div className="py-8 text-center bg-[#121622] rounded-xl border border-[#20283C] p-6 space-y-1">
+              <p className="text-xs font-semibold text-white">
+                No matching topics found
               </p>
-              <p className="text-[11px] text-obsidian-400">
-                Select another specialty filter above to review recall accuracy.
+              <p className="text-[11px] text-zinc-400">
+                {topicSearch
+                  ? `No topics match "${topicSearch}". Try clearing your search.`
+                  : 'Select another specialty filter above to review recall accuracy.'}
               </p>
             </div>
           )}
         </div>
+
+        {/* Compact Pagination Bar */}
+        {totalTopicPages > 1 && (
+          <div className="flex items-center justify-between pt-1 px-0.5">
+            <span className="text-xs text-zinc-400 font-medium">
+              Showing <span className="font-semibold text-white">{topicStartIndex + 1}–{Math.min(topicStartIndex + TOPICS_PER_PAGE, filteredTopics.length)}</span> of <span className="font-semibold text-white">{filteredTopics.length}</span>
+            </span>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setTopicPage((p) => Math.max(1, p - 1))}
+                disabled={topicPage === 1}
+                className="p-1.5 rounded-lg bg-[#141926] border border-[#20283C] text-zinc-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-[#182030] transition-all cursor-pointer shadow-xs active:scale-95"
+                aria-label="Previous Page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <span className="px-2.5 py-1 rounded-lg bg-[#141926] border border-[#20283C] text-[11px] font-semibold text-white shadow-xs">
+                {topicPage} / {totalTopicPages}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setTopicPage((p) => Math.min(totalTopicPages, p + 1))}
+                disabled={topicPage === totalTopicPages}
+                className="p-1.5 rounded-lg bg-[#141926] border border-[#20283C] text-zinc-300 disabled:opacity-30 disabled:pointer-events-none hover:bg-[#182030] transition-all cursor-pointer shadow-xs active:scale-95"
+                aria-label="Next Page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Install Shortcut Modal */}
