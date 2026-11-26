@@ -11,11 +11,17 @@ import {
   Filter,
   Layers,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Check,
   TrendingUp,
   BarChart2,
   AlertTriangle,
   Loader2,
+  Pill,
+  Microscope,
+  ShieldCheck,
+  Zap,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import { analyticsStore } from '../utils/analyticsStore'
@@ -425,6 +431,7 @@ export default function McqPracticeScreen({
   const [selectedTopic, setSelectedTopic] = useState(initialTopicSlug || 'ALL')
   const [selectedMode, setSelectedMode] = useState('ALL') // 'ALL' | 'MISTAKES'
   const [questionCountLimit, setQuestionCountLimit] = useState(10)
+  const [isCustomOpen, setIsCustomOpen] = useState(Boolean(initialTopicSlug))
 
   // Active drill states
   const [isDrillActive, setIsDrillActive] = useState(false)
@@ -631,253 +638,368 @@ export default function McqPracticeScreen({
     <div className="space-y-4 pb-32 animate-fade-in pt-1">
       {/* If drill is not active, show Filter & Setup Screen */}
       {!isDrillActive ? (
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {/* Header */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-1.5">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-sky-500/10 text-cliniq-pharm border border-sky-500/25 flex items-center justify-center">
-                <Target className="w-4 h-4 text-cliniq-pharm" />
+          <div className="flex items-center justify-between px-0.5">
+            <div>
+              <h1 className="text-base font-bold tracking-tight text-white font-sans flex items-center gap-2">
+                <Target className="w-4 h-4 text-sky-400" />
+                <span>Clinical MCQ Practice</span>
+              </h1>
+              <p className="text-[11px] text-obsidian-400 mt-0.5">
+                2,340 Clinical vignettes with 4-option rule-out analysis
+              </p>
+            </div>
+          </div>
+
+          {/* Hero Card 1: ⚠️ Spaced Repetition / Fix Mistakes Deck (Shown when user has mistakes to review) */}
+          {wrongCount > 0 && (
+            <div
+              onClick={() => executeStartDrill('ALL', 'ALL', Math.min(20, wrongCount), 'MISTAKES')}
+              className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/15 via-obsidian-800 to-obsidian-850 border border-amber-500/30 hover:border-amber-500/60 transition-all cursor-pointer shadow-sm group active:scale-[0.99] space-y-2.5"
+            >
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 text-[10.5px] font-bold border border-amber-500/25">
+                  <AlertTriangle className="w-3 h-3 text-amber-400" />
+                  <span>Spaced Repetition Queue</span>
+                </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  {wrongCount} Traps Waiting
+                </span>
               </div>
-              <h2 className="text-base font-bold font-sans text-white">
-                Clinical MCQ Practice Drill
-              </h2>
-            </div>
-            <p className="text-xs text-obsidian-400 font-sans leading-relaxed">
-              Filter practice sets by Specialty, Clinical Topic, or focus exclusively on previously missed questions.
-            </p>
-          </div>
 
-          {/* Filter 1: Choose Specialty / Subject */}
-          <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2.5">
+              <div>
+                <h3 className="text-[15px] font-bold text-white group-hover:text-amber-300 transition-colors">
+                  Fix Negative Marking Deck
+                </h3>
+                <p className="text-xs text-obsidian-300 leading-relaxed mt-0.5">
+                  Retest clinical traps you missed previously. Spaced repetition ensures you never repeat mistakes in the exam.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-1 border-t border-obsidian-700/60">
+                <span className="text-[11px] text-amber-300/80 font-medium">1-Tap Targeted Review</span>
+                <span className="text-xs font-bold text-amber-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <span>Review {wrongCount} Mistakes</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Hero Card 2: ⚡ Daily Rapid Clinical Sprint (10 Questions) */}
+          <div
+            onClick={() => executeStartDrill('ALL', 'ALL', 10, 'ALL')}
+            className="p-4 rounded-2xl bg-gradient-to-br from-sky-500/15 via-obsidian-800 to-obsidian-850 border border-sky-500/30 hover:border-sky-500/60 transition-all cursor-pointer shadow-sm group active:scale-[0.99] space-y-2.5"
+          >
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
-                <Filter className="w-3.5 h-3.5 text-cliniq-pharm" />
-                <span>1. Select Specialty</span>
-              </label>
-              <span className="text-[11px] font-medium text-obsidian-400">
-                {selectedSubject === 'ALL'
-                  ? 'All Specialties'
-                  : subjects.find((s) => s.slug === selectedSubject)?.name}
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-400 text-[10.5px] font-bold border border-sky-500/25">
+                <Sparkles className="w-3 h-3 text-sky-400" />
+                <span>High-Yield Mixed Sprint</span>
+              </span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                10 Qs · All Subjects
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedSubject('ALL')
-                  setSelectedTopic('ALL')
-                }}
-                className={cn(
-                  'py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center active:scale-95',
-                  selectedSubject === 'ALL'
-                    ? 'bg-cliniq-pharm text-obsidian-950 font-bold border-cliniq-pharm shadow-xs'
-                    : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700 hover:bg-obsidian-750 hover:text-white'
-                )}
-              >
-                All Specialties
-              </button>
-
-              {subjects.map((s) => {
-                const isSelected = selectedSubject === s.slug
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedSubject(s.slug)
-                      setSelectedTopic('ALL')
-                    }}
-                    className={cn(
-                      'py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center active:scale-95',
-                      isSelected
-                        ? 'bg-cliniq-pharm text-obsidian-950 font-bold border-cliniq-pharm shadow-xs'
-                        : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700 hover:bg-obsidian-750 hover:text-white'
-                    )}
-                  >
-                    {s.name}
-                  </button>
-                )
-              })}
+            <div>
+              <h3 className="text-[15px] font-bold text-white group-hover:text-sky-300 transition-colors">
+                Rapid Clinical Vignette Sprint
+              </h3>
+              <p className="text-xs text-obsidian-300 leading-relaxed mt-0.5">
+                Integrated cross-specialty clinical scenarios with 4-option rule-out distractor analysis.
+              </p>
             </div>
-          </div>
 
-          {/* Filter 2: Choose Topic */}
-          <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-cliniq-pharm" />
-                <span>2. Select Clinical Topic</span>
-              </label>
-              <span className="text-[11px] text-obsidian-400">
-                {availableTopics.length} topics available
+            <div className="flex items-center justify-between pt-1 border-t border-obsidian-700/60">
+              <span className="text-[11px] text-sky-400/80 font-medium">Standard NBE Pattern</span>
+              <span className="text-xs font-bold text-sky-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                <span>Start 10-Q Sprint</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </div>
+          </div>
 
-            <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
+          {/* Specialty Quick Sprints (3 1-tap tiles) */}
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-xs font-bold text-obsidian-300 uppercase tracking-wider font-mono">
+                Specialty Sprints (10 Qs)
+              </span>
+              <span className="text-[11px] text-obsidian-400">1-Tap Start</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2">
+              {/* Pharma */}
               <button
                 type="button"
-                onClick={() => setSelectedTopic('ALL')}
-                className={cn(
-                  'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer active:scale-[0.99]',
-                  selectedTopic === 'ALL'
-                    ? 'bg-sky-500/10 text-cliniq-pharm border-sky-500/50 font-bold'
-                    : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700/80 hover:bg-obsidian-750 hover:text-white'
-                )}
+                onClick={() => executeStartDrill('pharmacology', 'ALL', 10, 'ALL')}
+                className="p-3 rounded-2xl bg-obsidian-800 hover:bg-obsidian-750 border border-sky-500/25 hover:border-sky-500/50 text-left transition-all active:scale-95 group shadow-xs cursor-pointer flex flex-col justify-between h-24"
               >
-                <span>All Topics (Combined Random Drill)</span>
-                {selectedTopic === 'ALL' && (
-                  <Check className="w-3.5 h-3.5 text-cliniq-pharm" />
-                )}
+                <div className="flex items-center justify-between w-full">
+                  <Pill className="w-4 h-4 text-sky-400" />
+                  <span className="text-[9px] font-mono font-bold text-sky-400/90">78 Topics</span>
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white group-hover:text-sky-300 transition-colors">
+                    Pharma
+                  </div>
+                  <div className="text-[10px] text-obsidian-400 mt-0.5 flex items-center gap-0.5">
+                    <span>Start</span>
+                    <ChevronRight className="w-2.5 h-2.5 text-sky-400" />
+                  </div>
+                </div>
               </button>
 
-              {availableTopics.map((topic) => {
-                const isSelected = selectedTopic === topic.topicSlug
-                const isPharm = topic.subjectCode === 'PHARM'
-                const isPatho = topic.subjectCode === 'PATH'
-                return (
-                  <button
-                    key={topic.topicId}
-                    type="button"
-                    onClick={() => setSelectedTopic(topic.topicSlug)}
-                    className={cn(
-                      'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer gap-2 active:scale-[0.99]',
-                      isSelected
-                        ? 'bg-sky-500/10 text-white border-sky-500/50 font-semibold ring-1 ring-sky-500/30'
-                        : 'bg-obsidian-850 text-obsidian-200 border-obsidian-700/80 hover:bg-obsidian-750 hover:text-white'
-                    )}
-                  >
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                      <span
-                        className={cn(
-                          'text-[10px] font-mono px-1.5 py-0.5 rounded border shrink-0 font-bold',
-                          isPharm
-                            ? 'bg-sky-500/10 text-sky-400 border-sky-500/25'
-                            : isPatho
-                            ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'
-                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
-                        )}
-                      >
-                        {topic.subjectCode}
-                      </span>
-                      <span className="truncate">{topic.title}</span>
-                    </div>
+              {/* Pathology */}
+              <button
+                type="button"
+                onClick={() => executeStartDrill('pathology', 'ALL', 10, 'ALL')}
+                className="p-3 rounded-2xl bg-obsidian-800 hover:bg-obsidian-750 border border-indigo-500/25 hover:border-indigo-500/50 text-left transition-all active:scale-95 group shadow-xs cursor-pointer flex flex-col justify-between h-24"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <Microscope className="w-4 h-4 text-indigo-400" />
+                  <span className="text-[9px] font-mono font-bold text-indigo-400/90">86 Topics</span>
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">
+                    Pathology
+                  </div>
+                  <div className="text-[10px] text-obsidian-400 mt-0.5 flex items-center gap-0.5">
+                    <span>Start</span>
+                    <ChevronRight className="w-2.5 h-2.5 text-indigo-400" />
+                  </div>
+                </div>
+              </button>
 
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span
-                        className={cn(
-                          'text-[10px] font-bold px-1.5 py-0.5 rounded border',
-                          topic.attempted > 0
-                            ? topic.accuracy >= 80
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                              : topic.accuracy >= 60
-                              ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
-                              : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                            : 'bg-obsidian-750 text-obsidian-400 border-obsidian-700'
-                        )}
-                      >
-                        {topic.attempted > 0 ? `${topic.accuracy}%` : 'New'}
-                      </span>
-                      {isSelected && (
-                        <Check className="w-3.5 h-3.5 text-cliniq-pharm" />
-                      )}
-                    </div>
-                  </button>
-                )
-              })}
+              {/* PSM */}
+              <button
+                type="button"
+                onClick={() => executeStartDrill('psm', 'ALL', 10, 'ALL')}
+                className="p-3 rounded-2xl bg-obsidian-800 hover:bg-obsidian-750 border border-emerald-500/25 hover:border-emerald-500/50 text-left transition-all active:scale-95 group shadow-xs cursor-pointer flex flex-col justify-between h-24"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span className="text-[9px] font-mono font-bold text-emerald-400/90">70 Topics</span>
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">
+                    PSM
+                  </div>
+                  <div className="text-[10px] text-obsidian-400 mt-0.5 flex items-center gap-0.5">
+                    <span>Start</span>
+                    <ChevronRight className="w-2.5 h-2.5 text-emerald-400" />
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 
-          {/* Filter 3: Drill Mode & Question Count */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Mode */}
-            <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2">
-              <label className="text-xs font-bold text-white font-sans">
-                Drill Mode
-              </label>
-              <div className="grid grid-cols-2 gap-1 p-1 bg-obsidian-850 rounded-xl border border-obsidian-700">
-                <button
-                  type="button"
-                  onClick={() => setSelectedMode('ALL')}
-                  className={cn(
-                    'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
-                    selectedMode === 'ALL'
-                      ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
-                      : 'text-obsidian-400 hover:text-white'
-                  )}
-                >
-                  Standard Drill
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedMode('MISTAKES')}
-                  className={cn(
-                    'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center flex items-center justify-center gap-1.5',
-                    selectedMode === 'MISTAKES'
-                      ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
-                      : 'text-obsidian-400 hover:text-white'
-                  )}
-                >
-                  <span>Mistakes Only</span>
-                  {wrongCount > 0 && (
-                    <span
+          {/* Custom Topic Drill Accordion */}
+          <div className="rounded-2xl bg-obsidian-800 border border-obsidian-700/80 shadow-xs overflow-hidden transition-all">
+            <button
+              type="button"
+              onClick={() => setIsCustomOpen((prev) => !prev)}
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-obsidian-750/50 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-obsidian-750 border border-obsidian-700 flex items-center justify-center text-obsidian-300">
+                  <Filter className="w-3.5 h-3.5 text-sky-400" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-white font-sans">
+                    Custom Topic Drill & Deep Dive
+                  </h3>
+                  <p className="text-[10.5px] text-obsidian-400">
+                    Select specific clinical topic and question count target
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {isCustomOpen ? (
+                  <ChevronUp className="w-4 h-4 text-obsidian-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-obsidian-400" />
+                )}
+              </div>
+            </button>
+
+            {isCustomOpen && (
+              <div className="p-4 pt-1 border-t border-obsidian-700/80 space-y-3.5 animate-fade-in">
+                {/* Subject Pills */}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold text-obsidian-400 font-sans">
+                    Select Specialty
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedSubject('ALL')
+                        setSelectedTopic('ALL')
+                      }}
                       className={cn(
-                        'px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold leading-none',
-                        selectedMode === 'MISTAKES'
-                          ? 'bg-obsidian-950 text-cliniq-pharm'
-                          : 'bg-cliniq-trap text-obsidian-950'
+                        'py-1.5 px-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center active:scale-95',
+                        selectedSubject === 'ALL'
+                          ? 'bg-sky-500/20 text-sky-300 border-sky-500/50 font-bold shadow-xs'
+                          : 'bg-obsidian-850 text-obsidian-400 border-obsidian-700 hover:text-white'
                       )}
                     >
-                      {wrongCount}
-                    </span>
-                  )}
-                </button>
-              </div>
-            </div>
+                      All
+                    </button>
 
-            {/* Questions count */}
-            <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2">
-              <label className="text-xs font-bold text-white font-sans">
-                Question Target
-              </label>
-              <div className="grid grid-cols-3 gap-1 p-1 bg-obsidian-850 rounded-xl border border-obsidian-700">
-                {[5, 10, 20].map((count) => (
+                    {subjects.map((s) => {
+                      const isSelected = selectedSubject === s.slug
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedSubject(s.slug)
+                            setSelectedTopic('ALL')
+                          }}
+                          className={cn(
+                            'py-1.5 px-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center active:scale-95',
+                            isSelected
+                              ? 'bg-sky-500/20 text-sky-300 border-sky-500/50 font-bold shadow-xs'
+                              : 'bg-obsidian-850 text-obsidian-400 border-obsidian-700 hover:text-white'
+                          )}
+                        >
+                          {s.name.split(' ')[0]}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Topic List */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] text-obsidian-400">
+                    <span className="font-semibold">Select Topic</span>
+                    <span>{availableTopics.length} topics available</span>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedTopic('ALL')}
+                      className={cn(
+                        'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer active:scale-[0.99]',
+                        selectedTopic === 'ALL'
+                          ? 'bg-sky-500/15 text-sky-300 border-sky-500/50 font-bold'
+                          : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700/80 hover:bg-obsidian-750 hover:text-white'
+                      )}
+                    >
+                      <span>All Topics (Combined)</span>
+                      {selectedTopic === 'ALL' && (
+                        <Check className="w-3.5 h-3.5 text-sky-400" />
+                      )}
+                    </button>
+
+                    {availableTopics.map((topic) => {
+                      const isSelected = selectedTopic === topic.topicSlug
+                      const isPharm = topic.subjectCode === 'PHARM'
+                      const isPatho = topic.subjectCode === 'PATH'
+                      return (
+                        <button
+                          key={topic.topicId}
+                          type="button"
+                          onClick={() => setSelectedTopic(topic.topicSlug)}
+                          className={cn(
+                            'w-full p-2 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer gap-2 active:scale-[0.99]',
+                            isSelected
+                              ? 'bg-sky-500/15 text-white border-sky-500/50 font-semibold ring-1 ring-sky-500/30'
+                              : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700/80 hover:bg-obsidian-750 hover:text-white'
+                          )}
+                        >
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span
+                              className={cn(
+                                'text-[10px] font-mono px-1.5 py-0.5 rounded border shrink-0 font-bold',
+                                isPharm
+                                  ? 'bg-sky-500/10 text-sky-400 border-sky-500/25'
+                                  : isPatho
+                                  ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'
+                                  : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                              )}
+                            >
+                              {topic.subjectCode}
+                            </span>
+                            <span className="truncate">{topic.title}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span
+                              className={cn(
+                                'text-[10px] font-bold px-1.5 py-0.5 rounded border',
+                                topic.attempted > 0
+                                  ? topic.accuracy >= 80
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                    : topic.accuracy >= 60
+                                    ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                                    : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                                  : 'bg-obsidian-750 text-obsidian-400 border-obsidian-700'
+                              )}
+                            >
+                              {topic.attempted > 0 ? `${topic.accuracy}%` : 'New'}
+                            </span>
+                            {isSelected && (
+                              <Check className="w-3.5 h-3.5 text-sky-400" />
+                            )}
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Target Selector & Start Button */}
+                <div className="space-y-2.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-semibold text-obsidian-400 font-sans">
+                      Question Target
+                    </label>
+                    <div className="flex items-center gap-1 p-1 bg-obsidian-850 rounded-xl border border-obsidian-700">
+                      {[5, 10, 20].map((count) => (
+                        <button
+                          key={count}
+                          type="button"
+                          onClick={() => setQuestionCountLimit(count)}
+                          className={cn(
+                            'py-1 px-2.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
+                            questionCountLimit === count
+                              ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold shadow-xs'
+                              : 'text-obsidian-400 hover:text-white'
+                          )}
+                        >
+                          {count} Qs
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <button
-                    key={count}
                     type="button"
-                    onClick={() => setQuestionCountLimit(count)}
-                    className={cn(
-                      'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
-                      questionCountLimit === count
-                        ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
-                        : 'text-obsidian-400 hover:text-white'
-                    )}
+                    onClick={() =>
+                      executeStartDrill(
+                        selectedSubject,
+                        selectedTopic,
+                        questionCountLimit,
+                        'ALL'
+                      )
+                    }
+                    className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer"
                   >
-                    {count} Qs
+                    <Play className="w-3.5 h-3.5 fill-white stroke-white" />
+                    <span>
+                      Start Custom Drill ({questionCountLimit} Questions)
+                    </span>
                   </button>
-                ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
-
-          {/* Launch Button */}
-          <button
-            type="button"
-            onClick={() =>
-              executeStartDrill(
-                selectedSubject,
-                selectedTopic,
-                questionCountLimit,
-                selectedMode
-              )
-            }
-            className="w-full py-3.5 px-6 rounded-2xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
-          >
-            <Play className="w-4 h-4 fill-obsidian-950 stroke-obsidian-950" />
-            <span>
-              Start Practice Drill ({questionCountLimit} Questions)
-            </span>
-          </button>
         </div>
       ) : isLoadingQuestions ? (
         /* Loading Skeleton while preparing questions */
