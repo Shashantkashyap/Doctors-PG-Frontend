@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import {
   Target,
   Play,
@@ -443,6 +443,7 @@ export default function McqPracticeScreen({
   const [activeSetTitle, setActiveSetTitle] = useState('')
 
   const drawerTimerRef = useRef(null)
+  const lastInitialLaunchRef = useRef(null)
 
   // Cleanup pending drawer timer on unmount
   useEffect(() => {
@@ -451,13 +452,15 @@ export default function McqPracticeScreen({
     }
   }, [])
 
-  const analytics = analyticsStore.getAnalyticsSummary()
+  const analytics = useMemo(() => analyticsStore.getAnalyticsSummary(), [isCompleted])
 
   // Dynamic available topics based on selected subject
-  const availableTopics = analytics.topicBreakdown.filter((t) => {
-    if (selectedSubject === 'ALL') return true
-    return t.subjectSlug === selectedSubject
-  })
+  const availableTopics = useMemo(() => {
+    return analytics.topicBreakdown.filter((t) => {
+      if (selectedSubject === 'ALL') return true
+      return t.subjectSlug === selectedSubject
+    })
+  }, [analytics, selectedSubject])
 
   // Start the drill and fetch questions (from API or Curated Bank)
   const executeStartDrill = useCallback(
@@ -515,7 +518,7 @@ export default function McqPracticeScreen({
       setActiveSetTitle(title)
       setIsLoadingQuestions(false)
     },
-    [analytics.topicBreakdown]
+    []
   )
 
   // React to initial navigation props (e.g. from Profile Screen Practice buttons)
@@ -525,13 +528,16 @@ export default function McqPracticeScreen({
     }
     if (initialTopicSlug) {
       setSelectedTopic(initialTopicSlug)
-      // Automatically launch drill when explicitly navigated from Profile
-      executeStartDrill(
-        initialSubjectSlug || 'ALL',
-        initialTopicSlug,
-        questionCountLimit,
-        selectedMode
-      )
+      const launchKey = `${initialSubjectSlug || 'ALL'}__${initialTopicSlug}`
+      if (lastInitialLaunchRef.current !== launchKey) {
+        lastInitialLaunchRef.current = launchKey
+        executeStartDrill(
+          initialSubjectSlug || 'ALL',
+          initialTopicSlug,
+          questionCountLimit,
+          selectedMode
+        )
+      }
     }
   }, [initialTopicSlug, initialSubjectSlug, executeStartDrill])
 
