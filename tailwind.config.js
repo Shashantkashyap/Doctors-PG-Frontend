@@ -7,6 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
+        obsidian: {
+          950: '#070A10',
+          900: '#0B0F19', // App canvas background
+          800: '#111827', // Card surfaces
+          750: '#151D2E', // Inset surfaces
+          700: '#1F2937', // Borders & dividers
+          600: '#374151', // Subtle active borders
+          500: '#4B5563', // Muted text
+          400: '#6B7280', // Secondary metadata
+          300: '#9CA3AF', // Primary body text
+          200: '#E5E7EB', // Subheadings
+          100: '#F3F4F6', // Headings
+          50: '#F9FAFB',  // High-contrast titles
+        },
+        // Subject Clinical Accents
+        cliniq: {
+          pharm: '#38BDF8', // Cyan for Pharmacology
+          pharmGlow: 'rgba(56, 189, 248, 0.15)',
+          patho: '#818CF8', // Indigo / Purple for Pathology
+          pathoGlow: 'rgba(129, 140, 248, 0.15)',
+          psm: '#34D399',   // Emerald Green for PSM & Success
+          psmGlow: 'rgba(52, 211, 153, 0.15)',
+          trap: '#FBBF24',  // Amber for Traps & Warnings
+          trapGlow: 'rgba(251, 191, 36, 0.15)',
+          danger: '#F87171', // Rose / Red for Contraindications & Errors
+          dangerGlow: 'rgba(248, 113, 113, 0.15)',
+        },
         navy: {
           50: '#F0F6F9',
           100: '#E1ECF2',
@@ -30,54 +57,37 @@ export default {
           700: '#256E86',
           800: '#1D576A',
         },
-        aqua: {
-          50: '#F5FCFD',
-          100: '#EDF9FC',
-          200: '#D5F3FA',
-          300: '#B4EDF7',
-          400: '#9FE7F5',
-          500: '#75D8EB',
-          600: '#46BFD6',
-        },
         amberGold: {
           50: '#FEFBF5',
           100: '#FEF6E7',
           200: '#FDEBC8',
           300: '#FCDAA0',
           400: '#FAC45E',
-          500: '#F7AD19',
-          600: '#DC930B',
-          700: '#B37306',
+          500: '#FBBF24',
+          600: '#F7AD19',
+          700: '#DC930B',
           800: '#8A5506',
-          900: '#683F04',
-        },
-        brand: {
-          50: '#F0F6F9',
-          100: '#E1ECF2',
-          500: '#429EBD',
-          600: '#053F5C',
-          700: '#032B40',
         },
         pharma: {
-          subtle: '#EDF9FC',
-          border: '#C5E6F1',
-          activeBorder: '#9FE7F5',
-          accent: '#053F5C',
-          text: '#053F5C',
+          subtle: 'rgba(56, 189, 248, 0.08)',
+          border: 'rgba(56, 189, 248, 0.25)',
+          activeBorder: '#38BDF8',
+          accent: '#38BDF8',
+          text: '#7DD3FC',
         },
         patho: {
-          subtle: '#FEF6E7',
-          border: '#FDEBC8',
-          activeBorder: '#F7AD19',
-          accent: '#F7AD19',
-          text: '#8A5506',
+          subtle: 'rgba(129, 140, 248, 0.08)',
+          border: 'rgba(129, 140, 248, 0.25)',
+          activeBorder: '#818CF8',
+          accent: '#818CF8',
+          text: '#A5B4FC',
         },
         psm: {
-          subtle: '#E2F3F8',
-          border: '#B8D5E3',
-          activeBorder: '#429EBD',
-          accent: '#429EBD',
-          text: '#1D576A',
+          subtle: 'rgba(52, 211, 153, 0.08)',
+          border: 'rgba(52, 211, 153, 0.25)',
+          activeBorder: '#34D399',
+          accent: '#34D399',
+          text: '#6EE7B7',
         },
       },
       fontFamily: {

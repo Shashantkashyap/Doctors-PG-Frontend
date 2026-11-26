@@ -10,41 +10,32 @@ export default function TopNavbar({
   return (
     <header
       className={cn(
-        'sticky top-0 z-30 -mx-4 px-4 py-2.5 bg-white/92 backdrop-blur-xl border-b border-[#E2E8F0] transition-all duration-200 flex items-center justify-between gap-3',
+        'sticky top-0 z-30 -mx-4 px-4 py-2.5 bg-obsidian-900/95 backdrop-blur-xl border-b border-obsidian-700/80 transition-all duration-200 flex items-center justify-between gap-3',
         className
       )}
     >
-      {/* Brand & Official Logo Lockup */}
+      {/* Brand & ClinIQ Logo Lockup */}
       <a
         href="/"
-        className="flex items-center gap-2 shrink-0 group active:scale-[0.98] transition-transform"
+        className="flex items-center gap-2.5 shrink-0 group active:scale-[0.98] transition-transform"
       >
-        <LogoIcon className="w-8 h-8 shadow-xs rounded-xl shrink-0 transition-transform group-hover:scale-105" />
-
-        <div className="flex items-baseline gap-0.5">
-          <span className="text-[16px] font-bold font-sans tracking-[-0.02em] text-[#053F5C]">
-            Clinical
-          </span>
-          <span className="text-[16px] font-bold font-sans tracking-[-0.02em] text-[#429EBD]">
-            Recall
-          </span>
-        </div>
+        <LogoFull className="h-8 w-auto" />
       </a>
 
-      {/* Spacious, Professional Search Bar */}
+      {/* Spacious, Professional Obsidian Search Trigger */}
       <button
         type="button"
         onClick={onOpenSearch}
-        className="flex-1 max-w-[260px] pl-3 pr-2.5 py-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] hover:border-[#429EBD]/60 rounded-xl text-left flex items-center justify-between gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer group"
+        className="flex-1 max-w-[240px] pl-3 pr-2.5 py-1.5 bg-obsidian-800 hover:bg-obsidian-750 border border-obsidian-700 hover:border-cliniq-pharm/50 rounded-xl text-left flex items-center justify-between gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer group"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <Search className="w-3.5 h-3.5 text-[#5C768D] group-hover:text-[#053F5C] transition-colors shrink-0 stroke-[2]" />
-          <span className="text-xs text-[#5C768D] font-normal truncate">
-            Search topics, drugs, protocols...
+          <Search className="w-3.5 h-3.5 text-obsidian-400 group-hover:text-cliniq-pharm transition-colors shrink-0 stroke-[2]" />
+          <span className="text-xs text-obsidian-300 font-normal truncate">
+            Search 234 topics, DOCs...
           </span>
         </div>
 
-        <kbd className="text-[9px] font-mono text-[#5C768D] bg-[#EDF2F7] px-1.5 py-0.5 rounded border border-[#E2E8F0] hidden sm:inline shrink-0">
+        <kbd className="text-[9px] font-mono text-obsidian-400 bg-obsidian-700/70 px-1.5 py-0.5 rounded border border-obsidian-600 hidden sm:inline shrink-0">
           ⌘K
         </kbd>
       </button>

@@ -5,6 +5,8 @@ import {
   ArrowRight,
   RotateCcw,
   ChevronRight,
+  Target,
+  Sparkles,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import { analyticsStore } from '../utils/analyticsStore'
@@ -113,15 +115,15 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   if (isLoading) {
     return (
       <div className="py-20 text-center space-y-2.5">
-        <div className="w-5 h-5 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-slate-400 font-medium">Loading practice drill...</p>
+        <div className="w-5 h-5 border-2 border-obsidian-600 border-t-cliniq-pharm rounded-full animate-spin mx-auto" />
+        <p className="text-xs text-obsidian-400 font-medium">Loading 10 clinical vignette MCQs...</p>
       </div>
     )
   }
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="py-16 text-center text-slate-400 space-y-2">
+      <div className="py-16 text-center text-obsidian-400 space-y-2">
         <p className="text-xs">No questions recorded for this topic yet.</p>
       </div>
     )
@@ -138,16 +140,16 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   if (isCompleted) {
     const accuracy = Math.round((correctCount / questions.length) * 100)
     return (
-      <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] text-center space-y-5 shadow-xs my-2 animate-fade-in">
+      <div className="p-6 rounded-2xl bg-obsidian-800 border border-obsidian-700 text-center space-y-5 shadow-xs my-2 animate-fade-in">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-widest text-[#5C768D]">
-            Session Summary
+          <span className="text-[10px] uppercase font-bold tracking-widest text-obsidian-400">
+            Session Performance
           </span>
-          <h3 className="text-xl font-bold text-[#053F5C] mt-1">
+          <h3 className="text-2xl font-bold text-white mt-1">
             {correctCount} / {questions.length} Correct
           </h3>
-          <p className="text-xs text-[#5C768D] mt-0.5">
-            Accuracy: {accuracy}%
+          <p className="text-xs text-obsidian-400 mt-0.5">
+            Accuracy: <span className="text-cliniq-psm font-bold">{accuracy}%</span>
           </p>
         </div>
 
@@ -166,10 +168,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                 className={cn(
                   'h-8 rounded-lg font-mono text-xs font-semibold border flex items-center justify-center transition-all cursor-pointer',
                   chosen === undefined
-                    ? 'bg-[#F0F6F9] text-[#889DA8] border-[#E1ECF2]'
+                    ? 'bg-obsidian-850 text-obsidian-400 border-obsidian-700'
                     : isQCorrect
-                    ? 'bg-[#EDF9FC] text-[#053F5C] border-[#B8D5E3]'
-                    : 'bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]'
+                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    : 'bg-rose-500/15 text-rose-400 border-rose-500/30'
                 )}
               >
                 {idx + 1}
@@ -180,10 +182,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
 
         <button
           onClick={handleRestart}
-          className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white flex items-center justify-center gap-1.5 transition-all shadow-xs border border-[#084869] cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
         >
-          <RotateCcw className="w-3.5 h-3.5 text-[#9FE7F5]" />
-          <span>Practice Again</span>
+          <RotateCcw className="w-3.5 h-3.5 stroke-[2.2]" />
+          <span>Practice Drill Again</span>
         </button>
       </div>
     )
@@ -194,13 +196,13 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   return (
     <div className="space-y-3.5 pb-20 animate-fade-in">
       {/* Progress Header */}
-      <div className="flex items-center justify-between text-xs text-[#5C768D] px-0.5 font-medium">
-        <span className="font-semibold text-[#053F5C]">
+      <div className="flex items-center justify-between text-xs text-obsidian-400 px-0.5 font-medium">
+        <span className="font-semibold text-white">
           Question {currentIndex + 1} of {questions.length}
         </span>
 
         {currentQ.pyqTag && (
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#FEF6E7] border border-[#FDEBC8] text-[#8A5506] font-bold">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-300 font-bold">
             {currentQ.pyqTag}
           </span>
         )}
@@ -220,10 +222,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
               onClick={() => setCurrentIndex(i)}
               className={cn(
                 'h-1.5 flex-1 rounded-full transition-all duration-150 cursor-pointer',
-                isCurrent && 'ring-2 ring-[#053F5C]/30',
-                !isDone && 'bg-[#E2ECF2]',
-                isDone && isQCorrect && 'bg-[#429EBD]',
-                isDone && !isQCorrect && 'bg-[#DC2626]'
+                isCurrent && 'ring-2 ring-cliniq-pharm/50',
+                !isDone && 'bg-obsidian-700',
+                isDone && isQCorrect && 'bg-cliniq-psm',
+                isDone && !isQCorrect && 'bg-cliniq-danger'
               )}
             />
           )
@@ -231,9 +233,9 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
       </div>
 
       {/* Question Card */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-4">
         {/* Question Stem */}
-        <p className="text-sm font-semibold text-[#053F5C] leading-relaxed break-words">
+        <p className="text-xs sm:text-sm font-semibold text-white leading-relaxed break-words">
           {currentQ.question}
         </p>
 
@@ -244,15 +246,15 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
             const isCorrectOption = optIdx === currentQ.correctIndex
 
             let optionStyle =
-              'bg-[#F8FAFC] hover:bg-[#F1F9FB] border-[#E2E8F0] text-[#183B4E]'
+              'bg-obsidian-850 hover:bg-obsidian-750 border-obsidian-700 text-obsidian-200'
 
             if (hasAnsweredCurrent) {
               if (isCorrectOption) {
-                optionStyle = 'bg-[#EDF9FC] border-[#429EBD] text-[#053F5C] font-semibold shadow-xs'
+                optionStyle = 'bg-emerald-500/10 border-emerald-500 text-white font-semibold'
               } else if (isChosen) {
-                optionStyle = 'bg-[#FEF2F2] border-[#FCA5A5] text-[#991B1B] font-semibold shadow-xs'
+                optionStyle = 'bg-rose-500/10 border-rose-500 text-white font-semibold'
               } else {
-                optionStyle = 'bg-[#F8FAFC]/60 border-[#E2E8F0] text-[#889DA8] opacity-60'
+                optionStyle = 'bg-obsidian-850/50 border-obsidian-700/60 text-obsidian-400 opacity-60'
               }
             }
 
@@ -269,10 +271,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                   className={cn(
                     'w-5 h-5 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border',
                     hasAnsweredCurrent && isCorrectOption
-                      ? 'bg-[#429EBD] text-white border-[#429EBD]'
+                      ? 'bg-emerald-500 text-obsidian-950 border-emerald-500'
                       : hasAnsweredCurrent && isChosen
-                      ? 'bg-[#DC2626] text-white border-[#DC2626]'
-                      : 'bg-white text-[#5C768D] border-[#CBD5E1]'
+                      ? 'bg-rose-500 text-white border-rose-500'
+                      : 'bg-obsidian-750 text-obsidian-400 border-obsidian-600'
                   )}
                 >
                   {optionLetters[optIdx]}
@@ -283,10 +285,10 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
                 </span>
 
                 {hasAnsweredCurrent && isCorrectOption && (
-                  <CheckCircle2 className="w-4 h-4 text-[#429EBD] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 )}
                 {hasAnsweredCurrent && isChosen && !isCorrectOption && (
-                  <XCircle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
+                  <XCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                 )}
               </button>
             )
@@ -295,20 +297,20 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
 
         {/* View Rule Out Drawer trigger */}
         {hasAnsweredCurrent && (
-          <div className="pt-2 flex items-center justify-between gap-2 border-t border-[#E2E8F0]">
+          <div className="pt-2 flex items-center justify-between gap-2 border-t border-obsidian-700">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="text-xs font-semibold text-[#429EBD] hover:text-[#053F5C] hover:underline cursor-pointer"
+              className="text-xs font-semibold text-cliniq-pharm hover:underline cursor-pointer"
             >
-              View 4-Option Explanation &rarr;
+              View 4-Option Rule-Out &rarr;
             </button>
 
             <button
               onClick={handleNextQuestion}
-              className="py-1.5 px-3 rounded-xl bg-[#053F5C] hover:bg-[#032B40] text-white text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-xs border border-[#084869] cursor-pointer"
+              className="py-1.5 px-3 rounded-xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 text-xs font-bold flex items-center gap-1 active:scale-95 transition-all shadow-xs cursor-pointer"
             >
               <span>{currentIndex < questions.length - 1 ? 'Next' : 'Finish'}</span>
-              <ChevronRight className="w-3.5 h-3.5 text-[#9FE7F5]" />
+              <ChevronRight className="w-3.5 h-3.5 stroke-[2.2]" />
             </button>
           </div>
         )}

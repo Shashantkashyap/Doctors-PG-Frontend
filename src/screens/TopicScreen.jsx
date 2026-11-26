@@ -5,8 +5,11 @@ import {
   Flag,
   CheckCircle2,
   Clock,
-  ListChecks,
+  Zap,
+  BookOpen,
   Target,
+  AlertTriangle,
+  ShieldAlert,
 } from 'lucide-react'
 import WardCard from '../components/WardCard'
 import Checklist from '../components/Checklist'
@@ -29,14 +32,6 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isFlagDrawerOpen, setIsFlagDrawerOpen] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('scroll') === 'true' && topic) {
-      setTimeout(() => {
-        window.scrollTo({ top: 500, behavior: 'instant' })
-      }, 300)
-    }
-  }, [topic])
 
   useEffect(() => {
     let mounted = true
@@ -89,8 +84,8 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
   if (isLoading) {
     return (
       <div className="py-28 text-center space-y-2.5">
-        <div className="w-5 h-5 border-2 border-slate-300 border-t-slate-800 rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-slate-400 font-medium">Loading clinical card...</p>
+        <div className="w-5 h-5 border-2 border-obsidian-600 border-t-cliniq-pharm rounded-full animate-spin mx-auto" />
+        <p className="text-xs text-obsidian-400 font-medium">Loading clinical capsule...</p>
       </div>
     )
   }
@@ -98,10 +93,10 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
   if (!topic) {
     return (
       <div className="py-16 text-center space-y-4">
-        <p className="text-sm font-semibold text-slate-700">Topic not found.</p>
+        <p className="text-sm font-semibold text-obsidian-300">Topic not found.</p>
         <button
           onClick={onBack}
-          className="px-4 py-2 bg-slate-900 text-xs font-semibold rounded-xl text-white shadow-xs"
+          className="px-4 py-2 bg-cliniq-pharm text-obsidian-950 text-xs font-bold rounded-xl shadow-xs"
         >
           &larr; Return to Explore
         </button>
@@ -114,30 +109,47 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
+  // Subject theme styling
+  const subjectCode = topic.subject?.code || 'PHARM'
+  const subjectAccentClass =
+    subjectCode === 'PHARM'
+      ? 'bg-sky-500/10 text-sky-400 border-sky-500/25'
+      : subjectCode === 'PATH'
+      ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'
+      : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+
+  // Tier 3 Guidelines & Controversy Alert data
+  const guidelines = topic.currentGuidelines
+
   return (
-    <div className="space-y-4 animate-fade-in relative pb-16">
+    <div className="space-y-3.5 animate-fade-in relative pb-20">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#053F5C] text-white border border-[#084869] text-xs font-semibold shadow-float flex items-center gap-2 animate-fade-in">
-          <CheckCircle2 className="w-4 h-4 text-[#9FE7F5]" />
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-obsidian-800 text-white border border-obsidian-600 text-xs font-semibold shadow-float flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 text-cliniq-psm" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Sticky Header: Remains pinned at top while scrolling */}
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-[#E2E8F0] -mx-4 px-4 pt-2.5 pb-2.5 space-y-2 shadow-xs transition-all">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-30 bg-obsidian-900/95 backdrop-blur-xl border-b border-obsidian-700/80 -mx-4 px-4 pt-2 pb-2.5 space-y-2 shadow-xs transition-all">
         {/* Top Action Row: Back Button & Actions */}
         <div className="flex items-center justify-between">
           <button
             onClick={onBack}
-            className="flex items-center gap-1 py-1 px-2 -ml-1 rounded-xl text-xs font-semibold text-[#5C768D] hover:text-[#053F5C] hover:bg-[#F1F5F9] transition-all active:scale-95 cursor-pointer"
+            className="flex items-center gap-1 py-1 px-2 -ml-1 rounded-xl text-xs font-semibold text-obsidian-300 hover:text-white hover:bg-obsidian-800 transition-all active:scale-95 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4 stroke-[2.2]" />
             <span>Explore</span>
           </button>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#E2F3F8] text-[#053F5C] uppercase tracking-wider border border-[#C5E6F1]">
+            <span
+              className={cn(
+                'text-[10px] font-mono font-bold px-2 py-0.5 rounded-md uppercase tracking-wider border',
+                subjectAccentClass
+              )}
+            >
               {topic.subject?.name || 'Medical'}
             </span>
 
@@ -147,17 +159,17 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
               className={cn(
                 'w-8 h-8 rounded-xl border flex items-center justify-center transition-all active:scale-95 shadow-xs cursor-pointer',
                 isPinned
-                  ? 'bg-[#FEF6E7] text-[#F7AD19] border-[#FDEBC8]'
-                  : 'bg-white text-[#5C768D] border-[#E2E8F0] hover:text-[#053F5C]'
+                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                  : 'bg-obsidian-800 text-obsidian-400 border-obsidian-700 hover:text-white'
               )}
             >
-              <Bookmark className={cn('w-3.5 h-3.5', isPinned && 'fill-[#F7AD19] text-[#F7AD19]')} />
+              <Bookmark className={cn('w-3.5 h-3.5', isPinned && 'fill-amber-400 text-amber-400')} />
             </button>
 
             <button
               onClick={() => setIsFlagDrawerOpen(true)}
               title="Flag Discrepancy"
-              className="w-8 h-8 rounded-xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-center text-[#5C768D] hover:text-[#053F5C] transition-all active:scale-95 cursor-pointer"
+              className="w-8 h-8 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs flex items-center justify-center text-obsidian-400 hover:text-white transition-all active:scale-95 cursor-pointer"
             >
               <Flag className="w-3.5 h-3.5 stroke-[1.8]" />
             </button>
@@ -166,53 +178,85 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
 
         {/* Topic Title */}
         <div className="px-0.5">
-          <h1 className="text-base sm:text-lg font-bold font-sans text-[#053F5C] tracking-tight leading-snug line-clamp-1">
+          <h1 className="text-base sm:text-lg font-bold font-sans text-white tracking-tight leading-snug line-clamp-1">
             {topic.title}
           </h1>
         </div>
 
-        {/* 3-Layer Segmented Switcher */}
-        <div className="grid grid-cols-3 gap-1 p-1 bg-[#E2ECF2] rounded-xl">
+        {/* 3-Mode Segmented Floating Toggle */}
+        <div className="grid grid-cols-3 gap-1 p-1 bg-obsidian-800/90 rounded-xl border border-obsidian-700/80">
           <button
             onClick={() => handleLayerSwitch('wardCard')}
             className={cn(
-              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer',
+              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer flex items-center justify-center gap-1',
               activeLayer === 'wardCard'
-                ? 'bg-white text-[#053F5C] shadow-xs font-bold'
-                : 'text-[#5C768D] hover:text-[#053F5C]'
+                ? 'bg-obsidian-700 text-white shadow-xs font-bold border border-obsidian-600'
+                : 'text-obsidian-400 hover:text-white'
             )}
           >
-            Clinical Card
+            <Zap className="w-3.5 h-3.5 text-cliniq-trap" />
+            <span>3-Min Rapid</span>
           </button>
 
           <button
             onClick={() => handleLayerSwitch('checklist')}
             className={cn(
-              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer',
+              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer flex items-center justify-center gap-1',
               activeLayer === 'checklist'
-                ? 'bg-white text-[#053F5C] shadow-xs font-bold'
-                : 'text-[#5C768D] hover:text-[#053F5C]'
+                ? 'bg-obsidian-700 text-white shadow-xs font-bold border border-obsidian-600'
+                : 'text-obsidian-400 hover:text-white'
             )}
           >
-            5m Checklist
+            <BookOpen className="w-3.5 h-3.5 text-cliniq-pharm" />
+            <span>10-Min Deep</span>
           </button>
 
           <button
             onClick={() => handleLayerSwitch('mcqDrill')}
             className={cn(
-              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer',
+              'py-1.5 px-1 rounded-lg text-xs font-semibold transition-all duration-150 text-center touch-manipulation cursor-pointer flex items-center justify-center gap-1',
               activeLayer === 'mcqDrill'
-                ? 'bg-white text-[#053F5C] shadow-xs font-bold'
-                : 'text-[#5C768D] hover:text-[#053F5C]'
+                ? 'bg-obsidian-700 text-white shadow-xs font-bold border border-obsidian-600'
+                : 'text-obsidian-400 hover:text-white'
             )}
           >
-            10 MCQs
+            <Target className="w-3.5 h-3.5 text-cliniq-psm" />
+            <span>10 MCQs</span>
           </button>
         </div>
       </header>
 
+      {/* Tier 3: National Guidelines & Exam Controversy Quarantine Alert */}
+      {guidelines && (
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-obsidian-800 to-obsidian-800 border border-amber-500/30 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-400">
+              Tier 3 · National Program Guidelines & Controversy Alert
+            </span>
+          </div>
+
+          <div className="space-y-1">
+            <h4 className="text-xs font-bold text-white">
+              {guidelines.program || guidelines.title || 'National Health Program'}
+            </h4>
+            {guidelines.examControversyAlert && (
+              <div className="p-2.5 rounded-xl bg-obsidian-850 border border-amber-500/25 text-xs text-amber-200/90 leading-relaxed font-mono">
+                <span className="font-bold text-amber-400">⚡ Exam Resolver: </span>
+                <span>{guidelines.examControversyAlert}</span>
+              </div>
+            )}
+            {guidelines.keyUpdates && (
+              <p className="text-[11px] text-obsidian-300 leading-relaxed">
+                {guidelines.keyUpdates}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Active Layer View */}
-      <div className="pt-1">
+      <div className="pt-0.5">
         <ErrorBoundary>
           {activeLayer === 'wardCard' && <WardCard topic={topic} />}
           {activeLayer === 'checklist' && <Checklist checklist={topic.completeChecklist} />}

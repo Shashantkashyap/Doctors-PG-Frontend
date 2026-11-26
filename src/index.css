@@ -13,7 +13,8 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    background-color: #F4F7F9;
+    background-color: #0B0F19;
+    color: #F9FAFB;
   }
 
   body {
@@ -21,8 +22,8 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     touch-action: manipulation;
-    background-color: #F4F7F9;
-    color: #053F5C;
+    background-color: #0B0F19;
+    color: #F9FAFB;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
@@ -48,12 +49,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(66, 158, 189, 0.28);
+  background: rgba(55, 65, 81, 0.45);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(5, 63, 92, 0.45);
+  background: rgba(75, 85, 99, 0.7);
 }
 
 /* Hide scrollbar for carousel/pill bars */

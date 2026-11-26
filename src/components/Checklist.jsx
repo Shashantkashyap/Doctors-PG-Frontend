@@ -4,8 +4,119 @@ import {
   ChevronUp,
   CheckCircle2,
   Circle,
+  BookOpen,
 } from 'lucide-react'
 import { cn } from '../utils/cn'
+
+// Lightweight helper to render markdown tables and bullet lines cleanly without huge heavy dependencies
+function MarkdownDomainRenderer({ content = '' }) {
+  if (!content) return null
+
+  // Split into paragraphs or table blocks
+  const lines = content.split('\n')
+  const blocks = []
+  let tableRows = []
+  let inTable = false
+
+  lines.forEach((line, idx) => {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+      inTable = true
+      // Skip separator rows like |---|---|
+      if (!trimmed.match(/^\|[\s-:]+\|$/)) {
+        const cells = trimmed
+          .split('|')
+          .slice(1, -1)
+          .map((c) => c.trim())
+        tableRows.push(cells)
+      }
+    } else {
+      if (inTable && tableRows.length > 0) {
+        blocks.push({ type: 'table', rows: [...tableRows] })
+        tableRows = []
+        inTable = false
+      }
+      if (trimmed.startsWith('###')) {
+        blocks.push({ type: 'h3', text: trimmed.replace(/^###\s*/, '') })
+      } else if (trimmed.startsWith('##')) {
+        blocks.push({ type: 'h2', text: trimmed.replace(/^##\s*/, '') })
+      } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        blocks.push({ type: 'bullet', text: trimmed.replace(/^[-*]\s*/, '') })
+      } else if (trimmed.length > 0) {
+        blocks.push({ type: 'p', text: trimmed })
+      }
+    }
+  })
+
+  if (inTable && tableRows.length > 0) {
+    blocks.push({ type: 'table', rows: tableRows })
+  }
+
+  return (
+    <div className="space-y-2 text-xs text-obsidian-200 leading-relaxed">
+      {blocks.map((block, i) => {
+        if (block.type === 'h2') {
+          return (
+            <h3 key={i} className="text-xs sm:text-sm font-bold text-white pt-2 border-b border-obsidian-700 pb-1">
+              {block.text}
+            </h3>
+          )
+        }
+        if (block.type === 'h3') {
+          return (
+            <h4 key={i} className="text-xs font-bold text-cliniq-pharm pt-1">
+              {block.text}
+            </h4>
+          )
+        }
+        if (block.type === 'table') {
+          const [header, ...bodyRows] = block.rows
+          return (
+            <div key={i} className="overflow-x-auto my-2 rounded-xl border border-obsidian-700 bg-obsidian-850">
+              <table className="w-full text-left border-collapse text-xs">
+                {header && (
+                  <thead>
+                    <tr className="bg-obsidian-750 border-b border-obsidian-700">
+                      {header.map((col, cIdx) => (
+                        <th key={cIdx} className="p-2.5 font-bold text-white border-r border-obsidian-700 last:border-r-0">
+                          {col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                )}
+                <tbody className="divide-y divide-obsidian-700/60">
+                  {bodyRows.map((row, rIdx) => (
+                    <tr key={rIdx} className="hover:bg-obsidian-800 transition-colors">
+                      {row.map((cell, cIdx) => (
+                        <td key={cIdx} className="p-2.5 text-obsidian-200 border-r border-obsidian-700/60 last:border-r-0">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        }
+        if (block.type === 'bullet') {
+          return (
+            <div key={i} className="flex items-start gap-2 pl-1">
+              <span className="text-cliniq-pharm mt-0.5">•</span>
+              <span className="flex-1">{block.text}</span>
+            </div>
+          )
+        }
+        return (
+          <p key={i} className="text-obsidian-300">
+            {block.text}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
 
 export default function Checklist({ checklist = [] }) {
   const [openSections, setOpenSections] = useState({ 0: true, 1: true })
@@ -13,8 +124,8 @@ export default function Checklist({ checklist = [] }) {
 
   if (!checklist || checklist.length === 0) {
     return (
-      <div className="py-16 text-center text-slate-400">
-        <p className="text-xs">Clinical checklist is in editorial preparation.</p>
+      <div className="py-16 text-center text-obsidian-400">
+        <p className="text-xs">Clinical knowledge base is in editorial preparation.</p>
       </div>
     )
   }
@@ -46,30 +157,20 @@ export default function Checklist({ checklist = [] }) {
     setOpenSections({})
   }
 
-  // Calculate total progress
-  let totalBullets = 0
-  let totalChecked = 0
-  checklist.forEach((sec, sIdx) => {
-    sec.bullets?.forEach((_, bIdx) => {
-      totalBullets++
-      if (checkedMap[`${sIdx}-${bIdx}`]) totalChecked++
-    })
-  })
-
   return (
     <div className="space-y-3 pb-20 animate-fade-in">
-      {/* Controls & Overall Progress Header */}
-      <div className="p-3.5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs flex items-center justify-between gap-2">
+      {/* Controls & Domain Progress Header */}
+      <div className="p-3.5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#E2F3F8] text-[#053F5C] border border-[#C5E6F1] flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.2] text-[#429EBD]" />
+          <div className="w-7 h-7 rounded-lg bg-sky-500/10 text-cliniq-pharm border border-sky-500/20 flex items-center justify-center shrink-0">
+            <BookOpen className="w-3.5 h-3.5 stroke-[2.2]" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-[#053F5C]">
-              Clinical Domains ({checklist.length})
+            <h3 className="text-xs font-bold text-white">
+              10-Minute Knowledge Base ({checklist.length} Domains)
             </h3>
-            <span className="text-[10px] text-[#5C768D] font-medium">
-              {totalChecked} of {totalBullets} items reviewed
+            <span className="text-[10px] text-obsidian-400 font-medium">
+              Structured clinical checklist & comparative tables
             </span>
           </div>
         </div>
@@ -77,102 +178,93 @@ export default function Checklist({ checklist = [] }) {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={expandAll}
-            className="text-[#5C768D] hover:text-[#053F5C] transition-colors text-[11px] font-semibold cursor-pointer"
+            className="text-obsidian-400 hover:text-white transition-colors text-[11px] font-semibold cursor-pointer"
           >
             Expand
           </button>
-          <span className="text-[#E2E8F0]">·</span>
+          <span className="text-obsidian-600">·</span>
           <button
             onClick={collapseAll}
-            className="text-[#5C768D] hover:text-[#053F5C] transition-colors text-[11px] font-semibold cursor-pointer"
+            className="text-obsidian-400 hover:text-white transition-colors text-[11px] font-semibold cursor-pointer"
           >
             Collapse
           </button>
         </div>
       </div>
 
-      {/* Inset Accordion Cards */}
+      {/* Accordion Cards for 6 Domains */}
       <div className="space-y-2">
         {checklist.map((section, idx) => {
           const isOpen = Boolean(openSections[idx])
           const bullets = section.bullets || []
-          const domainCheckedCount = bullets.filter((_, bIdx) => checkedMap[`${idx}-${bIdx}`]).length
-          const isDomainComplete = bullets.length > 0 && domainCheckedCount === bullets.length
+          const hasMarkdown = Boolean(section.contentMarkdown)
 
           return (
             <div
               key={idx}
               className={cn(
-                'rounded-2xl border transition-all duration-150 overflow-hidden bg-white',
+                'rounded-2xl border transition-all duration-150 overflow-hidden bg-obsidian-800',
                 isOpen
-                  ? 'border-[#9FE7F5] shadow-xs'
-                  : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
+                  ? 'border-cliniq-pharm/40 shadow-xs'
+                  : 'border-obsidian-700 hover:border-obsidian-600'
               )}
             >
               {/* Accordion Header */}
               <button
                 onClick={() => toggleSection(idx)}
-                className="w-full p-3.5 flex items-center justify-between text-left transition-colors active:bg-[#F0F6F9] gap-2 cursor-pointer"
+                className="w-full p-3.5 flex items-center justify-between text-left transition-colors active:bg-obsidian-750 gap-2 cursor-pointer"
               >
                 <div className="min-w-0 flex-1">
-                  <h4 className="text-xs sm:text-[13px] font-bold text-[#053F5C] leading-snug break-words">
+                  <h4 className="text-xs sm:text-[13px] font-bold text-white leading-snug break-words">
                     {section.domain}
                   </h4>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  {isDomainComplete ? (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E2F3F8] text-[#053F5C] border border-[#C5E6F1]">
-                      Done
-                    </span>
-                  ) : domainCheckedCount > 0 ? (
-                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#F0F6F9] text-[#053F5C] border border-[#E1ECF2]">
-                      {domainCheckedCount}/{bullets.length}
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-mono font-medium text-[#889DA8]">
-                      {bullets.length}
-                    </span>
-                  )}
-
                   {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-[#889DA8]" />
+                    <ChevronUp className="w-4 h-4 text-obsidian-400" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-[#889DA8]" />
+                    <ChevronDown className="w-4 h-4 text-obsidian-400" />
                   )}
                 </div>
               </button>
 
-              {/* Accordion Body: Interactive bullets */}
+              {/* Accordion Body */}
               {isOpen && (
-                <div className="px-4 pb-4 pt-1 space-y-1.5 border-t border-[#E2E8F0]">
-                  {bullets && bullets.length > 0 ? (
-                    bullets.map((bullet, bIdx) => {
-                      const isChecked = Boolean(checkedMap[`${idx}-${bIdx}`])
-                      return (
-                        <div
-                          key={bIdx}
-                          onClick={() => toggleBullet(idx, bIdx)}
-                          className={cn(
-                            'p-2 rounded-xl flex items-start gap-2.5 text-xs leading-relaxed transition-all cursor-pointer select-none active:scale-[0.99]',
-                            isChecked
-                              ? 'bg-[#EBF8FB]/60 text-[#889DA8] line-through'
-                              : 'hover:bg-[#F0F6F9] text-[#183B4E] font-medium'
-                          )}
-                        >
-                          <div className="mt-0.5 shrink-0">
-                            {isChecked ? (
-                              <CheckCircle2 className="w-4 h-4 text-[#429EBD]" />
-                            ) : (
-                              <Circle className="w-4 h-4 text-[#CBD5E1] hover:text-[#429EBD] transition-colors" />
+                <div className="px-4 pb-4 pt-1 space-y-2 border-t border-obsidian-700/80">
+                  {/* Rich Markdown with Tables */}
+                  {hasMarkdown && (
+                    <MarkdownDomainRenderer content={section.contentMarkdown} />
+                  )}
+
+                  {/* Interactive bullets if present */}
+                  {bullets && bullets.length > 0 && (
+                    <div className="space-y-1.5 pt-1">
+                      {bullets.map((bullet, bIdx) => {
+                        const isChecked = Boolean(checkedMap[`${idx}-${bIdx}`])
+                        return (
+                          <div
+                            key={bIdx}
+                            onClick={() => toggleBullet(idx, bIdx)}
+                            className={cn(
+                              'p-2 rounded-xl flex items-start gap-2.5 text-xs leading-relaxed transition-all cursor-pointer select-none active:scale-[0.99]',
+                              isChecked
+                                ? 'bg-emerald-500/10 text-obsidian-500 line-through'
+                                : 'hover:bg-obsidian-750 text-obsidian-200 font-medium'
                             )}
+                          >
+                            <div className="mt-0.5 shrink-0">
+                              {isChecked ? (
+                                <CheckCircle2 className="w-4 h-4 text-cliniq-psm" />
+                              ) : (
+                                <Circle className="w-4 h-4 text-obsidian-500 hover:text-cliniq-pharm transition-colors" />
+                              )}
+                            </div>
+                            <span className="flex-1 break-words">{bullet}</span>
                           </div>
-                          <span className="flex-1 break-words">{bullet}</span>
-                        </div>
-                      )
-                    })
-                  ) : (
-                    <p className="text-xs text-[#889DA8] italic">No items recorded.</p>
+                        )
+                      })}
+                    </div>
                   )}
                 </div>
               )}

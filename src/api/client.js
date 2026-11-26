@@ -42,9 +42,11 @@ export async function ensureAuth() {
 
 // API Methods
 export const apiService = {
-  // Subjects
+  // Subjects & Live Progress
   getSubjects: () => api.get('/subjects').then((r) => r.data),
   getSubjectTopics: (slug) => api.get(`/subjects/${slug}/topics`).then((r) => r.data),
+  getLiveProgress: () =>
+    axios.get('https://doctors-pg-backend-1001199295091.asia-south2.run.app/live-progress/data').then((r) => r.data),
 
   // Search
   search: (query) => api.get('/search', { params: { q: query } }).then((r) => r.data),

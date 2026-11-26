@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { WifiOff } from 'lucide-react'
 import BottomNav from './components/BottomNav'
 import ExploreScreen from './screens/ExploreScreen'
+import SubjectsScreen from './screens/SubjectsScreen'
 import TopicScreen from './screens/TopicScreen'
 import NotebookScreen from './screens/NotebookScreen'
 import McqPracticeScreen from './screens/McqPracticeScreen'
@@ -16,7 +17,7 @@ export default function App() {
   const { user, isAuthenticated, isLoading } = useAuth()
   const [activeTab, setActiveTab] = useState(() => {
     const path = window.location.pathname.replace(/^\//, '')
-    if (path === 'notebook' || path === 'mcqs' || path === 'mistakes' || path === 'profile') {
+    if (path === 'subjects' || path === 'notebook' || path === 'mcqs' || path === 'mistakes' || path === 'profile') {
       return path === 'mistakes' ? 'mcqs' : path
     }
     return 'explore'
@@ -60,7 +61,7 @@ export default function App() {
         } else {
           setCurrentTopicSlug(null)
           const path = window.location.pathname.replace(/^\//, '')
-          if (path === 'notebook' || path === 'mcqs' || path === 'mistakes' || path === 'profile') {
+          if (path === 'subjects' || path === 'notebook' || path === 'mcqs' || path === 'mistakes' || path === 'profile') {
             setActiveTab(path === 'mistakes' ? 'mcqs' : path)
           } else if (e.state?.tab) {
             setActiveTab(e.state.tab)
@@ -130,7 +131,7 @@ export default function App() {
   const handleBackToExplore = () => {
     setCurrentTopicSlug(null)
     setIsSearchOpen(false)
-    window.history.pushState({ tab: activeTab }, '', '/')
+    window.history.pushState({ tab: activeTab }, '', `/${activeTab === 'explore' ? '' : activeTab}`)
     refreshCounters()
   }
 
@@ -156,7 +157,6 @@ export default function App() {
     setActiveTab(tabId)
     setCurrentTopicSlug(null)
     setIsSearchOpen(false)
-    // Clear practice config when switching tabs manually
     if (tabId !== 'mcqs') {
       setMcqPracticeConfig({ topicSlug: null, subjectSlug: null })
     }
@@ -168,12 +168,12 @@ export default function App() {
   // 1. Initial Session Verification Screen
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F7F9] flex flex-col items-center justify-center p-4">
-        <div className="w-12 h-12 rounded-2xl bg-[#053F5C] flex items-center justify-center shadow-md shadow-[#053F5C]/15 mb-4 animate-pulse">
-          <LogoIcon className="w-9 h-9" />
+      <div className="min-h-screen bg-obsidian-950 flex flex-col items-center justify-center p-4">
+        <div className="w-12 h-12 rounded-2xl bg-obsidian-800 border border-obsidian-700 flex items-center justify-center shadow-lg mb-4 animate-pulse">
+          <LogoIcon className="w-8 h-8" />
         </div>
-        <div className="w-5 h-5 border-2 border-[#C5E6F1] border-t-[#429EBD] rounded-full animate-spin" />
-        <p className="text-xs font-semibold text-[#5C768D] font-inter mt-3">Restoring resident session...</p>
+        <div className="w-5 h-5 border-2 border-obsidian-700 border-t-cliniq-pharm rounded-full animate-spin" />
+        <p className="text-xs font-semibold text-obsidian-400 mt-3">Restoring resident session...</p>
       </div>
     )
   }
@@ -185,13 +185,13 @@ export default function App() {
 
   // 3. Authenticated App Experience
   return (
-    <div className="min-h-screen bg-[#EAEFF4] text-[#053F5C] flex flex-col items-center justify-start selection:bg-[#C5E6F1] selection:text-[#053F5C] font-sans">
+    <div className="min-h-screen bg-obsidian-950 text-white flex flex-col items-center justify-start selection:bg-cliniq-pharm/30 selection:text-white font-sans">
       {/* Mobile-First App Shell (Max 430px iPhone 16 Pro width) */}
-      <div className="w-full max-w-[430px] min-h-screen bg-[#F8FAFC] sm:border-x sm:border-[#E2E8F0] sm:shadow-[0_20px_50px_-15px_rgba(5,63,92,0.08)] flex flex-col relative px-4 scroll-touch">
+      <div className="w-full max-w-[430px] min-h-screen bg-obsidian-900 sm:border-x sm:border-obsidian-700/80 sm:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] flex flex-col relative px-4 scroll-touch">
         {/* Offline Pill Alert */}
         {!isOnline && (
-          <div className="sticky top-2 z-50 py-1.5 px-3.5 bg-[#053F5C] text-white rounded-full text-xs font-medium flex items-center justify-center gap-2 shadow-float mx-auto w-fit animate-fade-in border border-[#429EBD]/30">
-            <WifiOff className="w-3.5 h-3.5 text-[#F7AD19]" />
+          <div className="sticky top-2 z-50 py-1.5 px-3.5 bg-obsidian-800 text-white rounded-full text-xs font-medium flex items-center justify-center gap-2 shadow-float mx-auto w-fit animate-fade-in border border-amber-500/30">
+            <WifiOff className="w-3.5 h-3.5 text-cliniq-trap" />
             <span>Offline mode · Cached clinical cards available</span>
           </div>
         )}
@@ -213,6 +213,10 @@ export default function App() {
             <ExploreScreen
               onSelectTopic={navigateToTopic}
               onOpenSearch={handleOpenSearch}
+            />
+          ) : activeTab === 'subjects' ? (
+            <SubjectsScreen
+              onSelectTopic={navigateToTopic}
             />
           ) : activeTab === 'mcqs' || activeTab === 'mistakes' ? (
             <McqPracticeScreen
