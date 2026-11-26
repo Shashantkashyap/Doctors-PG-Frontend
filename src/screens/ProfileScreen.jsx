@@ -14,6 +14,14 @@ import {
   Filter,
   Smartphone,
   PlusSquare,
+  Stethoscope,
+  Microscope,
+  Pill,
+  ShieldCheck,
+  Activity,
+  Flame,
+  Zap,
+  ArrowRight,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { apiService } from '../api/client'
@@ -84,7 +92,7 @@ export default function ProfileScreen({
             let updatedTopics = [...prev.topicBreakdown]
             if (Array.isArray(res.topicProgressList) && res.topicProgressList.length > 0) {
               const remoteMap = new Map(res.topicProgressList.map((p) => [p.topicSlug, p]))
-              
+
               // 1. Update existing topics
               updatedTopics = updatedTopics.map((t) => {
                 const remote = remoteMap.get(t.topicSlug)
@@ -185,62 +193,114 @@ export default function ProfileScreen({
   const getSubjectBadgeStyle = (code) => {
     switch (code) {
       case 'PHARM':
-        return 'text-[#053F5C] bg-[#E2F3F8] border-[#B8D5E3]'
+        return 'text-sky-400 bg-sky-500/10 border-sky-500/25'
       case 'PATH':
-        return 'text-[#8A5506] bg-[#FEF6E7] border-[#FDEBC8]'
+        return 'text-indigo-400 bg-indigo-500/10 border-indigo-500/25'
       case 'PSM':
-        return 'text-[#1D576A] bg-[#EDF9FC] border-[#B8E5F0]'
+        return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25'
       default:
-        return 'text-[#053F5C] bg-[#F8FAFC] border-[#E2E8F0]'
+        return 'text-obsidian-300 bg-obsidian-750 border-obsidian-700'
+    }
+  }
+
+  const getSubjectIcon = (code) => {
+    switch (code) {
+      case 'PHARM':
+        return <Pill className="w-3.5 h-3.5 text-sky-400" />
+      case 'PATH':
+        return <Microscope className="w-3.5 h-3.5 text-indigo-400" />
+      case 'PSM':
+        return <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+      default:
+        return <Activity className="w-3.5 h-3.5 text-cliniq-pharm" />
     }
   }
 
   const getAccuracyBadge = (accuracy, attempted) => {
     if (attempted === 0) {
       return (
-        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-[#5C768D]">
+        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-obsidian-750 border border-obsidian-700 text-obsidian-400">
           Unattempted
         </span>
       )
     }
     if (accuracy >= 80) {
       return (
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#EDF9FC] border border-[#9FE7F5] text-[#053F5C] flex items-center gap-1">
-          <Check className="w-2.5 h-2.5 text-[#429EBD]" />
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 flex items-center gap-1">
+          <Check className="w-2.5 h-2.5 text-emerald-400 stroke-[3]" />
           <span>{accuracy}% · Mastered</span>
         </span>
       )
     }
     if (accuracy >= 60) {
       return (
-        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#FEF6E7] border border-[#FDEBC8] text-[#8A5506]">
+        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-300">
           {accuracy}% · Solid
         </span>
       )
     }
     return (
-      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/25 text-rose-300 flex items-center gap-1">
+      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/25 text-rose-400 flex items-center gap-1">
         <AlertTriangle className="w-2.5 h-2.5 text-rose-400" />
         <span>{accuracy}% · Needs Revision</span>
       </span>
     )
   }
 
+  // Clinical Readiness Tier calculation
+  const overallAcc = analytics.overall.overallAccuracy || 0
+  const totalAtt = analytics.overall.totalAttempted || 0
+
+  let readinessBadge = {
+    title: 'Clinical Foundation Phase',
+    subtitle: 'Solve daily MCQ drills to unlock rank predictor',
+    style: 'from-obsidian-800 to-obsidian-850 border-obsidian-700 text-obsidian-300',
+    indicator: 'bg-obsidian-500',
+  }
+
+  if (totalAtt >= 20) {
+    if (overallAcc >= 80) {
+      readinessBadge = {
+        title: 'Top 1,000 Rank Benchmark',
+        subtitle: 'Elite recall retention · 99th percentile speed & accuracy',
+        style: 'from-emerald-950/40 via-obsidian-800 to-obsidian-850 border-emerald-500/30 text-emerald-300',
+        indicator: 'bg-emerald-400',
+      }
+    } else if (overallAcc >= 65) {
+      readinessBadge = {
+        title: 'Top 5,000 Rank Potential',
+        subtitle: 'Solid diagnostic acumen · Eliminate weak topic penalties',
+        style: 'from-sky-950/40 via-obsidian-800 to-obsidian-850 border-sky-500/30 text-sky-300',
+        indicator: 'bg-cliniq-pharm',
+      }
+    } else {
+      readinessBadge = {
+        title: 'High-Yield Drill Phase',
+        subtitle: 'Focus on ⚠️ Weak Topics (<70%) to boost negative marking',
+        style: 'from-amber-950/40 via-obsidian-800 to-obsidian-850 border-amber-500/30 text-amber-300',
+        indicator: 'bg-amber-400',
+      }
+    }
+  }
+
   return (
     <div className="space-y-4 pb-32 animate-fade-in pt-1">
       {/* 1. Doctor Profile Hero Card */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-obsidian-800 via-obsidian-800 to-obsidian-850 border border-obsidian-700 shadow-sm space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="relative">
-              <div className="w-13 h-13 rounded-2xl bg-obsidian-750 text-white font-sans font-bold text-lg flex items-center justify-center shadow-xs border border-obsidian-650 shrink-0">
+          <div className="flex items-center gap-3.5 min-w-0">
+            {/* Clinical Avatar with Verified Stethoscope Badge */}
+            <div className="relative shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500/20 via-obsidian-750 to-obsidian-850 text-white font-sans font-black text-xl flex items-center justify-center shadow-xs border border-sky-500/30">
                 {initials}
               </div>
-              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cliniq-pharm ring-2 ring-obsidian-800" />
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-obsidian-900 border border-sky-500/60 flex items-center justify-center text-cliniq-pharm shadow-xs">
+                <Stethoscope className="w-3 h-3 stroke-[2.5]" />
+              </div>
             </div>
 
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
+            <div className="min-w-0 space-y-0.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <h2 className="text-base font-bold font-sans text-white truncate">
                   {user.name}
                 </h2>
@@ -248,7 +308,7 @@ export default function ProfileScreen({
                   MD Resident
                 </span>
               </div>
-              <p className="text-xs text-obsidian-400 truncate font-sans mt-0.5">
+              <p className="text-xs text-obsidian-400 truncate font-sans">
                 {user.email}
               </p>
             </div>
@@ -257,19 +317,36 @@ export default function ProfileScreen({
           <button
             onClick={logout}
             title="Sign Out"
-            className="p-2 rounded-xl text-obsidian-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/25 transition-all cursor-pointer"
+            className="p-2 rounded-xl text-obsidian-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/25 transition-all cursor-pointer shrink-0 active:scale-95"
           >
             <LogOut className="w-4 h-4 stroke-[2]" />
           </button>
         </div>
 
+        {/* Clinical Readiness Rank Predictor Banner */}
+        <div className={cn(
+          'p-3 rounded-xl bg-gradient-to-r border flex items-center gap-3 transition-all',
+          readinessBadge.style
+        )}>
+          <span className={cn('w-2 h-2 rounded-full shrink-0 animate-pulse', readinessBadge.indicator)} />
+          <div className="min-w-0 flex-1">
+            <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+              <span>{readinessBadge.title}</span>
+            </h4>
+            <p className="text-[11px] text-obsidian-300 leading-tight mt-0.5 truncate">
+              {readinessBadge.subtitle}
+            </p>
+          </div>
+          <Sparkles className="w-4 h-4 text-cliniq-trap shrink-0" />
+        </div>
+
         {/* Target Examination Switcher */}
-        <div className="p-3 bg-obsidian-850 rounded-xl border border-obsidian-700 space-y-2">
+        <div className="p-3 bg-obsidian-850 rounded-xl border border-obsidian-700/80 space-y-2">
           <div className="flex items-center justify-between px-0.5">
             <span className="text-[11px] font-medium text-obsidian-400 font-sans">
               Target Examination
             </span>
-            <span className="text-[11px] font-semibold text-cliniq-pharm font-sans">
+            <span className="text-[11px] font-bold text-cliniq-pharm font-sans">
               {user.targetExam?.replace('_', ' ')}
             </span>
           </div>
@@ -303,17 +380,8 @@ export default function ProfileScreen({
           )}
         </div>
 
-        {/* Cloud Sync Status */}
-        <div className="flex items-center justify-between px-1 text-xs text-obsidian-400">
-          <span>Cloud Telemetry Sync</span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-cliniq-pharm">
-            <span className="w-1.5 h-1.5 rounded-full bg-cliniq-pharm animate-pulse" />
-            Live & Active
-          </span>
-        </div>
-
-        {/* Device Shortcut / PWA Status */}
-        <div className="pt-2 border-t border-obsidian-700 flex items-center justify-between gap-3">
+        {/* Device Shortcut / PWA Status & Telemetry Sync */}
+        <div className="pt-2 border-t border-obsidian-700/80 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <Smartphone className="w-4 h-4 text-cliniq-pharm shrink-0" />
             <div className="min-w-0">
@@ -323,7 +391,7 @@ export default function ProfileScreen({
               <p className="text-[10px] text-obsidian-400 truncate">
                 {isStandalone
                   ? 'Running in full-screen standalone mode'
-                  : 'Install icon on your phone for 1-tap recall'}
+                  : 'Install 1-tap app on your mobile home screen'}
               </p>
             </div>
           </div>
@@ -347,56 +415,60 @@ export default function ProfileScreen({
         </div>
       </div>
 
-      {/* 2. Overall Accuracy & Performance Scorecard */}
+      {/* 2. Overall Accuracy & Performance Scorecard (Clinical Vitals HUD) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <div className="p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs">
-          <div className="flex items-center justify-between text-xs text-obsidian-400 mb-1">
-            <span className="font-medium text-[11px]">Overall Accuracy</span>
+        {/* Overall Accuracy */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-sky-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-pharm shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-obsidian-400">
+            <span className="font-semibold text-[11px] text-obsidian-300">Accuracy</span>
             <TrendingUp className="w-3.5 h-3.5 text-cliniq-pharm" />
           </div>
-          <p className="text-xl font-bold font-sans text-white">
+          <p className="text-2xl font-black font-sans text-white tracking-tight">
             {analytics.overall.overallAccuracy}%
           </p>
-          <p className="text-[10px] text-obsidian-400 mt-0.5">
+          <p className="text-[10px] text-obsidian-400 font-medium">
             {analytics.overall.totalCorrect} / {analytics.overall.totalAttempted} Correct
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs">
-          <div className="flex items-center justify-between text-xs text-obsidian-400 mb-1">
-            <span className="font-medium text-[11px]">Questions Done</span>
+        {/* Questions Done */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-emerald-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-psm shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-obsidian-400">
+            <span className="font-semibold text-[11px] text-obsidian-300">MCQs Done</span>
             <Target className="w-3.5 h-3.5 text-cliniq-psm" />
           </div>
-          <p className="text-xl font-bold font-sans text-white">
+          <p className="text-2xl font-black font-sans text-white tracking-tight">
             {analytics.overall.totalAttempted}
           </p>
-          <p className="text-[10px] text-obsidian-400 mt-0.5">
-            Across 3 Specialties
+          <p className="text-[10px] text-obsidian-400 font-medium">
+            Clinical Vignettes
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs">
-          <div className="flex items-center justify-between text-xs text-obsidian-400 mb-1">
-            <span className="font-medium text-[11px]">Cards Mastered</span>
+        {/* Cards Mastered */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-amber-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-trap shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-obsidian-400">
+            <span className="font-semibold text-[11px] text-obsidian-300">Mastered</span>
             <Award className="w-3.5 h-3.5 text-cliniq-trap" />
           </div>
-          <p className="text-xl font-bold font-sans text-white">
+          <p className="text-2xl font-black font-sans text-white tracking-tight">
             {analytics.overall.masteredCount}
           </p>
-          <p className="text-[10px] text-obsidian-400 mt-0.5">
+          <p className="text-[10px] text-obsidian-400 font-medium">
             ≥80% Recall Rate
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs">
-          <div className="flex items-center justify-between text-xs text-obsidian-400 mb-1">
-            <span className="font-medium text-[11px]">Topics Tracked</span>
+        {/* Topics Tracked */}
+        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-indigo-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-patho shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-obsidian-400">
+            <span className="font-semibold text-[11px] text-obsidian-300">Topics</span>
             <BookOpen className="w-3.5 h-3.5 text-cliniq-patho" />
           </div>
-          <p className="text-xl font-bold font-sans text-white">
+          <p className="text-2xl font-black font-sans text-white tracking-tight">
             {analytics.overall.totalTopicsTracked}
           </p>
-          <p className="text-[10px] text-obsidian-400 mt-0.5">
+          <p className="text-[10px] text-obsidian-400 font-medium">
             High-Yield Syllabus
           </p>
         </div>
@@ -406,8 +478,8 @@ export default function ProfileScreen({
       <div className="space-y-2.5">
         <div className="flex items-baseline justify-between px-0.5">
           <h3 className="text-sm font-bold text-white font-sans flex items-center gap-1.5">
-            <Target className="w-4 h-4 text-cliniq-pharm" />
-            <span>Specialty-Wise Accuracy</span>
+            <Activity className="w-4 h-4 text-cliniq-pharm" />
+            <span>Specialty Diagnostic Matrix</span>
           </h3>
           <span className="text-[11px] text-obsidian-400 font-sans">
             Subject performance
@@ -415,65 +487,73 @@ export default function ProfileScreen({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          {analytics.subjectBreakdown.map((subj) => (
-            <div
-              key={subj.code}
-              className="p-4 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-3"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <span
-                    className={cn(
-                      'text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border',
-                      getSubjectBadgeStyle(subj.code)
-                    )}
-                  >
-                    {subj.code}
-                  </span>
-                  <h4 className="text-sm font-bold text-white font-sans mt-1">
-                    {subj.name}
-                  </h4>
-                </div>
-
-                <div className="text-right">
-                  <span className="text-base font-bold text-white font-sans">
-                    {subj.accuracy}%
-                  </span>
-                  <p className="text-[10px] text-obsidian-400">
-                    {subj.correct}/{subj.attempted} Qs
-                  </p>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full bg-obsidian-700 h-2 rounded-full overflow-hidden">
-                <div
-                  className={cn(
-                    'h-full rounded-full transition-all duration-500',
-                    subj.accuracy >= 75
-                      ? 'bg-cliniq-pharm'
-                      : subj.accuracy >= 60
-                      ? 'bg-cliniq-patho'
-                      : 'bg-cliniq-trap'
-                  )}
-                  style={{ width: `${subj.accuracy}%` }}
-                />
-              </div>
-
-              {/* Action */}
-              <button
-                onClick={() => {
-                  if (onStartPracticeSubject) {
-                    onStartPracticeSubject(subj.slug)
-                  }
-                }}
-                className="w-full py-1.5 px-3 rounded-lg bg-obsidian-850 hover:bg-obsidian-750 text-white text-[11px] font-semibold border border-obsidian-700 transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+          {analytics.subjectBreakdown.map((subj) => {
+            const isPharm = subj.code === 'PHARM'
+            const isPatho = subj.code === 'PATH'
+            return (
+              <div
+                key={subj.code}
+                className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-3 hover:border-obsidian-600 transition-all"
               >
-                <span>Practice {subj.name}</span>
-                <ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className={cn(
+                          'text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border inline-flex items-center gap-1',
+                          getSubjectBadgeStyle(subj.code)
+                        )}
+                      >
+                        {getSubjectIcon(subj.code)}
+                        <span>{subj.code}</span>
+                      </span>
+                    </div>
+                    <h4 className="text-sm font-bold text-white font-sans">
+                      {subj.name}
+                    </h4>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="text-lg font-black text-white font-sans">
+                      {subj.accuracy}%
+                    </span>
+                    <p className="text-[10px] text-obsidian-400">
+                      {subj.correct}/{subj.attempted} Qs
+                    </p>
+                  </div>
+                </div>
+
+                {/* Multi-tone Clinical Progress Bar */}
+                <div className="w-full bg-obsidian-700 h-2 rounded-full overflow-hidden">
+                  <div
+                    className={cn(
+                      'h-full rounded-full transition-all duration-500',
+                      isPharm
+                        ? 'bg-cliniq-pharm'
+                        : isPatho
+                        ? 'bg-cliniq-patho'
+                        : 'bg-cliniq-psm'
+                    )}
+                    style={{ width: `${Math.max(5, subj.accuracy)}%` }}
+                  />
+                </div>
+
+                {/* Direct Specialty Practice Action */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onStartPracticeSubject) {
+                      onStartPracticeSubject(subj.slug)
+                    }
+                  }}
+                  className="w-full py-2 px-3 rounded-xl bg-obsidian-850 hover:bg-obsidian-750 text-white text-[11px] font-bold border border-obsidian-700 hover:border-cliniq-pharm/40 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                >
+                  <span>Practice {subj.name}</span>
+                  <ArrowRight className="w-3 h-3 text-cliniq-pharm stroke-[2.5]" />
+                </button>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -486,32 +566,41 @@ export default function ProfileScreen({
               <span>Topic-Wise Clinical Retention</span>
             </h3>
             <p className="text-[11px] text-obsidian-400 font-sans">
-              Accuracy and recall status per clinical topic
+              Accuracy and recall status per clinical capsule
             </p>
           </div>
 
-          {/* Filter Pills */}
+          {/* Filter Pills with Highlighted Weak Topics Pill */}
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
             {[
               { id: 'ALL', label: 'All' },
               { id: 'PHARM', label: 'Pharma' },
               { id: 'PATH', label: 'Patho' },
               { id: 'PSM', label: 'PSM' },
-              { id: 'WEAK', label: 'Weak (<70%)' },
-            ].map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setTopicFilter(f.id)}
-                className={cn(
-                  'px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all cursor-pointer',
-                  topicFilter === f.id
-                    ? 'bg-obsidian-700 text-white shadow-xs font-bold border border-obsidian-600'
-                    : 'bg-obsidian-800 text-obsidian-400 hover:text-white border border-obsidian-700'
-                )}
-              >
-                {f.label}
-              </button>
-            ))}
+              { id: 'WEAK', label: '⚠️ Weak (<70%)' },
+            ].map((f) => {
+              const isSelected = topicFilter === f.id
+              const isWeakFilter = f.id === 'WEAK'
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setTopicFilter(f.id)}
+                  className={cn(
+                    'px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap transition-all cursor-pointer border active:scale-95',
+                    isSelected
+                      ? isWeakFilter
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold shadow-xs'
+                        : 'bg-cliniq-pharm text-obsidian-950 font-bold border-cliniq-pharm shadow-xs'
+                      : isWeakFilter
+                      ? 'bg-obsidian-800 text-rose-400/90 border-rose-500/25 hover:bg-rose-500/10'
+                      : 'bg-obsidian-850 text-obsidian-400 hover:text-white border-obsidian-700'
+                  )}
+                >
+                  {f.label}
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -521,10 +610,10 @@ export default function ProfileScreen({
             filteredTopics.map((topic) => (
               <div
                 key={topic.topicId}
-                className="p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 group transition-all"
+                className="p-3.5 rounded-2xl bg-obsidian-800 border border-obsidian-700/80 hover:border-obsidian-600 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 group transition-all"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 mb-1 text-[11px]">
+                  <div className="flex items-center gap-1.5 mb-1.5 text-[11px] flex-wrap">
                     <span
                       className={cn(
                         'font-bold px-1.5 py-0.5 rounded border font-mono text-[10px]',
@@ -537,6 +626,7 @@ export default function ProfileScreen({
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => onSelectTopic(topic.topicSlug)}
                     className="text-left font-bold text-[13px] text-white hover:text-cliniq-pharm transition-colors leading-snug cursor-pointer line-clamp-1"
                   >
@@ -554,12 +644,12 @@ export default function ProfileScreen({
                         className={cn(
                           'h-full rounded-full',
                           topic.accuracy >= 80
-                            ? 'bg-cliniq-pharm'
+                            ? 'bg-cliniq-psm'
                             : topic.accuracy >= 60
-                            ? 'bg-cliniq-patho'
+                            ? 'bg-cliniq-trap'
                             : 'bg-cliniq-danger'
                         )}
-                        style={{ width: `${topic.accuracy}%` }}
+                        style={{ width: `${Math.max(8, topic.accuracy)}%` }}
                       />
                     </div>
                   </div>
@@ -568,12 +658,13 @@ export default function ProfileScreen({
                 {/* Direct Practice Button */}
                 <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                   <button
+                    type="button"
                     onClick={() => {
                       if (onStartPracticeTopic) {
                         onStartPracticeTopic(topic.topicSlug, topic.subjectSlug)
                       }
                     }}
-                    className="py-1.5 px-3 rounded-lg bg-obsidian-850 hover:bg-obsidian-750 text-white text-xs font-semibold border border-obsidian-700 transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-xs"
+                    className="py-1.5 px-3 rounded-xl bg-obsidian-850 hover:bg-obsidian-750 text-white text-xs font-semibold border border-obsidian-700 hover:border-cliniq-pharm/40 transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-xs"
                   >
                     <RotateCcw className="w-3 h-3 text-cliniq-pharm" />
                     <span>Practice</span>
@@ -582,7 +673,7 @@ export default function ProfileScreen({
               </div>
             ))
           ) : (
-            <div className="py-8 text-center bg-obsidian-800 rounded-xl border border-obsidian-700 p-6 space-y-1">
+            <div className="py-8 text-center bg-obsidian-800 rounded-2xl border border-obsidian-700 p-6 space-y-1">
               <p className="text-xs font-bold text-white">
                 No topics in this filter
               </p>

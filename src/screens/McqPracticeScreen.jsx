@@ -632,28 +632,28 @@ export default function McqPracticeScreen({
       {!isDrillActive ? (
         <div className="space-y-4">
           {/* Header */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-1.5">
+          <div className="p-4 sm:p-5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-[#E2F3F8] text-[#053F5C] border border-[#B8D5E3] flex items-center justify-center">
-                <Target className="w-4 h-4 text-[#429EBD]" />
+              <div className="w-8 h-8 rounded-xl bg-sky-500/10 text-cliniq-pharm border border-sky-500/25 flex items-center justify-center">
+                <Target className="w-4 h-4 text-cliniq-pharm" />
               </div>
-              <h2 className="text-base font-bold font-sans text-[#053F5C]">
+              <h2 className="text-base font-bold font-sans text-white">
                 Clinical MCQ Practice Drill
               </h2>
             </div>
-            <p className="text-xs text-[#5C768D] font-sans leading-relaxed">
+            <p className="text-xs text-obsidian-400 font-sans leading-relaxed">
               Filter practice sets by Specialty, Clinical Topic, or focus exclusively on previously missed questions.
             </p>
           </div>
 
           {/* Filter 1: Choose Specialty / Subject */}
-          <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-2.5">
+          <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[#053F5C] font-sans flex items-center gap-1.5">
-                <Filter className="w-3.5 h-3.5 text-[#429EBD]" />
+              <label className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
+                <Filter className="w-3.5 h-3.5 text-cliniq-pharm" />
                 <span>1. Select Specialty</span>
               </label>
-              <span className="text-[11px] font-medium text-[#5C768D]">
+              <span className="text-[11px] font-medium text-obsidian-400">
                 {selectedSubject === 'ALL'
                   ? 'All Specialties'
                   : subjects.find((s) => s.slug === selectedSubject)?.name}
@@ -668,10 +668,10 @@ export default function McqPracticeScreen({
                   setSelectedTopic('ALL')
                 }}
                 className={cn(
-                  'py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center',
+                  'py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center active:scale-95',
                   selectedSubject === 'ALL'
-                    ? 'bg-[#053F5C] text-white border-[#084869] shadow-xs'
-                    : 'bg-[#F8FAFC] text-[#5C768D] border-[#E2E8F0] hover:bg-[#F0F6F9]'
+                    ? 'bg-cliniq-pharm text-obsidian-950 font-bold border-cliniq-pharm shadow-xs'
+                    : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700 hover:bg-obsidian-750 hover:text-white'
                 )}
               >
                 All Specialties
@@ -688,10 +688,10 @@ export default function McqPracticeScreen({
                       setSelectedTopic('ALL')
                     }}
                     className={cn(
-                      'py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center',
+                      'py-2 px-3 rounded-xl text-xs font-semibold transition-all cursor-pointer border text-center active:scale-95',
                       isSelected
-                        ? 'bg-[#053F5C] text-white border-[#084869] shadow-xs'
-                        : 'bg-[#F8FAFC] text-[#5C768D] border-[#E2E8F0] hover:bg-[#F0F6F9]'
+                        ? 'bg-cliniq-pharm text-obsidian-950 font-bold border-cliniq-pharm shadow-xs'
+                        : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700 hover:bg-obsidian-750 hover:text-white'
                     )}
                   >
                     {s.name}
@@ -702,13 +702,13 @@ export default function McqPracticeScreen({
           </div>
 
           {/* Filter 2: Choose Topic */}
-          <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-2.5">
+          <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[#053F5C] font-sans flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-[#429EBD]" />
+              <label className="text-xs font-bold text-white font-sans flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-cliniq-pharm" />
                 <span>2. Select Clinical Topic</span>
               </label>
-              <span className="text-[11px] text-[#5C768D]">
+              <span className="text-[11px] text-obsidian-400">
                 {availableTopics.length} topics available
               </span>
             </div>
@@ -718,34 +718,45 @@ export default function McqPracticeScreen({
                 type="button"
                 onClick={() => setSelectedTopic('ALL')}
                 className={cn(
-                  'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer',
+                  'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer active:scale-[0.99]',
                   selectedTopic === 'ALL'
-                    ? 'bg-[#EBF8FB] text-[#053F5C] border-[#429EBD] font-semibold'
-                    : 'bg-[#F8FAFC] text-[#5C768D] border-[#E2E8F0] hover:bg-[#F0F6F9]'
+                    ? 'bg-sky-500/10 text-cliniq-pharm border-sky-500/50 font-bold'
+                    : 'bg-obsidian-850 text-obsidian-300 border-obsidian-700/80 hover:bg-obsidian-750 hover:text-white'
                 )}
               >
                 <span>All Topics (Combined Random Drill)</span>
                 {selectedTopic === 'ALL' && (
-                  <Check className="w-3.5 h-3.5 text-[#429EBD]" />
+                  <Check className="w-3.5 h-3.5 text-cliniq-pharm" />
                 )}
               </button>
 
               {availableTopics.map((topic) => {
                 const isSelected = selectedTopic === topic.topicSlug
+                const isPharm = topic.subjectCode === 'PHARM'
+                const isPatho = topic.subjectCode === 'PATH'
                 return (
                   <button
                     key={topic.topicId}
                     type="button"
                     onClick={() => setSelectedTopic(topic.topicSlug)}
                     className={cn(
-                      'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer gap-2',
+                      'w-full p-2.5 rounded-xl text-left text-xs font-medium border flex items-center justify-between transition-all cursor-pointer gap-2 active:scale-[0.99]',
                       isSelected
-                        ? 'bg-[#EBF8FB] text-[#053F5C] border-[#429EBD] font-semibold'
-                        : 'bg-[#F8FAFC] text-[#053F5C] border-[#E2E8F0] hover:bg-[#F0F6F9]'
+                        ? 'bg-sky-500/10 text-white border-sky-500/50 font-semibold ring-1 ring-sky-500/30'
+                        : 'bg-obsidian-850 text-obsidian-200 border-obsidian-700/80 hover:bg-obsidian-750 hover:text-white'
                     )}
                   >
                     <div className="flex items-center gap-2 min-w-0 flex-1">
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white border border-[#E2E8F0] text-[#5C768D] shrink-0 font-bold">
+                      <span
+                        className={cn(
+                          'text-[10px] font-mono px-1.5 py-0.5 rounded border shrink-0 font-bold',
+                          isPharm
+                            ? 'bg-sky-500/10 text-sky-400 border-sky-500/25'
+                            : isPatho
+                            ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'
+                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                        )}
+                      >
                         {topic.subjectCode}
                       </span>
                       <span className="truncate">{topic.title}</span>
@@ -754,18 +765,20 @@ export default function McqPracticeScreen({
                     <div className="flex items-center gap-2 shrink-0">
                       <span
                         className={cn(
-                          'text-[10px] font-bold px-1.5 py-0.5 rounded',
-                          topic.accuracy >= 80
-                            ? 'bg-[#EDF9FC] text-[#053F5C]'
-                            : topic.accuracy >= 60
-                            ? 'bg-[#FEF6E7] text-[#8A5506]'
-                            : 'bg-[#FEF2F2] text-[#991B1B]'
+                          'text-[10px] font-bold px-1.5 py-0.5 rounded border',
+                          topic.attempted > 0
+                            ? topic.accuracy >= 80
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                              : topic.accuracy >= 60
+                              ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                              : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                            : 'bg-obsidian-750 text-obsidian-400 border-obsidian-700'
                         )}
                       >
                         {topic.attempted > 0 ? `${topic.accuracy}%` : 'New'}
                       </span>
                       {isSelected && (
-                        <Check className="w-3.5 h-3.5 text-[#429EBD]" />
+                        <Check className="w-3.5 h-3.5 text-cliniq-pharm" />
                       )}
                     </div>
                   </button>
@@ -777,19 +790,19 @@ export default function McqPracticeScreen({
           {/* Filter 3: Drill Mode & Question Count */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Mode */}
-            <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-2">
-              <label className="text-xs font-bold text-[#053F5C] font-sans">
+            <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2">
+              <label className="text-xs font-bold text-white font-sans">
                 Drill Mode
               </label>
-              <div className="grid grid-cols-2 gap-1 p-1 bg-[#E2ECF2] rounded-xl">
+              <div className="grid grid-cols-2 gap-1 p-1 bg-obsidian-850 rounded-xl border border-obsidian-700">
                 <button
                   type="button"
                   onClick={() => setSelectedMode('ALL')}
                   className={cn(
                     'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
                     selectedMode === 'ALL'
-                      ? 'bg-[#053F5C] text-white shadow-xs'
-                      : 'text-[#5C768D] hover:text-[#053F5C]'
+                      ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
+                      : 'text-obsidian-400 hover:text-white'
                   )}
                 >
                   Standard Drill
@@ -800,8 +813,8 @@ export default function McqPracticeScreen({
                   className={cn(
                     'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
                     selectedMode === 'MISTAKES'
-                      ? 'bg-[#053F5C] text-white shadow-xs'
-                      : 'text-[#5C768D] hover:text-[#053F5C]'
+                      ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
+                      : 'text-obsidian-400 hover:text-white'
                   )}
                 >
                   Mistakes Only
@@ -810,11 +823,11 @@ export default function McqPracticeScreen({
             </div>
 
             {/* Questions count */}
-            <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-2">
-              <label className="text-xs font-bold text-[#053F5C] font-sans">
+            <div className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-2">
+              <label className="text-xs font-bold text-white font-sans">
                 Question Target
               </label>
-              <div className="grid grid-cols-3 gap-1 p-1 bg-[#E2ECF2] rounded-xl">
+              <div className="grid grid-cols-3 gap-1 p-1 bg-obsidian-850 rounded-xl border border-obsidian-700">
                 {[5, 10, 20].map((count) => (
                   <button
                     key={count}
@@ -823,8 +836,8 @@ export default function McqPracticeScreen({
                     className={cn(
                       'py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center',
                       questionCountLimit === count
-                        ? 'bg-[#053F5C] text-white shadow-xs'
-                        : 'text-[#5C768D] hover:text-[#053F5C]'
+                        ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
+                        : 'text-obsidian-400 hover:text-white'
                     )}
                   >
                     {count} Qs
@@ -845,9 +858,9 @@ export default function McqPracticeScreen({
                 selectedMode
               )
             }
-            className="w-full py-3.5 px-6 rounded-2xl bg-[#053F5C] hover:bg-[#032B40] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer border border-[#084869]"
+            className="w-full py-3.5 px-6 rounded-2xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
           >
-            <Play className="w-4 h-4 fill-white" />
+            <Play className="w-4 h-4 fill-obsidian-950 stroke-obsidian-950" />
             <span>
               Start Practice Drill ({questionCountLimit} Questions)
             </span>
@@ -855,41 +868,41 @@ export default function McqPracticeScreen({
         </div>
       ) : isLoadingQuestions ? (
         /* Loading Skeleton while preparing questions */
-        <div className="p-8 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs text-center space-y-4 my-6 animate-pulse">
-          <div className="w-12 h-12 rounded-2xl bg-[#E2F3F8] text-[#053F5C] border border-[#B8D5E3] flex items-center justify-center mx-auto">
-            <Loader2 className="w-6 h-6 animate-spin text-[#429EBD]" />
+        <div className="p-8 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs text-center space-y-4 my-6 animate-pulse">
+          <div className="w-12 h-12 rounded-2xl bg-sky-500/10 text-cliniq-pharm border border-sky-500/25 flex items-center justify-center mx-auto">
+            <Loader2 className="w-6 h-6 animate-spin text-cliniq-pharm" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#053F5C] font-sans">
+            <h3 className="text-base font-bold text-white font-sans">
               Preparing {questionCountLimit} Practice Questions
             </h3>
-            <p className="text-xs text-[#5C768D] mt-1 font-sans">
+            <p className="text-xs text-obsidian-400 mt-1 font-sans">
               Loading high-yield items and clinical rule-out rationales...
             </p>
           </div>
         </div>
       ) : isCompleted ? (
         /* Completed Recap Screen */
-        <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm text-center space-y-4 animate-scale-up">
-          <div className="w-14 h-14 rounded-2xl bg-[#EDF9FC] text-[#053F5C] border border-[#B8D5E3] flex items-center justify-center mx-auto shadow-xs">
-            <CheckCircle2 className="w-7 h-7 text-[#429EBD]" />
+        <div className="p-6 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-sm text-center space-y-4 animate-scale-up">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 flex items-center justify-center mx-auto shadow-xs">
+            <CheckCircle2 className="w-7 h-7 text-emerald-400" />
           </div>
 
           <div>
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#429EBD]">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cliniq-pharm">
               Drill Completed
             </span>
-            <h3 className="text-2xl font-bold text-[#053F5C] font-sans mt-0.5">
+            <h3 className="text-2xl font-bold text-white font-sans mt-0.5">
               {correctCount} / {activeQuestions.length} Correct
             </h3>
-            <p className="text-xs text-[#5C768D] mt-1">
-              Recall Accuracy: <strong className="text-[#053F5C]">{accuracy}%</strong>
+            <p className="text-xs text-obsidian-400 mt-1">
+              Recall Accuracy: <strong className="text-cliniq-psm font-bold">{accuracy}%</strong>
             </p>
           </div>
 
           {/* Performance tag */}
-          <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#5C768D] flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#F7AD19]" />
+          <div className="p-3 rounded-xl bg-obsidian-850 border border-obsidian-700 text-xs text-obsidian-300 flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4 text-cliniq-trap" />
             <span>
               {accuracy >= 80
                 ? 'Clinical mastery achieved for this set!'
@@ -903,15 +916,15 @@ export default function McqPracticeScreen({
           <div className="flex flex-col sm:flex-row gap-2 pt-1">
             <button
               onClick={handleRestart}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-[#9FE7F5]" />
+              <RotateCcw className="w-3.5 h-3.5 stroke-[2.2]" />
               <span>Practice Again</span>
             </button>
 
             <button
               onClick={() => setIsDrillActive(false)}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold bg-[#F8FAFC] hover:bg-[#F0F6F9] text-[#053F5C] border border-[#CBD5E1] transition-all cursor-pointer"
+              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold bg-obsidian-850 hover:bg-obsidian-750 text-white border border-obsidian-700 transition-all cursor-pointer active:scale-95"
             >
               Change Filter / Subject
             </button>
@@ -924,17 +937,17 @@ export default function McqPracticeScreen({
           <div className="flex items-center justify-between px-0.5">
             <button
               onClick={() => setIsDrillActive(false)}
-              className="text-xs font-semibold text-[#5C768D] hover:text-[#053F5C] flex items-center gap-1 cursor-pointer"
+              className="text-xs font-semibold text-obsidian-400 hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
             >
               <span>← Change Filter</span>
             </button>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-[#053F5C]">
+              <span className="text-xs font-mono font-bold text-white">
                 Q {currentIndex + 1} of {activeQuestions.length}
               </span>
               {currentQ?.pyqTag && (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#FEF6E7] border border-[#FDEBC8] text-[#8A5506] font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-300 font-bold">
                   {currentQ.pyqTag}
                 </span>
               )}
@@ -954,12 +967,12 @@ export default function McqPracticeScreen({
                   className={cn(
                     'h-1.5 rounded-full flex-1 transition-all duration-300',
                     i === currentIndex
-                      ? 'bg-[#053F5C] ring-2 ring-[#429EBD]/30'
+                      ? 'bg-cliniq-pharm ring-2 ring-sky-500/30'
                       : isDone
                       ? isQCorrect
-                        ? 'bg-[#429EBD]'
-                        : 'bg-[#DC2626]'
-                      : 'bg-[#E2E8F0]'
+                        ? 'bg-cliniq-psm'
+                        : 'bg-cliniq-danger'
+                      : 'bg-obsidian-700'
                   )}
                 />
               )
@@ -967,8 +980,8 @@ export default function McqPracticeScreen({
           </div>
 
           {/* Question Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-4">
-            <h3 className="text-[14px] font-semibold text-[#053F5C] leading-relaxed font-sans">
+          <div className="p-4 sm:p-5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-4">
+            <h3 className="text-[14px] font-semibold text-white leading-relaxed font-sans">
               {currentQ?.stem}
             </h3>
 
@@ -979,17 +992,17 @@ export default function McqPracticeScreen({
                 const isCorrect = optIdx === currentQ.correctIndex
 
                 let style =
-                  'bg-[#F8FAFC] border-[#E2E8F0] text-[#053F5C] hover:border-[#429EBD]/60 hover:bg-[#F0F6F9]'
+                  'bg-obsidian-850 border-obsidian-700 text-obsidian-200 hover:border-cliniq-pharm/50 hover:bg-obsidian-750'
 
                 if (hasAnsweredCurrent) {
                   if (isCorrect) {
                     style =
-                      'bg-[#EDF9FC] border-[#429EBD] text-[#053F5C] font-semibold ring-1 ring-[#429EBD]'
+                      'bg-emerald-500/15 border-emerald-500/50 text-white font-semibold ring-1 ring-emerald-500/30'
                   } else if (isSelected) {
                     style =
-                      'bg-[#FEF2F2] border-[#FCA5A5] text-[#991B1B] font-semibold ring-1 ring-[#F87171]'
+                      'bg-rose-500/15 border-rose-500/50 text-white font-semibold ring-1 ring-rose-500/30'
                   } else {
-                    style = 'bg-white border-[#E2E8F0] text-[#5C768D] opacity-60'
+                    style = 'bg-obsidian-900/60 border-obsidian-750 text-obsidian-500 opacity-60'
                   }
                 }
 
@@ -1006,10 +1019,10 @@ export default function McqPracticeScreen({
                       className={cn(
                         'w-5 h-5 rounded-md flex items-center justify-center font-mono font-bold text-xs shrink-0 mt-0.5',
                         hasAnsweredCurrent && isCorrect
-                          ? 'bg-[#429EBD] text-white'
+                          ? 'bg-emerald-500 text-obsidian-950 font-bold'
                           : hasAnsweredCurrent && isSelected
-                          ? 'bg-[#DC2626] text-white'
-                          : 'bg-white text-[#5C768D] border border-[#CBD5E1]'
+                          ? 'bg-rose-500 text-white font-bold'
+                          : 'bg-obsidian-750 text-obsidian-400 border border-obsidian-700'
                       )}
                     >
                       {optionLetters[optIdx]}
@@ -1024,24 +1037,24 @@ export default function McqPracticeScreen({
 
             {/* Next or Explanation Action */}
             {hasAnsweredCurrent && (
-              <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#E2E8F0]">
+              <div className="flex items-center justify-between gap-2 pt-2 border-t border-obsidian-700">
                 <button
                   onClick={() => setIsDrawerOpen(true)}
-                  className="text-xs font-semibold text-[#429EBD] hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-semibold text-cliniq-pharm hover:text-sky-300 flex items-center gap-1 cursor-pointer transition-colors"
                 >
                   <span>View Rule-Out Rationales</span>
                 </button>
 
                 <button
                   onClick={handleNextQuestion}
-                  className="py-2 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95 border border-[#084869]"
+                  className="py-2 px-4 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
                 >
                   <span>
                     {currentIndex < activeQuestions.length - 1
                       ? 'Next Question'
                       : 'Finish Drill'}
                   </span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
                 </button>
               </div>
             )}
@@ -1058,11 +1071,11 @@ export default function McqPracticeScreen({
           />
         </div>
       ) : (
-        <div className="p-8 text-center bg-white rounded-2xl border border-[#E2E8F0] space-y-3">
-          <p className="text-xs font-bold text-[#053F5C]">No questions found</p>
+        <div className="p-8 text-center bg-obsidian-800 rounded-2xl border border-obsidian-700 space-y-3">
+          <p className="text-xs font-bold text-white">No questions found</p>
           <button
             onClick={() => setIsDrillActive(false)}
-            className="py-2 px-4 rounded-xl text-xs font-semibold bg-[#053F5C] text-white"
+            className="py-2 px-4 rounded-xl text-xs font-bold bg-cliniq-pharm text-obsidian-950"
           >
             Change Filter
           </button>
