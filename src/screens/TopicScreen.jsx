@@ -20,6 +20,7 @@ import AnimatedDoctorGuide from '../components/AnimatedDoctorGuide'
 import GuidelinesSheet from '../components/GuidelinesSheet'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { apiService } from '../api/client'
+import { resolveTopicGuidelines } from '../utils/guidelinesResolver'
 import { cn } from '../utils/cn'
 
 export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialLayer = 'wardCard' }) {
@@ -131,8 +132,8 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
       ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'
       : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
 
-  // Tier 3 Guidelines & Controversy Alert data
-  const guidelines = topic.currentGuidelines
+  // Tier 3 Guidelines & Controversy Alert data (guaranteed authoritative guidelines & exam controversy resolver)
+  const guidelines = resolveTopicGuidelines(topic, topicSlug)
 
   return (
     <div className="space-y-3.5 animate-fade-in relative pb-20">
@@ -306,7 +307,10 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
 
       {/* Floating Side Doctor Companion (Docked to right, accessible across all 3 modes) */}
       {guidelines && (
-        <div className="fixed bottom-24 right-3.5 sm:right-6 z-40 animate-fade-in">
+        <div
+          className="fixed bottom-6 z-40 animate-fade-in"
+          style={{ right: 'max(1rem, calc(50% - 200px))' }}
+        >
           <button
             type="button"
             onClick={() => setIsGuidelinesSheetOpen(true)}
