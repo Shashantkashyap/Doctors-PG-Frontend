@@ -19,14 +19,23 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import { apiService } from '../api/client'
 import { cn } from '../utils/cn'
 
-export default function TopicScreen({ topicSlug, onBack, onAttemptDone }) {
+export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialLayer = 'wardCard' }) {
   const [activeLayer, setActiveLayer] = useState(() => {
+    if (initialLayer && ['wardCard', 'checklist', 'mcqDrill'].includes(initialLayer)) {
+      return initialLayer
+    }
     if (typeof window !== 'undefined') {
       const layer = new URLSearchParams(window.location.search).get('layer')
       if (['wardCard', 'checklist', 'mcqDrill'].includes(layer)) return layer
     }
     return 'wardCard'
   })
+
+  useEffect(() => {
+    if (initialLayer && ['wardCard', 'checklist', 'mcqDrill'].includes(initialLayer)) {
+      setActiveLayer(initialLayer)
+    }
+  }, [initialLayer, topicSlug])
   const [topic, setTopic] = useState(null)
   const [isPinned, setIsPinned] = useState(false)
   const [isLoading, setIsLoading] = useState(true)

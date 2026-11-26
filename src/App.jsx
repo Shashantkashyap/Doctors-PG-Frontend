@@ -109,10 +109,14 @@ export default function App() {
       .catch(() => {})
   }
 
-  const navigateToTopic = (slug) => {
+  const [topicInitialLayer, setTopicInitialLayer] = useState('wardCard')
+
+  const navigateToTopic = (slug, layer = 'wardCard') => {
     setIsSearchOpen(false)
     setCurrentTopicSlug(slug)
-    window.history.pushState({ topicSlug: slug }, '', `/topic/${slug}`)
+    setTopicInitialLayer(layer)
+    const query = layer && layer !== 'wardCard' ? `?layer=${layer}` : ''
+    window.history.pushState({ topicSlug: slug, layer }, '', `/topic/${slug}${query}`)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -206,6 +210,7 @@ export default function App() {
           ) : currentTopicSlug ? (
             <TopicScreen
               topicSlug={currentTopicSlug}
+              initialLayer={topicInitialLayer}
               onBack={handleBackToExplore}
               onAttemptDone={refreshCounters}
             />

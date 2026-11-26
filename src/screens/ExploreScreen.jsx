@@ -5,11 +5,8 @@ import {
   ArrowRight,
   Clock,
   Sparkles,
-  Zap,
-  BookOpen,
+  RotateCcw,
   Target,
-  CheckCircle2,
-  TrendingUp,
 } from 'lucide-react'
 import TopNavbar from '../components/TopNavbar'
 import { apiService } from '../api/client'
@@ -17,8 +14,116 @@ import { cn } from '../utils/cn'
 
 const ITEMS_PER_PAGE = 8
 
-export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfile, onSelectSubjectTab }) {
-  const [subjects, setSubjects] = useState([
+// Curated pool of high-yield topics across Pharma, Pathology & PSM for daily challenge rotation
+const FEATURED_CAPSULES_POOL = [
+  {
+    slug: 'pharm-warfarin-doacs-reversal-agents',
+    title: 'Warfarin & DOAC Protocols',
+    subtitle: 'Reversal agents, INR targets & high-yield differentiators',
+    subject: 'PHARM',
+    subjectName: 'Pharmacology',
+    color: '#38BDF8',
+  },
+  {
+    slug: 'pharm-anti-tubercular-drugs',
+    title: 'Anti-Tubercular Drugs (ATT)',
+    subtitle: 'First-line 2HRZE+4HRE, BPaLM regimen & adverse toxicities',
+    subject: 'PHARM',
+    subjectName: 'Pharmacology',
+    color: '#38BDF8',
+  },
+  {
+    slug: 'path-hodgkin-lymphoma-subtypes',
+    title: 'Hodgkin vs Non-Hodgkin Lymphoma',
+    subtitle: 'Reed-Sternberg variants, Ann Arbor staging & CD markers',
+    subject: 'PATH',
+    subjectName: 'Pathology',
+    color: '#818CF8',
+  },
+  {
+    slug: 'psm-national-immunization-schedule',
+    title: 'National Immunization Schedule (UIP)',
+    subtitle: 'Zero-dose vaccines, open vial policy & cold chain maintenance',
+    subject: 'PSM',
+    subjectName: 'Community Medicine',
+    color: '#34D399',
+  },
+  {
+    slug: 'pharm-anti-epileptics-pregnancy',
+    title: 'Anti-Epileptics in Pregnancy',
+    subtitle: 'Teratogenicity, neural tube defects & safe therapeutic choices',
+    subject: 'PHARM',
+    subjectName: 'Pharmacology',
+    color: '#38BDF8',
+  },
+  {
+    slug: 'path-nephrotic-vs-nephritic-syndromes',
+    title: 'Glomerular Diseases Spectrum',
+    subtitle: 'Minimal change, FSGS, Membranous & Post-strep GN',
+    subject: 'PATH',
+    subjectName: 'Pathology',
+    color: '#818CF8',
+  },
+  {
+    slug: 'psm-epidemiology-study-designs',
+    title: 'Epidemiology Study Designs',
+    subtitle: 'Case-control odds ratio vs Cohort relative risk & biases',
+    subject: 'PSM',
+    subjectName: 'Community Medicine',
+    color: '#34D399',
+  },
+  {
+    slug: 'pharm-glaucoma-pharmacotherapy',
+    title: 'Glaucoma Pharmacotherapy',
+    subtitle: 'Prostaglandin analogues, beta-blockers & acute angle-closure',
+    subject: 'PHARM',
+    subjectName: 'Pharmacology',
+    color: '#38BDF8',
+  },
+  {
+    slug: 'path-multiple-myeloma',
+    title: 'Multiple Myeloma & Dyscrasias',
+    subtitle: 'CRAB criteria, Bence Jones protein & serum electrophoresis',
+    subject: 'PATH',
+    subjectName: 'Pathology',
+    color: '#818CF8',
+  },
+  {
+    slug: 'psm-biostatistics-screening-tests',
+    title: 'Screening Tests & Biostatistics',
+    subtitle: 'Sensitivity, Specificity, PPV/NPV & ROC curve cutoffs',
+    subject: 'PSM',
+    subjectName: 'Community Medicine',
+    color: '#34D399',
+  },
+  {
+    slug: 'pharm-anti-malarial-drugs',
+    title: 'Anti-Malarial Regimens & ACT',
+    subtitle: 'Artemisinin combination therapies, radical cure & G6PD precautions',
+    subject: 'PHARM',
+    subjectName: 'Pharmacology',
+    color: '#38BDF8',
+  },
+  {
+    slug: 'path-amyloidosis-classification',
+    title: 'Amyloidosis Classification & Stains',
+    subtitle: 'Apple-green birefringence, Congo Red & AL vs AA pathogenesis',
+    subject: 'PATH',
+    subjectName: 'Pathology',
+    color: '#818CF8',
+  },
+  {
+    slug: 'psm-rabies-prophylaxis-guidelines',
+    title: 'Rabies Post-Exposure Prophylaxis',
+    subtitle: 'WHO bite classification, Essen schedule & RIG administration',
+    subject: 'PSM',
+    subjectName: 'Community Medicine',
+    color: '#34D399',
+  },
+]
+
+export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
+  const [subjects] = useState([
     { id: 'pharm', name: 'Pharmacology', slug: 'pharmacology', code: 'PHARM' },
     { id: 'path', name: 'Pathology', slug: 'pathology', code: 'PATH' },
     { id: 'psm', name: 'PSM', slug: 'psm', code: 'PSM' },
@@ -28,32 +133,34 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
   const [trending, setTrending] = useState([])
   const [isLoadingTopics, setIsLoadingTopics] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [liveStats, setLiveStats] = useState({
-    total: 234,
-    ready: 234,
-    subjects: { PHARM: 78, PATH: 86, PSM: 70 },
+
+  // Rotating logic for featured topic: changes daily + user can shuffle
+  const [featuredOffset, setFeaturedOffset] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cliniq_featured_offset')
+      return saved ? parseInt(saved, 10) : 0
+    } catch {
+      return 0
+    }
   })
 
-  // Live progress
+  const now = new Date()
+  const startOfYear = new Date(now.getFullYear(), 0, 0)
+  const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24))
+  const featuredIndex = (dayOfYear + featuredOffset) % FEATURED_CAPSULES_POOL.length
+  const featuredTopic = FEATURED_CAPSULES_POOL[featuredIndex]
+
+  const handleShuffleFeatured = (e) => {
+    e.stopPropagation()
+    const nextOffset = (featuredOffset + 1) % FEATURED_CAPSULES_POOL.length
+    setFeaturedOffset(nextOffset)
+    try {
+      localStorage.setItem('cliniq_featured_offset', nextOffset.toString())
+    } catch {}
+  }
+
   useEffect(() => {
     let mounted = true
-    apiService
-      .getLiveProgress()
-      .then((res) => {
-        if (mounted && res?.ok && res.subjects) {
-          const statsMap = {}
-          res.subjects.forEach((s) => {
-            statsMap[s.code] = s.ready
-          })
-          setLiveStats({
-            total: res.overall?.ready || 234,
-            ready: res.overall?.ready || 234,
-            subjects: statsMap,
-          })
-        }
-      })
-      .catch((err) => console.warn('Live progress fetch error:', err))
-
     apiService
       .getTrending()
       .then((data) => {
@@ -68,7 +175,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
     }
   }, [])
 
-  // Subject topics
+  // Fetch subject topics
   useEffect(() => {
     if (!selectedSubjectSlug) return
 
@@ -96,7 +203,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const paginatedTopics = subjectTopics.slice(startIndex, startIndex + ITEMS_PER_PAGE)
 
-  const activeSubjects = subjects.filter((s) => !s.isLocked)
+  const activeSubjects = subjects
   const selectedSubjectIndex = Math.max(
     0,
     activeSubjects.findIndex((s) => s.slug === selectedSubjectSlug)
@@ -107,55 +214,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
       {/* 1. Sticky Professional Navbar with ClinIQ Branding */}
       <TopNavbar onOpenSearch={onOpenSearch} />
 
-      {/* 2. Live Database Status Bar */}
-      <div className="p-3.5 rounded-2xl bg-obsidian-800 border border-obsidian-700/80 shadow-xs space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cliniq-psm animate-pulse" />
-            <span className="font-bold text-white tracking-tight">
-              ClinIQ High-Yield Database
-            </span>
-          </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
-            100% Verified
-          </span>
-        </div>
-
-        {/* 3 Subject Pill Meters */}
-        <div className="grid grid-cols-3 gap-1.5 pt-0.5">
-          <div className="p-2 rounded-xl bg-obsidian-850 border border-obsidian-700 flex flex-col">
-            <div className="flex items-center justify-between text-[10px] text-obsidian-400">
-              <span className="text-cliniq-pharm font-semibold">Pharma</span>
-              <span className="font-mono text-white font-bold">{liveStats.subjects.PHARM || 78}/78</span>
-            </div>
-            <div className="h-1 bg-obsidian-700 rounded-full mt-1.5 overflow-hidden">
-              <div className="h-full bg-cliniq-pharm w-full rounded-full" />
-            </div>
-          </div>
-
-          <div className="p-2 rounded-xl bg-obsidian-850 border border-obsidian-700 flex flex-col">
-            <div className="flex items-center justify-between text-[10px] text-obsidian-400">
-              <span className="text-cliniq-patho font-semibold">Pathology</span>
-              <span className="font-mono text-white font-bold">{liveStats.subjects.PATH || 86}/86</span>
-            </div>
-            <div className="h-1 bg-obsidian-700 rounded-full mt-1.5 overflow-hidden">
-              <div className="h-full bg-cliniq-patho w-full rounded-full" />
-            </div>
-          </div>
-
-          <div className="p-2 rounded-xl bg-obsidian-850 border border-obsidian-700 flex flex-col">
-            <div className="flex items-center justify-between text-[10px] text-obsidian-400">
-              <span className="text-cliniq-psm font-semibold">PSM</span>
-              <span className="font-mono text-white font-bold">{liveStats.subjects.PSM || 70}/70</span>
-            </div>
-            <div className="h-1 bg-obsidian-700 rounded-full mt-1.5 overflow-hidden">
-              <div className="h-full bg-cliniq-psm w-full rounded-full" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Trending High-Yield Topics */}
+      {/* 2. Trending High-Yield Topics */}
       {trending && trending.length > 0 && (
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
           <button
@@ -182,14 +241,20 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
         </div>
       )}
 
-      {/* 4. Featured Rapid Capsule Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-obsidian-800 via-obsidian-800 to-obsidian-850 border border-cliniq-pharm/30 p-4 shadow-sm hover:border-cliniq-pharm/50 transition-all">
+      {/* 3. Daily Clinical MCQ Challenge (Rotates Daily + Direct 10 MCQs Launch) */}
+      <div
+        onClick={() => onSelectTopic(featuredTopic.slug, 'mcqDrill')}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-obsidian-800 via-obsidian-800 to-obsidian-850 border border-cliniq-pharm/30 p-4 shadow-sm hover:border-cliniq-pharm/60 transition-all cursor-pointer group active:scale-[0.99]"
+      >
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1 space-y-1">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/10 text-cliniq-pharm text-[10.5px] font-bold border border-sky-500/20">
                 <Sparkles className="w-3 h-3 text-cliniq-trap" />
-                <span>Featured Capsule</span>
+                <span>Daily MCQ Challenge</span>
+              </span>
+              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-obsidian-750 text-obsidian-300 border border-obsidian-700">
+                {featuredTopic.subject}
               </span>
               <span className="text-[11px] text-obsidian-500">·</span>
               <span className="text-[11px] text-obsidian-400 font-medium">
@@ -197,25 +262,40 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
               </span>
             </div>
 
-            <h2 className="text-[15px] font-bold text-white tracking-tight leading-snug">
-              Warfarin & DOAC Protocols
+            <h2 className="text-[15px] font-bold text-white tracking-tight leading-snug group-hover:text-cliniq-pharm transition-colors">
+              {featuredTopic.title}
             </h2>
             <p className="text-[12px] text-obsidian-300 line-clamp-1">
-              Reversal agents, INR targets & high-yield differentiators
+              {featuredTopic.subtitle}
             </p>
           </div>
 
-          <button
-            onClick={() => onSelectTopic('pharm-warfarin-doacs-reversal-agents')}
-            className="py-2 px-3.5 rounded-xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 font-bold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer"
-          >
-            <span>Review</span>
-            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleShuffleFeatured}
+              title="Shuffle to another high-yield topic"
+              className="w-8 h-8 rounded-xl bg-obsidian-750 hover:bg-obsidian-700 text-obsidian-400 hover:text-white border border-obsidian-700 flex items-center justify-center transition-all cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onSelectTopic(featuredTopic.slug, 'mcqDrill')
+              }}
+              className="py-2 px-3.5 rounded-xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 font-bold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer"
+            >
+              <span>Solve MCQs</span>
+              <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 5. 3-Subject Segmented Switcher */}
+      {/* 4. 3-Subject Segmented Switcher */}
       <div className="relative p-1 bg-obsidian-800/90 rounded-2xl flex items-center border border-obsidian-700/80">
         {/* Sliding Pill */}
         {activeSubjects.length > 0 && (
@@ -254,7 +334,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch, onOpenProfi
         })}
       </div>
 
-      {/* 6. Topics List */}
+      {/* 5. Topics List */}
       <div className="space-y-2 pt-1">
         {isLoadingTopics ? (
           <div className="py-16 text-center space-y-2">
