@@ -4,6 +4,7 @@ import {
   XCircle,
   ArrowRight,
   Target,
+  Sparkles,
 } from 'lucide-react'
 import { apiService } from '../api/client'
 import RuleOutDrawer from '../components/RuleOutDrawer'
@@ -83,64 +84,64 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
   const optionLetters = ['A', 'B', 'C', 'D']
 
   return (
-    <div className="space-y-4 pb-16 animate-fade-in pt-3">
+    <div className="space-y-4 pb-24 animate-fade-in pt-1">
       {/* Header */}
       <div className="flex items-baseline justify-between px-0.5">
-        <h1 className="text-[19px] font-bold tracking-tight text-[#053F5C]">
-          Review Deck
+        <h1 className="text-lg font-bold tracking-tight text-white font-sans">
+          Review Deck (Mistakes)
         </h1>
-        <span className="text-xs font-mono font-medium text-[#889DA8]">
+        <span className="text-xs font-mono font-bold text-obsidian-400">
           {deck.length} questions
         </span>
       </div>
 
       {isLoading ? (
-        <div className="py-20 text-center space-y-2">
-          <div className="w-5 h-5 border-2 border-[#C5E6F1] border-t-[#053F5C] rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-[#5C768D] font-medium">Loading review deck...</p>
+        <div className="py-20 text-center space-y-2.5">
+          <div className="w-5 h-5 border-2 border-obsidian-700 border-t-cliniq-pharm rounded-full animate-spin mx-auto" />
+          <p className="text-xs text-obsidian-400 font-medium">Loading review deck...</p>
         </div>
       ) : deck.length === 0 ? (
-        <div className="py-20 text-center p-6 bg-white rounded-2xl border border-[#E2E8F0] shadow-xs space-y-2">
-          <div className="w-10 h-10 rounded-2xl bg-[#EDF9FC] text-[#053F5C] flex items-center justify-center mx-auto mb-2 border border-[#B8D5E3]">
-            <CheckCircle2 className="w-5 h-5 stroke-[2] text-[#429EBD]" />
+        <div className="py-20 text-center p-6 bg-obsidian-800 rounded-2xl border border-obsidian-700 shadow-xs space-y-2">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-2 border border-emerald-500/25">
+            <CheckCircle2 className="w-6 h-6 stroke-[2]" />
           </div>
-          <h3 className="text-sm font-bold text-[#053F5C]">
-            All caught up
+          <h3 className="text-base font-bold text-white font-sans">
+            All caught up!
           </h3>
-          <p className="text-xs text-[#5C768D] max-w-xs mx-auto leading-relaxed">
+          <p className="text-xs text-obsidian-400 max-w-xs mx-auto leading-relaxed">
             Questions you answer incorrectly during practice sessions will automatically appear here for focused spaced repetition.
           </p>
         </div>
       ) : currentCard ? (
         <div className="space-y-3">
           {/* Card progress */}
-          <div className="flex items-center justify-between text-xs text-[#889DA8] px-0.5 font-medium">
-            <span>
+          <div className="flex items-center justify-between text-xs text-obsidian-400 px-0.5 font-medium">
+            <span className="font-semibold text-white">
               Question {currentIndex + 1} of {deck.length}
             </span>
             <button
               onClick={() => onSelectTopic(currentCard.topicSlug)}
-              className="text-xs font-semibold text-[#429EBD] hover:text-[#053F5C] flex items-center gap-1 cursor-pointer transition-colors"
+              className="text-xs font-semibold text-cliniq-pharm hover:text-sky-300 flex items-center gap-1 cursor-pointer transition-colors truncate max-w-[200px]"
             >
-              <span>{currentCard.topicTitle}</span>
-              <ArrowRight className="w-3 h-3 text-[#9FE7F5]" />
+              <span className="truncate">{currentCard.topicTitle}</span>
+              <ArrowRight className="w-3 h-3 text-cliniq-pharm shrink-0" />
             </button>
           </div>
 
           {/* Question Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-xs space-y-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-4">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E2F3F8] border border-[#C5E6F1] text-[#053F5C] font-mono">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/25 text-sky-400 font-mono">
                 {currentCard.subject?.code || 'QUESTION'}
               </span>
               {currentCard.pyqTag && (
-                <span className="text-[10px] font-mono text-[#8A5506] bg-[#FEF6E7] px-2 py-0.5 rounded border border-[#FDEBC8] font-bold">
+                <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/25 font-bold">
                   {currentCard.pyqTag}
                 </span>
               )}
             </div>
 
-            <p className="text-sm font-semibold text-[#053F5C] leading-relaxed">
+            <p className="text-sm font-semibold text-white leading-relaxed font-sans">
               {currentCard.question}
             </p>
 
@@ -151,15 +152,15 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
                 const isCorrectOption = optIdx === currentCard.correctIndex
 
                 let optionStyle =
-                  'bg-[#F8FAFC] hover:bg-[#F1F9FB] border-[#E2E8F0] text-[#183B4E]'
+                  'bg-obsidian-850 hover:bg-obsidian-750 border-obsidian-700 text-obsidian-200'
 
                 if (hasAnsweredCurrent) {
                   if (isCorrectOption) {
-                    optionStyle = 'bg-[#EDF9FC] border-[#429EBD] text-[#053F5C] font-semibold'
+                    optionStyle = 'bg-emerald-500/15 border-emerald-500/50 text-white font-semibold ring-1 ring-emerald-500/30'
                   } else if (isChosen) {
-                    optionStyle = 'bg-[#FEF2F2] border-[#FCA5A5] text-[#991B1B] font-semibold'
+                    optionStyle = 'bg-rose-500/15 border-rose-500/50 text-white font-semibold ring-1 ring-rose-500/30'
                   } else {
-                    optionStyle = 'bg-[#F8FAFC]/60 border-[#E2E8F0] text-[#889DA8] opacity-60'
+                    optionStyle = 'bg-obsidian-900/60 border-obsidian-750 text-obsidian-500 opacity-60'
                   }
                 }
 
@@ -176,24 +177,24 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
                       className={cn(
                         'w-5 h-5 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 border',
                         hasAnsweredCurrent && isCorrectOption
-                          ? 'bg-[#429EBD] text-white border-[#429EBD]'
+                          ? 'bg-emerald-500 text-obsidian-950 font-bold border-emerald-500'
                           : hasAnsweredCurrent && isChosen
-                          ? 'bg-[#DC2626] text-white border-[#DC2626]'
-                          : 'bg-white text-[#5C768D] border-[#CBD5E1]'
+                          ? 'bg-rose-500 text-white font-bold border-rose-500'
+                          : 'bg-obsidian-750 text-obsidian-400 border-obsidian-700'
                       )}
                     >
                       {optionLetters[optIdx]}
                     </span>
 
-                    <span className="text-xs sm:text-sm font-medium leading-relaxed flex-1">
+                    <span className="text-xs sm:text-sm font-medium leading-relaxed flex-1 font-sans">
                       {optionText}
                     </span>
 
                     {hasAnsweredCurrent && isCorrectOption && (
-                      <CheckCircle2 className="w-4 h-4 text-[#429EBD] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                     )}
                     {hasAnsweredCurrent && isChosen && !isCorrectOption && (
-                      <XCircle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
+                      <XCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                     )}
                   </button>
                 )
@@ -202,20 +203,20 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
 
             {/* Bottom Actions */}
             {hasAnsweredCurrent && (
-              <div className="pt-2 flex items-center justify-between gap-2 border-t border-[#E2E8F0]">
+              <div className="pt-2 flex items-center justify-between gap-2 border-t border-obsidian-700">
                 <button
                   onClick={() => setIsDrawerOpen(true)}
-                  className="text-xs font-semibold text-[#429EBD] hover:text-[#053F5C] hover:underline cursor-pointer"
+                  className="text-xs font-semibold text-cliniq-pharm hover:text-sky-300 flex items-center gap-1 cursor-pointer transition-colors"
                 >
-                  View 4-Option Explanation &rarr;
+                  <span>View 4-Option Explanation &rarr;</span>
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className="py-1.5 px-3 rounded-xl text-xs font-semibold bg-[#053F5C] hover:bg-[#032B40] text-white border border-[#084869] flex items-center gap-1 transition-colors active:scale-95 shadow-xs cursor-pointer"
+                  className="py-1.5 px-3.5 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
                 >
                   <span>{currentIndex === deck.length - 1 ? 'Refresh' : 'Next'}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#9FE7F5]" />
+                  <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
                 </button>
               </div>
             )}
