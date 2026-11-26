@@ -1,6 +1,6 @@
 import React from 'react'
 import { Search } from 'lucide-react'
-import { LogoIcon } from './Logo'
+import { LogoIcon, LogoFull } from './Logo'
 import { cn } from '../utils/cn'
 
 export default function TopNavbar({

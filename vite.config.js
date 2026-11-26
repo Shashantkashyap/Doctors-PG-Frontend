@@ -7,13 +7,16 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      devOptions: {
+        enabled: true,
+      },
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'favicon.svg'],
       manifest: {
-        name: 'Clinical Recall · Focused learning. Lasting knowledge.',
-        short_name: 'Clinical Recall',
-        description: 'High-yield Clinical Cards, Checklists & Practice Micro-Drills for NEET PG & INI-CET',
-        theme_color: '#053F5C',
-        background_color: '#F4F7F9',
+        name: 'ClinIQ (MedRecall) · Pocket Clinical Revision & Instant Search',
+        short_name: 'ClinIQ',
+        description: 'Mobile-First Pocket Clinical Revision & Instant Search Companion for NEET PG & INI-CET Medical Aspirants',
+        theme_color: '#0B0F19',
+        background_color: '#0B0F19',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
