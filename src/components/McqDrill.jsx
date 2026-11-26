@@ -321,14 +321,14 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
           <div className="pt-2 flex items-center justify-between gap-2 border-t border-obsidian-700">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="text-xs font-semibold text-cliniq-pharm hover:underline cursor-pointer"
+              className="text-xs font-medium text-zinc-400 hover:text-white cursor-pointer transition-colors"
             >
               View 4-Option Rule-Out &rarr;
             </button>
 
             <button
               onClick={handleNextQuestion}
-              className="py-1.5 px-3 rounded-xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 text-xs font-bold flex items-center gap-1 active:scale-95 transition-all shadow-xs cursor-pointer"
+              className="py-1.5 px-3.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-xs cursor-pointer"
             >
               <span>{currentIndex < questions.length - 1 ? 'Next' : 'Finish'}</span>
               <ChevronRight className="w-3.5 h-3.5 stroke-[2.2]" />

@@ -134,24 +134,24 @@ export default function NotebookScreen({ onSelectTopic, onUpdateCounts }) {
           {bookmarks.map((bm) => (
             <div
               key={bm.id}
-              className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs hover:border-cliniq-pharm/50 space-y-3 transition-all"
+              className="p-4 rounded-2xl bg-[#121622] hover:bg-[#161C2C] border border-[#20283C] hover:border-[#38435E] shadow-xs space-y-3 transition-all"
             >
               {/* Card Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 mb-1 text-[11px]">
-                    <span className="font-semibold text-cliniq-pharm bg-sky-500/10 border border-sky-500/25 px-1.5 py-0.5 rounded font-mono text-[10px]">
+                    <span className="font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded font-mono text-[10px]">
                       {bm.subject?.code || 'TOPIC'}
                     </span>
                     {bm.subtopic && (
-                      <span className="text-obsidian-400 truncate">
+                      <span className="text-zinc-400 truncate">
                         {bm.subtopic}
                       </span>
                     )}
                   </div>
                   <h3
                     onClick={() => onSelectTopic(bm.slug)}
-                    className="text-[14px] font-bold text-white hover:text-cliniq-pharm cursor-pointer transition-colors line-clamp-1 leading-snug"
+                    className="text-[14px] font-bold text-white hover:text-blue-300 cursor-pointer transition-colors line-clamp-1 leading-snug"
                   >
                     {bm.title}
                   </h3>
@@ -161,13 +161,13 @@ export default function NotebookScreen({ onSelectTopic, onUpdateCounts }) {
                   <button
                     onClick={() => handleUnpin(bm.topicId)}
                     title="Remove from notebook"
-                    className="p-1.5 rounded-lg text-obsidian-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => onSelectTopic(bm.slug)}
-                    className="p-1.5 rounded-lg text-obsidian-400 hover:text-white hover:bg-obsidian-750 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-[#181F30] transition-colors cursor-pointer"
                   >
                     <ArrowRight className="w-4 h-4" />
                   </button>
@@ -176,16 +176,16 @@ export default function NotebookScreen({ onSelectTopic, onUpdateCounts }) {
 
               {/* Summary Anchors */}
               {bm.goldenAnchorsSummary && (
-                <div className="p-2.5 rounded-xl bg-obsidian-850 border border-obsidian-700 text-xs space-y-1">
+                <div className="p-2.5 rounded-xl bg-[#182030] border border-[#252E44] text-xs space-y-1">
                   {bm.goldenAnchorsSummary.doc && (
-                    <div className="text-obsidian-200 font-medium line-clamp-2">
-                      <span className="font-bold text-cliniq-pharm mr-1">DOC:</span>
+                    <div className="text-zinc-200 font-medium line-clamp-2">
+                      <span className="font-bold text-blue-400 mr-1">DOC:</span>
                       {bm.goldenAnchorsSummary.doc}
                     </div>
                   )}
                   {bm.goldenAnchorsSummary.ioc && (
-                    <div className="text-obsidian-200 font-medium line-clamp-1">
-                      <span className="font-bold text-cliniq-patho mr-1">IOC:</span>
+                    <div className="text-zinc-200 font-medium line-clamp-1">
+                      <span className="font-bold text-indigo-400 mr-1">IOC:</span>
                       {bm.goldenAnchorsSummary.ioc}
                     </div>
                   )}

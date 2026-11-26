@@ -41,18 +41,17 @@ export default function WardCard({ topic }) {
       <div className="space-y-2.5">
         {/* DOC: Drug / Treatment of Choice */}
         {docItems && docItems.length > 0 && (
-          <div className="rounded-2xl bg-obsidian-800 border border-sky-500/30 p-3.5 sm:p-4 shadow-xs space-y-2 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-xl pointer-events-none" />
+          <div className="rounded-2xl bg-[#121622] border border-blue-500/25 p-3.5 sm:p-4 shadow-xs space-y-2 relative overflow-hidden">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cliniq-pharm shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
               <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-sky-400">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400">
                   Drug / Treatment of Choice (DOC)
                 </h3>
-                <span className="text-[11px] text-obsidian-400">First-line gold standard medical therapy</span>
+                <span className="text-[11px] text-zinc-400">First-line gold standard medical therapy</span>
               </div>
             </div>
-            <div className="divide-y divide-obsidian-700/60 text-xs">
+            <div className="divide-y divide-[#20283C] text-xs">
               {docItems.map((item, idx) => (
                 <div
                   key={idx}
@@ -67,18 +66,17 @@ export default function WardCard({ topic }) {
 
         {/* IOC: Investigation of Choice */}
         {iocItems && iocItems.length > 0 && (
-          <div className="rounded-2xl bg-obsidian-800 border border-indigo-500/30 p-3.5 sm:p-4 shadow-xs space-y-2 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
+          <div className="rounded-2xl bg-[#121622] border border-indigo-500/25 p-3.5 sm:p-4 shadow-xs space-y-2 relative overflow-hidden">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cliniq-patho shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-indigo-400 shrink-0" />
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400">
                   Investigation of Choice (IOC)
                 </h3>
-                <span className="text-[11px] text-obsidian-400">Diagnostic gold standard confirmation</span>
+                <span className="text-[11px] text-zinc-400">Diagnostic gold standard confirmation</span>
               </div>
             </div>
-            <div className="divide-y divide-obsidian-700/60 text-xs">
+            <div className="divide-y divide-[#20283C] text-xs">
               {iocItems.map((item, idx) => (
                 <div
                   key={idx}
@@ -93,18 +91,17 @@ export default function WardCard({ topic }) {
 
         {/* MCC: Most Common Cause */}
         {mccItems && mccItems.length > 0 && (
-          <div className="rounded-2xl bg-obsidian-800 border border-amber-500/30 p-3.5 sm:p-4 shadow-xs space-y-2 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none" />
+          <div className="rounded-2xl bg-[#121622] border border-amber-500/25 p-3.5 sm:p-4 shadow-xs space-y-2 relative overflow-hidden">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cliniq-trap shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400">
                   Most Common Cause (MCC)
                 </h3>
-                <span className="text-[11px] text-obsidian-400">Primary etiology & signature exam recall</span>
+                <span className="text-[11px] text-zinc-400">Primary etiology & signature exam recall</span>
               </div>
             </div>
-            <div className="divide-y divide-obsidian-700/60 text-xs">
+            <div className="divide-y divide-[#20283C] text-xs">
               {mccItems.map((item, idx) => (
                 <div
                   key={idx}

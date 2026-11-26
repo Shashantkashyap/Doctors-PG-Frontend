@@ -270,14 +270,14 @@ export default function ProfileScreen({
       readinessBadge = {
         title: 'Top 5,000 Rank Potential',
         subtitle: 'Solid diagnostic acumen · Eliminate weak topic penalties',
-        style: 'from-sky-950/40 via-obsidian-800 to-obsidian-850 border-sky-500/30 text-sky-300',
-        indicator: 'bg-cliniq-pharm',
+        style: 'bg-[#151C2C] border-[#25324D] text-zinc-200',
+        indicator: 'bg-blue-400',
       }
     } else {
       readinessBadge = {
         title: 'High-Yield Drill Phase',
         subtitle: 'Focus on ⚠️ Weak Topics (<70%) to boost negative marking',
-        style: 'from-amber-950/40 via-obsidian-800 to-obsidian-850 border-amber-500/30 text-amber-300',
+        style: 'bg-[#1C1814] border-[#3D2E1A] text-amber-200',
         indicator: 'bg-amber-400',
       }
     }
@@ -286,15 +286,15 @@ export default function ProfileScreen({
   return (
     <div className="space-y-4 pb-32 animate-fade-in pt-1">
       {/* 1. Doctor Profile Hero Card */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-obsidian-800 via-obsidian-800 to-obsidian-850 border border-obsidian-700 shadow-sm space-y-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#111624] border border-[#20283C] shadow-sm space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3.5 min-w-0">
             {/* Clinical Avatar with Verified Stethoscope Badge */}
             <div className="relative shrink-0">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500/20 via-obsidian-750 to-obsidian-850 text-white font-sans font-black text-xl flex items-center justify-center shadow-xs border border-sky-500/30">
+              <div className="w-14 h-14 rounded-2xl bg-[#182032] text-white font-sans font-black text-xl flex items-center justify-center shadow-xs border border-[#283654]">
                 {initials}
               </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-obsidian-900 border border-sky-500/60 flex items-center justify-center text-cliniq-pharm shadow-xs">
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#0D111A] border border-[#283654] flex items-center justify-center text-blue-400 shadow-xs">
                 <Stethoscope className="w-3 h-3 stroke-[2.5]" />
               </div>
             </div>
@@ -304,11 +304,11 @@ export default function ProfileScreen({
                 <h2 className="text-base font-bold font-sans text-white truncate">
                   {user.name}
                 </h2>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-500/10 text-sky-400 border border-sky-500/25">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-[#182032] text-zinc-300 border border-[#283654]">
                   MD Resident
                 </span>
               </div>
-              <p className="text-xs text-obsidian-400 truncate font-sans">
+              <p className="text-xs text-zinc-400 truncate font-sans">
                 {user.email}
               </p>
             </div>
@@ -317,7 +317,7 @@ export default function ProfileScreen({
           <button
             onClick={logout}
             title="Sign Out"
-            className="p-2 rounded-xl text-obsidian-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/25 transition-all cursor-pointer shrink-0 active:scale-95"
+            className="p-2 rounded-xl text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/25 transition-all cursor-pointer shrink-0 active:scale-95"
           >
             <LogOut className="w-4 h-4 stroke-[2]" />
           </button>
@@ -325,33 +325,33 @@ export default function ProfileScreen({
 
         {/* Clinical Readiness Rank Predictor Banner */}
         <div className={cn(
-          'p-3 rounded-xl bg-gradient-to-r border flex items-center gap-3 transition-all',
+          'p-3 rounded-xl border flex items-center gap-3 transition-all',
           readinessBadge.style
         )}>
           <span className={cn('w-2 h-2 rounded-full shrink-0 animate-pulse', readinessBadge.indicator)} />
           <div className="min-w-0 flex-1">
-            <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+            <h4 className="text-xs font-semibold text-white flex items-center gap-1.5">
               <span>{readinessBadge.title}</span>
             </h4>
-            <p className="text-[11px] text-obsidian-300 leading-tight mt-0.5 truncate">
+            <p className="text-[11px] text-zinc-400 leading-tight mt-0.5 truncate">
               {readinessBadge.subtitle}
             </p>
           </div>
-          <Sparkles className="w-4 h-4 text-cliniq-trap shrink-0" />
+          <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
         </div>
 
         {/* Target Examination Switcher */}
-        <div className="p-3 bg-obsidian-850 rounded-xl border border-obsidian-700/80 space-y-2">
+        <div className="p-3 bg-[#151B2A] rounded-xl border border-[#20283C] space-y-2">
           <div className="flex items-center justify-between px-0.5">
-            <span className="text-[11px] font-medium text-obsidian-400 font-sans">
+            <span className="text-[11px] font-medium text-zinc-400 font-sans">
               Target Examination
             </span>
-            <span className="text-[11px] font-bold text-cliniq-pharm font-sans">
+            <span className="text-[11px] font-semibold text-white font-sans">
               {user.targetExam?.replace('_', ' ')}
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-1 p-1 bg-obsidian-800 rounded-lg border border-obsidian-700">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-[#0E121E] rounded-lg border border-[#1E2538]">
             {EXAMS.map((exam) => {
               const isSelected = user.targetExam === exam.id
               return (
@@ -360,10 +360,10 @@ export default function ProfileScreen({
                   onClick={() => handleExamChange(exam.id)}
                   disabled={isUpdatingExam}
                   className={cn(
-                    'py-1.5 px-2 text-[11px] font-semibold font-sans rounded-md transition-all cursor-pointer active:scale-95 text-center',
+                    'py-1.5 px-2 text-[11px] font-medium font-sans rounded-md transition-all cursor-pointer active:scale-95 text-center',
                     isSelected
-                      ? 'bg-cliniq-pharm text-obsidian-950 font-bold shadow-xs'
-                      : 'text-obsidian-400 hover:text-white'
+                      ? 'bg-white text-zinc-950 font-semibold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
                   )}
                 >
                   {exam.label}
@@ -418,57 +418,57 @@ export default function ProfileScreen({
       {/* 2. Overall Accuracy & Performance Scorecard (Clinical Vitals HUD) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {/* Overall Accuracy */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-sky-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-pharm shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-xs text-obsidian-400">
-            <span className="font-semibold text-[11px] text-obsidian-300">Accuracy</span>
-            <TrendingUp className="w-3.5 h-3.5 text-cliniq-pharm" />
+        <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span className="font-medium text-[11px] text-zinc-300">Accuracy</span>
+            <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
           </div>
-          <p className="text-2xl font-black font-sans text-white tracking-tight">
+          <p className="text-2xl font-bold font-sans text-white tracking-tight">
             {analytics.overall.overallAccuracy}%
           </p>
-          <p className="text-[10px] text-obsidian-400 font-medium">
+          <p className="text-[10px] text-zinc-400 font-normal">
             {analytics.overall.totalCorrect} / {analytics.overall.totalAttempted} Correct
           </p>
         </div>
 
         {/* Questions Done */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-emerald-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-psm shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-xs text-obsidian-400">
-            <span className="font-semibold text-[11px] text-obsidian-300">MCQs Done</span>
-            <Target className="w-3.5 h-3.5 text-cliniq-psm" />
+        <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span className="font-medium text-[11px] text-zinc-300">MCQs Done</span>
+            <Target className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <p className="text-2xl font-black font-sans text-white tracking-tight">
+          <p className="text-2xl font-bold font-sans text-white tracking-tight">
             {analytics.overall.totalAttempted}
           </p>
-          <p className="text-[10px] text-obsidian-400 font-medium">
+          <p className="text-[10px] text-zinc-400 font-normal">
             Clinical Vignettes
           </p>
         </div>
 
         {/* Cards Mastered */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-amber-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-trap shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-xs text-obsidian-400">
-            <span className="font-semibold text-[11px] text-obsidian-300">Mastered</span>
-            <Award className="w-3.5 h-3.5 text-cliniq-trap" />
+        <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span className="font-medium text-[11px] text-zinc-300">Mastered</span>
+            <Award className="w-3.5 h-3.5 text-amber-400" />
           </div>
-          <p className="text-2xl font-black font-sans text-white tracking-tight">
+          <p className="text-2xl font-bold font-sans text-white tracking-tight">
             {analytics.overall.masteredCount}
           </p>
-          <p className="text-[10px] text-obsidian-400 font-medium">
+          <p className="text-[10px] text-zinc-400 font-normal">
             ≥80% Recall Rate
           </p>
         </div>
 
         {/* Topics Tracked */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-b from-indigo-500/10 to-obsidian-800 border border-obsidian-700 border-t-2 border-t-cliniq-patho shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-xs text-obsidian-400">
-            <span className="font-semibold text-[11px] text-obsidian-300">Topics</span>
-            <BookOpen className="w-3.5 h-3.5 text-cliniq-patho" />
+        <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span className="font-medium text-[11px] text-zinc-300">Topics</span>
+            <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
           </div>
-          <p className="text-2xl font-black font-sans text-white tracking-tight">
+          <p className="text-2xl font-bold font-sans text-white tracking-tight">
             {analytics.overall.totalTopicsTracked}
           </p>
-          <p className="text-[10px] text-obsidian-400 font-medium">
+          <p className="text-[10px] text-zinc-400 font-normal">
             High-Yield Syllabus
           </p>
         </div>
@@ -477,11 +477,11 @@ export default function ProfileScreen({
       {/* 3. Subject-Wise Accuracy Analysis */}
       <div className="space-y-2.5">
         <div className="flex items-baseline justify-between px-0.5">
-          <h3 className="text-sm font-bold text-white font-sans flex items-center gap-1.5">
-            <Activity className="w-4 h-4 text-cliniq-pharm" />
+          <h3 className="text-sm font-semibold text-white font-sans flex items-center gap-1.5">
+            <Activity className="w-4 h-4 text-blue-400" />
             <span>Specialty Diagnostic Matrix</span>
           </h3>
-          <span className="text-[11px] text-obsidian-400 font-sans">
+          <span className="text-[11px] text-zinc-400 font-sans font-normal">
             Subject performance
           </span>
         </div>
@@ -493,14 +493,14 @@ export default function ProfileScreen({
             return (
               <div
                 key={subj.code}
-                className="p-4 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs space-y-3 hover:border-obsidian-600 transition-all"
+                className="p-4 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs space-y-3 hover:border-[#323D59] transition-all"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5">
                       <span
                         className={cn(
-                          'text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border inline-flex items-center gap-1',
+                          'text-[10px] font-mono font-medium px-1.5 py-0.5 rounded border inline-flex items-center gap-1',
                           getSubjectBadgeStyle(subj.code)
                         )}
                       >
@@ -508,31 +508,31 @@ export default function ProfileScreen({
                         <span>{subj.code}</span>
                       </span>
                     </div>
-                    <h4 className="text-sm font-bold text-white font-sans">
+                    <h4 className="text-sm font-semibold text-white font-sans">
                       {subj.name}
                     </h4>
                   </div>
 
                   <div className="text-right">
-                    <span className="text-lg font-black text-white font-sans">
+                    <span className="text-lg font-bold text-white font-sans">
                       {subj.accuracy}%
                     </span>
-                    <p className="text-[10px] text-obsidian-400">
+                    <p className="text-[10px] text-zinc-400 font-normal">
                       {subj.correct}/{subj.attempted} Qs
                     </p>
                   </div>
                 </div>
 
                 {/* Multi-tone Clinical Progress Bar */}
-                <div className="w-full bg-obsidian-700 h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-[#182030] h-2 rounded-full overflow-hidden">
                   <div
                     className={cn(
                       'h-full rounded-full transition-all duration-500',
                       isPharm
-                        ? 'bg-cliniq-pharm'
+                        ? 'bg-blue-500'
                         : isPatho
-                        ? 'bg-cliniq-patho'
-                        : 'bg-cliniq-psm'
+                        ? 'bg-indigo-500'
+                        : 'bg-emerald-500'
                     )}
                     style={{ width: `${Math.max(5, subj.accuracy)}%` }}
                   />
@@ -546,10 +546,10 @@ export default function ProfileScreen({
                       onStartPracticeSubject(subj.slug)
                     }
                   }}
-                  className="w-full py-2 px-3 rounded-xl bg-obsidian-850 hover:bg-obsidian-750 text-white text-[11px] font-bold border border-obsidian-700 hover:border-cliniq-pharm/40 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  className="w-full py-2 px-3 rounded-xl bg-[#181F30] hover:bg-[#20283C] text-white text-[11px] font-semibold border border-[#283550] transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                 >
                   <span>Practice {subj.name}</span>
-                  <ArrowRight className="w-3 h-3 text-cliniq-pharm stroke-[2.5]" />
+                  <ArrowRight className="w-3 h-3 text-zinc-300 stroke-[2.2]" />
                 </button>
               </div>
             )
@@ -561,11 +561,11 @@ export default function ProfileScreen({
       <div className="space-y-3 pt-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-0.5">
           <div>
-            <h3 className="text-sm font-bold text-white font-sans flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-cliniq-trap" />
+            <h3 className="text-sm font-semibold text-white font-sans flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-amber-400" />
               <span>Topic-Wise Clinical Retention</span>
             </h3>
-            <p className="text-[11px] text-obsidian-400 font-sans">
+            <p className="text-[11px] text-zinc-400 font-sans font-normal">
               Accuracy and recall status per clinical capsule
             </p>
           </div>
@@ -587,14 +587,14 @@ export default function ProfileScreen({
                   type="button"
                   onClick={() => setTopicFilter(f.id)}
                   className={cn(
-                    'px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap transition-all cursor-pointer border active:scale-95',
+                    'px-2.5 py-1 rounded-lg text-[11px] whitespace-nowrap transition-all cursor-pointer border active:scale-95',
                     isSelected
                       ? isWeakFilter
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold shadow-xs'
-                        : 'bg-cliniq-pharm text-obsidian-950 font-bold border-cliniq-pharm shadow-xs'
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-semibold shadow-xs'
+                        : 'bg-white text-zinc-950 font-semibold border-white shadow-xs'
                       : isWeakFilter
-                      ? 'bg-obsidian-800 text-rose-400/90 border-rose-500/25 hover:bg-rose-500/10'
-                      : 'bg-obsidian-850 text-obsidian-400 hover:text-white border-obsidian-700'
+                      ? 'bg-[#181216] text-rose-400/90 border-rose-500/25 hover:bg-rose-500/10'
+                      : 'bg-[#141926] text-zinc-400 hover:text-white border-[#20273A]'
                   )}
                 >
                   {f.label}
@@ -628,26 +628,26 @@ export default function ProfileScreen({
                   <button
                     type="button"
                     onClick={() => onSelectTopic(topic.topicSlug)}
-                    className="text-left font-bold text-[13px] text-white hover:text-cliniq-pharm transition-colors leading-snug cursor-pointer line-clamp-1"
+                    className="text-left font-semibold text-[13px] text-white hover:text-blue-300 transition-colors leading-snug cursor-pointer line-clamp-1"
                   >
                     {topic.title}
                   </button>
 
-                  <div className="flex items-center gap-3 mt-1.5 text-[11px] text-obsidian-400">
+                  <div className="flex items-center gap-3 mt-1.5 text-[11px] text-zinc-400">
                     <span>
                       Recall: <strong className="text-white">{topic.correct} / {topic.attempted}</strong> correct
                     </span>
                     <span>·</span>
                     {/* Mini Accuracy bar */}
-                    <div className="w-16 bg-obsidian-700 h-1.5 rounded-full overflow-hidden shrink-0">
+                    <div className="w-16 bg-[#182030] h-1.5 rounded-full overflow-hidden shrink-0">
                       <div
                         className={cn(
                           'h-full rounded-full',
                           topic.accuracy >= 80
-                            ? 'bg-cliniq-psm'
+                            ? 'bg-emerald-500'
                             : topic.accuracy >= 60
-                            ? 'bg-cliniq-trap'
-                            : 'bg-cliniq-danger'
+                            ? 'bg-amber-400'
+                            : 'bg-rose-500'
                         )}
                         style={{ width: `${Math.max(8, topic.accuracy)}%` }}
                       />
@@ -664,9 +664,9 @@ export default function ProfileScreen({
                         onStartPracticeTopic(topic.topicSlug, topic.subjectSlug)
                       }
                     }}
-                    className="py-1.5 px-3 rounded-xl bg-obsidian-850 hover:bg-obsidian-750 text-white text-xs font-semibold border border-obsidian-700 hover:border-cliniq-pharm/40 transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-xs"
+                    className="py-1.5 px-3 rounded-xl bg-[#181F30] hover:bg-[#20283C] text-white text-xs font-medium border border-[#283550] transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-xs"
                   >
-                    <RotateCcw className="w-3 h-3 text-cliniq-pharm" />
+                    <RotateCcw className="w-3 h-3 text-zinc-300" />
                     <span>Practice</span>
                   </button>
                 </div>

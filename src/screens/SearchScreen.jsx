@@ -202,12 +202,12 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
                         </span>
                       </div>
 
-                      <h3 className="text-xs sm:text-[13.5px] font-bold text-white group-hover:text-cliniq-pharm transition-colors line-clamp-1 leading-snug">
+                      <h3 className="text-xs sm:text-[13.5px] font-semibold text-white group-hover:text-blue-300 transition-colors line-clamp-1 leading-snug">
                         {topic.title}
                       </h3>
                     </div>
 
-                    <ChevronRight className="w-4 h-4 text-obsidian-500 group-hover:text-cliniq-pharm transition-colors shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-zinc-200 transition-colors shrink-0" />
                   </button>
                 ))}
               </div>
@@ -215,11 +215,11 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
           )}
 
           {/* Quick Search Tip */}
-          <div className="p-3.5 rounded-2xl bg-obsidian-850 border border-obsidian-700 space-y-1 text-xs">
-            <h4 className="font-bold text-white text-xs">
+          <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#222A3C] space-y-1 text-xs">
+            <h4 className="font-semibold text-white text-xs">
               ⚡ Instant Global Search
             </h4>
-            <p className="text-obsidian-400 leading-relaxed text-[11px]">
+            <p className="text-zinc-400 leading-relaxed text-[11px]">
               Query across drug aliases (e.g. <em>Rifampicin</em>, <em>Dabigatran</em>), investigations (<em>CBNAAT</em>, <em>dTT</em>), or conditions (<em>Tuberculosis</em>, <em>Glaucoma</em>).
             </p>
           </div>
@@ -228,12 +228,12 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
         /* Query Results State */
         <div className="space-y-3 pt-1 animate-fade-in">
           {/* Status line */}
-          <div className="flex items-center justify-between px-0.5 text-xs text-obsidian-400">
+          <div className="flex items-center justify-between px-0.5 text-xs text-zinc-400">
             <span>
               {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
             </span>
             {latencyMs !== null && (
-              <span className="font-mono text-[11px] text-obsidian-500">
+              <span className="font-mono text-[11px] text-zinc-500">
                 {latencyMs}ms
               </span>
             )}
@@ -246,7 +246,7 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
                 <button
                   key={topic.id}
                   onClick={() => handleSelectTopic(topic)}
-                  className="w-full p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 hover:border-cliniq-pharm/50 shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
+                  className="w-full p-3.5 rounded-xl bg-[#121622] border border-[#222A3C] hover:border-[#343F5C] shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 mb-1 text-[11px]">
@@ -259,29 +259,29 @@ export default function SearchScreen({ onClose, onSelectTopic }) {
                         {topic.subject?.code || 'TOPIC'}
                       </span>
                       {topic.subtopic && (
-                        <span className="text-obsidian-400 truncate">
+                        <span className="text-zinc-400 truncate">
                           {topic.subtopic}
                         </span>
                       )}
-                      <span className="text-obsidian-600">·</span>
-                      <span className="text-obsidian-400 flex items-center gap-1 font-normal text-[11px]">
-                        <Clock className="w-3 h-3 text-obsidian-500" />
+                      <span className="text-zinc-600">·</span>
+                      <span className="text-zinc-400 flex items-center gap-1 font-normal text-[11px]">
+                        <Clock className="w-3 h-3 text-zinc-500" />
                         3-Min Capsule
                       </span>
                     </div>
 
-                    <h3 className="text-xs sm:text-[13.5px] font-bold text-white group-hover:text-cliniq-pharm transition-colors line-clamp-1 leading-snug">
+                    <h3 className="text-xs sm:text-[13.5px] font-semibold text-white group-hover:text-blue-300 transition-colors line-clamp-1 leading-snug">
                       {topic.title}
                     </h3>
 
                     {topic.acronyms && topic.acronyms.length > 0 && (
-                      <p className="text-[11px] font-mono text-obsidian-400 truncate mt-1">
+                      <p className="text-[11px] font-mono text-zinc-400 truncate mt-1">
                         {topic.acronyms.slice(0, 4).join('  ·  ')}
                       </p>
                     )}
                   </div>
 
-                  <ChevronRight className="w-4 h-4 text-obsidian-500 group-hover:text-cliniq-pharm transition-colors shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-zinc-200 transition-colors shrink-0" />
                 </button>
               ))}
             </div>

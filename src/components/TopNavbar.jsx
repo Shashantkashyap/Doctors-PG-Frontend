@@ -22,20 +22,20 @@ export default function TopNavbar({
         <LogoFull className="h-8 w-auto" />
       </a>
 
-      {/* Spacious, Professional Obsidian Search Trigger */}
+      {/* Spacious, Professional Titanium Search Trigger */}
       <button
         type="button"
         onClick={onOpenSearch}
-        className="flex-1 max-w-[240px] pl-3 pr-2.5 py-1.5 bg-obsidian-800 hover:bg-obsidian-750 border border-obsidian-700 hover:border-cliniq-pharm/50 rounded-xl text-left flex items-center justify-between gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer group"
+        className="flex-1 max-w-[240px] pl-3 pr-2.5 py-1.5 bg-[#121622] hover:bg-[#181E2E] border border-[#232B40] hover:border-[#333E5C] rounded-xl text-left flex items-center justify-between gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer group"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <Search className="w-3.5 h-3.5 text-obsidian-400 group-hover:text-cliniq-pharm transition-colors shrink-0 stroke-[2]" />
-          <span className="text-xs text-obsidian-300 font-normal truncate">
+          <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 transition-colors shrink-0 stroke-[2]" />
+          <span className="text-xs text-zinc-300 font-normal truncate">
             Search 234 topics, DOCs...
           </span>
         </div>
 
-        <kbd className="text-[9px] font-mono text-obsidian-400 bg-obsidian-700/70 px-1.5 py-0.5 rounded border border-obsidian-600 hidden sm:inline shrink-0">
+        <kbd className="text-[9px] font-mono text-zinc-400 bg-[#1A2234] px-1.5 py-0.5 rounded border border-[#26334D] hidden sm:inline shrink-0">
           ⌘K
         </kbd>
       </button>

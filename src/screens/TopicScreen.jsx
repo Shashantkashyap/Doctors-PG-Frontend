@@ -105,7 +105,7 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
         <p className="text-sm font-semibold text-obsidian-300">Topic not found.</p>
         <button
           onClick={onBack}
-          className="px-4 py-2 bg-cliniq-pharm text-obsidian-950 text-xs font-bold rounded-xl shadow-xs"
+          className="px-4 py-2 bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-semibold rounded-xl shadow-sm transition-all cursor-pointer"
         >
           &larr; Return to Explore
         </button>
@@ -237,7 +237,7 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
 
       {/* Tier 3: National Guidelines & Exam Controversy Quarantine Alert */}
       {guidelines && (
-        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-obsidian-800 to-obsidian-800 border border-amber-500/30 space-y-2">
+        <div className="p-3.5 rounded-2xl bg-[#181612] border border-amber-600/30 space-y-2">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-400">
@@ -250,13 +250,13 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
               {guidelines.program || guidelines.title || 'National Health Program'}
             </h4>
             {guidelines.examControversyAlert && (
-              <div className="p-2.5 rounded-xl bg-obsidian-850 border border-amber-500/25 text-xs text-amber-200/90 leading-relaxed font-mono">
+              <div className="p-2.5 rounded-xl bg-[#14120E] border border-amber-600/25 text-xs text-amber-200/90 leading-relaxed font-mono">
                 <span className="font-bold text-amber-400">⚡ Exam Resolver: </span>
                 <span>{guidelines.examControversyAlert}</span>
               </div>
             )}
             {guidelines.keyUpdates && (
-              <p className="text-[11px] text-obsidian-300 leading-relaxed">
+              <p className="text-[11px] text-zinc-300 leading-relaxed">
                 {guidelines.keyUpdates}
               </p>
             )}

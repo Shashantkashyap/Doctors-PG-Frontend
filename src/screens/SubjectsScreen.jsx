@@ -271,34 +271,34 @@ export default function SubjectsScreen({ onSelectTopic }) {
               <button
                 key={topic.id}
                 onClick={() => onSelectTopic(topic.slug)}
-                className="w-full p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 hover:border-cliniq-pharm/50 shadow-xs hover:shadow-card text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
+                className="w-full p-3.5 rounded-xl bg-[#121622] border border-[#222A3C] hover:border-[#343F5C] shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
               >
                 <div className="min-w-0 flex-1">
                   {/* Meta row: Subtopic Tag + 3-Min Rapid Capsule */}
                   <div className="flex items-center gap-2 mb-1 text-[10.5px]">
-                    <span className="font-semibold text-cliniq-pharm bg-sky-500/10 px-2 py-0.5 rounded-md border border-sky-500/20 truncate max-w-[200px]">
+                    <span className="font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20 truncate max-w-[200px]">
                       {topic.subtopic || 'General'}
                     </span>
-                    <span className="text-obsidian-400 flex items-center gap-1 font-normal">
-                      <Clock className="w-3 h-3 text-obsidian-400" />
+                    <span className="text-zinc-400 flex items-center gap-1 font-normal">
+                      <Clock className="w-3 h-3 text-zinc-400" />
                       3-Min Capsule
                     </span>
                   </div>
 
                   {/* Topic Title */}
-                  <h3 className="text-xs sm:text-[13.5px] font-bold text-white group-hover:text-cliniq-pharm transition-colors leading-snug">
+                  <h3 className="text-xs sm:text-[13.5px] font-semibold text-white group-hover:text-blue-300 transition-colors leading-snug">
                     {topic.title}
                   </h3>
 
                   {/* Acronyms */}
                   {topic.acronyms && topic.acronyms.length > 0 && (
-                    <p className="text-[11px] font-mono text-obsidian-400 truncate mt-1">
+                    <p className="text-[11px] font-mono text-zinc-400 truncate mt-1">
                       {topic.acronyms.slice(0, 4).join('  ·  ')}
                     </p>
                   )}
                 </div>
 
-                <div className="w-7 h-7 rounded-full bg-obsidian-750 group-hover:bg-sky-500/10 text-obsidian-400 group-hover:text-cliniq-pharm flex items-center justify-center transition-colors shrink-0 border border-obsidian-700">
+                <div className="w-7 h-7 rounded-full bg-[#181F30] group-hover:bg-[#20283C] text-zinc-400 group-hover:text-white flex items-center justify-center transition-colors shrink-0 border border-[#283550]">
                   <ChevronRight className="w-3.5 h-3.5 stroke-[2]" />
                 </div>
               </button>

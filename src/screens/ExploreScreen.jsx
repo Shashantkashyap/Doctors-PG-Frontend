@@ -252,9 +252,9 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
           <button
             type="button"
             onClick={onOpenSearch}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-750 text-[11px] font-semibold text-cliniq-pharm shrink-0 transition-colors cursor-pointer border border-obsidian-700"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-750 text-[11px] font-semibold text-blue-400 shrink-0 transition-colors cursor-pointer border border-obsidian-700"
           >
-            <Sparkles className="w-3 h-3 text-cliniq-trap" />
+            <Sparkles className="w-3 h-3 text-amber-400" />
             <span>High-Yield:</span>
           </button>
           {trending.slice(0, 6).map((topic) => {
@@ -264,7 +264,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
                 key={topic.id}
                 type="button"
                 onClick={() => onSelectTopic(topic.slug)}
-                className="px-2.5 py-1 rounded-full bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700/80 hover:border-cliniq-pharm/40 text-[11px] font-medium text-obsidian-300 hover:text-white shrink-0 shadow-xs transition-all active:scale-[0.98] cursor-pointer"
+                className="px-2.5 py-1 rounded-full bg-[#121622] hover:bg-[#182030] border border-[#20283C] hover:border-[#38435E] text-[11px] font-medium text-zinc-300 hover:text-white shrink-0 shadow-xs transition-all active:scale-[0.98] cursor-pointer"
               >
                 {shortTitle}
               </button>
@@ -276,28 +276,28 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
       {/* 3. Daily Clinical MCQ Challenge (Rotates Daily + Direct 10 MCQs Launch) */}
       <div
         onClick={() => onSelectTopic(featuredTopic.slug, 'mcqDrill')}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-obsidian-800 via-obsidian-800 to-obsidian-850 border border-cliniq-pharm/30 p-4 shadow-sm hover:border-cliniq-pharm/60 transition-all cursor-pointer group active:scale-[0.99]"
+        className="relative overflow-hidden rounded-2xl bg-[#121622] hover:bg-[#161C2C] border border-[#242C3E] hover:border-[#38435E] p-4.5 shadow-sm transition-all cursor-pointer group active:scale-[0.99]"
       >
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1 space-y-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/10 text-cliniq-pharm text-[10.5px] font-bold border border-sky-500/20">
-                <Sparkles className="w-3 h-3 text-cliniq-trap" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10.5px] font-semibold border border-blue-500/20">
+                <Sparkles className="w-3 h-3 text-amber-400" />
                 <span>Daily MCQ Challenge</span>
               </span>
-              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-obsidian-750 text-obsidian-300 border border-obsidian-700">
+              <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#182030] text-zinc-300 border border-[#252E44]">
                 {featuredTopic.subject}
               </span>
-              <span className="text-[11px] text-obsidian-500">·</span>
-              <span className="text-[11px] text-obsidian-400 font-medium">
+              <span className="text-[11px] text-zinc-500">·</span>
+              <span className="text-[11px] text-zinc-400 font-medium">
                 10 Clinical MCQs
               </span>
             </div>
 
-            <h2 className="text-[15px] font-bold text-white tracking-tight leading-snug group-hover:text-cliniq-pharm transition-colors">
+            <h2 className="text-[15px] font-bold text-white tracking-tight leading-snug group-hover:text-blue-300 transition-colors">
               {featuredTopic.title}
             </h2>
-            <p className="text-[12px] text-obsidian-300 line-clamp-1">
+            <p className="text-[12px] text-zinc-400 line-clamp-1">
               {featuredTopic.subtitle}
             </p>
           </div>
@@ -307,7 +307,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
               type="button"
               onClick={handleShuffleFeatured}
               title="Shuffle to another high-yield topic"
-              className="w-8 h-8 rounded-xl bg-obsidian-750 hover:bg-obsidian-700 text-obsidian-400 hover:text-white border border-obsidian-700 flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-xl bg-[#181F30] hover:bg-[#20293E] text-zinc-400 hover:text-white border border-[#283550] flex items-center justify-center transition-all cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
@@ -318,7 +318,7 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
                 e.stopPropagation()
                 onSelectTopic(featuredTopic.slug, 'mcqDrill')
               }}
-              className="py-2 px-3.5 rounded-xl bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 font-bold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer"
+              className="py-2 px-3.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 active:scale-95 shrink-0 cursor-pointer"
             >
               <span>Solve MCQs</span>
               <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -381,34 +381,34 @@ export default function ExploreScreen({ onSelectTopic, onOpenSearch }) {
                 <button
                   key={topic.id}
                   onClick={() => onSelectTopic(topic.slug)}
-                  className="w-full p-3.5 rounded-xl bg-obsidian-800 border border-obsidian-700 hover:border-cliniq-pharm/50 shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
+                  className="w-full p-3.5 rounded-xl bg-[#121622] hover:bg-[#161C2C] border border-[#20283C] hover:border-[#38435E] shadow-xs text-left flex items-center justify-between gap-3 group transition-all duration-150 active:scale-[0.99] cursor-pointer"
                 >
                   <div className="min-w-0 flex-1">
                     {/* Meta row: Subtopic Tag + 3-Min Rapid Capsule */}
                     <div className="flex items-center gap-2 mb-1.5 text-[11px]">
-                      <span className="font-semibold text-cliniq-pharm bg-sky-500/10 px-2 py-0.5 rounded-md border border-sky-500/20 truncate max-w-[200px]">
+                      <span className="font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20 truncate max-w-[200px]">
                         {topic.subtopic || 'General'}
                       </span>
-                      <span className="text-obsidian-400 flex items-center gap-1 font-normal">
-                        <Clock className="w-3 h-3 text-obsidian-400" />
+                      <span className="text-zinc-400 flex items-center gap-1 font-normal">
+                        <Clock className="w-3 h-3 text-zinc-500" />
                         3-Min Capsule
                       </span>
                     </div>
 
                     {/* Topic Title */}
-                    <h3 className="text-[14px] font-bold text-white group-hover:text-cliniq-pharm transition-colors leading-snug">
+                    <h3 className="text-[14px] font-bold text-white group-hover:text-blue-300 transition-colors leading-snug">
                       {topic.title}
                     </h3>
 
                     {/* Acronyms */}
                     {topic.acronyms && topic.acronyms.length > 0 && (
-                      <p className="text-[11px] font-mono text-obsidian-400 truncate mt-1">
+                      <p className="text-[11px] font-mono text-zinc-400 truncate mt-1">
                         {topic.acronyms.slice(0, 4).join('  ·  ')}
                       </p>
                     )}
                   </div>
 
-                  <div className="w-7 h-7 rounded-full bg-obsidian-750 group-hover:bg-sky-500/10 text-obsidian-400 group-hover:text-cliniq-pharm flex items-center justify-center transition-colors shrink-0 border border-obsidian-700">
+                  <div className="w-7 h-7 rounded-full bg-[#181F30] group-hover:bg-blue-500/15 text-zinc-400 group-hover:text-white flex items-center justify-center transition-colors shrink-0 border border-[#242E42]">
                     <ChevronRight className="w-3.5 h-3.5 stroke-[2]" />
                   </div>
                 </button>

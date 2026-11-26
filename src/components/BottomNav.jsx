@@ -51,34 +51,29 @@ export default function BottomNav({ activeTab, setActiveTab, wrongCount = 0, not
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  'relative flex-1 flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl transition-all duration-200 touch-manipulation active:scale-[0.96] cursor-pointer',
+                  'relative flex-1 flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl transition-all duration-150 touch-manipulation active:scale-[0.96] cursor-pointer',
                   isActive
-                    ? 'bg-obsidian-800 text-white font-semibold shadow-xs border border-obsidian-600'
-                    : 'text-obsidian-400 hover:text-white hover:bg-obsidian-850 font-medium'
+                    ? 'bg-[#181F30] text-white font-semibold shadow-xs border border-[#283550]'
+                    : 'text-zinc-400 hover:text-white hover:bg-[#141824] font-medium'
                 )}
               >
                 <div className="relative flex items-center justify-center">
                   <Icon
                     className={cn(
                       'w-[18px] h-[18px] transition-transform duration-150',
-                      isActive ? 'stroke-[2.2] text-cliniq-pharm' : 'stroke-[1.8]'
+                      isActive ? 'stroke-[2.2] text-white' : 'stroke-[1.8] text-zinc-400'
                     )}
                   />
                   {tab.badge !== null && (
                     <span
-                      className={cn(
-                        'absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 text-[9px] font-bold rounded-full flex items-center justify-center shadow-xs transition-colors',
-                        isActive
-                          ? 'bg-cliniq-pharm text-obsidian-950 font-black ring-1 ring-obsidian-900'
-                          : 'bg-cliniq-trap text-obsidian-950'
-                      )}
+                      className="absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 text-[9px] font-bold rounded-full flex items-center justify-center shadow-xs bg-rose-500 text-white"
                     >
                       {tab.badge}
                     </span>
                   )}
                 </div>
 
-                <span className={cn('text-[10.5px] tracking-tight', isActive ? 'font-bold text-white' : 'font-medium text-obsidian-400')}>
+                <span className={cn('text-[10.5px] tracking-tight', isActive ? 'font-bold text-white' : 'font-medium text-zinc-400')}>
                   {tab.label}
                 </span>
               </button>

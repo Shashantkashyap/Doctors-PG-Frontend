@@ -64,7 +64,7 @@ function MarkdownDomainRenderer({ content = '' }) {
         }
         if (block.type === 'h3') {
           return (
-            <h4 key={i} className="text-xs font-bold text-cliniq-pharm pt-1">
+            <h4 key={i} className="text-xs font-bold text-blue-400 pt-1">
               {block.text}
             </h4>
           )
@@ -103,7 +103,7 @@ function MarkdownDomainRenderer({ content = '' }) {
         if (block.type === 'bullet') {
           return (
             <div key={i} className="flex items-start gap-2 pl-1">
-              <span className="text-cliniq-pharm mt-0.5">•</span>
+              <span className="text-blue-400 mt-0.5">•</span>
               <span className="flex-1">{block.text}</span>
             </div>
           )
@@ -160,16 +160,14 @@ export default function Checklist({ checklist = [] }) {
   return (
     <div className="space-y-3 pb-20 animate-fade-in">
       {/* Controls & Domain Progress Header */}
-      <div className="p-3.5 rounded-2xl bg-obsidian-800 border border-obsidian-700 shadow-xs flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-sky-500/10 text-cliniq-pharm border border-sky-500/20 flex items-center justify-center shrink-0">
-            <BookOpen className="w-3.5 h-3.5 stroke-[2.2]" />
-          </div>
+      <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <BookOpen className="w-4 h-4 text-blue-400 stroke-[2] shrink-0" />
           <div>
             <h3 className="text-xs font-bold text-white">
               10-Minute Knowledge Base ({checklist.length} Domains)
             </h3>
-            <span className="text-[10px] text-obsidian-400 font-medium">
+            <span className="text-[10px] text-zinc-400 font-medium">
               Structured clinical checklist & comparative tables
             </span>
           </div>
@@ -178,14 +176,14 @@ export default function Checklist({ checklist = [] }) {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={expandAll}
-            className="text-obsidian-400 hover:text-white transition-colors text-[11px] font-semibold cursor-pointer"
+            className="text-zinc-400 hover:text-white transition-colors text-[11px] font-semibold cursor-pointer"
           >
             Expand
           </button>
-          <span className="text-obsidian-600">·</span>
+          <span className="text-zinc-600">·</span>
           <button
             onClick={collapseAll}
-            className="text-obsidian-400 hover:text-white transition-colors text-[11px] font-semibold cursor-pointer"
+            className="text-zinc-400 hover:text-white transition-colors text-[11px] font-semibold cursor-pointer"
           >
             Collapse
           </button>
@@ -203,10 +201,10 @@ export default function Checklist({ checklist = [] }) {
             <div
               key={idx}
               className={cn(
-                'rounded-2xl border transition-all duration-150 overflow-hidden bg-obsidian-800',
+                'rounded-2xl border transition-all duration-150 overflow-hidden bg-[#121622]',
                 isOpen
-                  ? 'border-cliniq-pharm/40 shadow-xs'
-                  : 'border-obsidian-700 hover:border-obsidian-600'
+                  ? 'border-blue-500/35 shadow-xs'
+                  : 'border-[#20283C] hover:border-[#2D3850]'
               )}
             >
               {/* Accordion Header */}

@@ -224,14 +224,14 @@ export default function MistakesDeckScreen({ onSelectTopic, onUpdateCounts }) {
               <div className="pt-2 flex items-center justify-between gap-2 border-t border-obsidian-700">
                 <button
                   onClick={() => setIsDrawerOpen(true)}
-                  className="text-xs font-semibold text-cliniq-pharm hover:text-sky-300 flex items-center gap-1 cursor-pointer transition-colors"
+                  className="text-xs font-medium text-zinc-400 hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
                 >
                   <span>View 4-Option Explanation &rarr;</span>
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className="py-1.5 px-3.5 rounded-xl text-xs font-bold bg-cliniq-pharm hover:bg-sky-400 text-obsidian-950 flex items-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
+                  className="py-1.5 px-3.5 rounded-xl text-xs font-semibold bg-white hover:bg-zinc-200 text-zinc-950 flex items-center gap-1.5 transition-all active:scale-95 shadow-xs cursor-pointer"
                 >
                   <span>{currentIndex === deck.length - 1 ? 'Refresh' : 'Next'}</span>
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
