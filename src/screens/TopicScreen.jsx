@@ -10,7 +10,6 @@ import {
   Target,
   AlertTriangle,
   ShieldAlert,
-  ArrowRight,
 } from 'lucide-react'
 import WardCard from '../components/WardCard'
 import Checklist from '../components/Checklist'
@@ -240,56 +239,6 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
         </div>
       </header>
 
-      {/* Tier 3: Interactive National Guidelines & Exam Controversy with Animated Doctor Guide */}
-      {guidelines && (
-        <div
-          onClick={() => setIsGuidelinesSheetOpen(true)}
-          className="p-3.5 rounded-2xl bg-[#17140E] hover:bg-[#1E1912] border border-amber-600/35 hover:border-amber-500/60 shadow-sm transition-all cursor-pointer group active:scale-[0.99] flex items-center justify-between gap-3"
-        >
-          <div className="flex items-center gap-3 min-w-0">
-            {/* Animated Doctor with Medical Clipboard */}
-            <div className="shrink-0 relative">
-              <AnimatedDoctorGuide
-                className="w-12 h-14"
-                hasAlert={Boolean(guidelines.examControversyAlert)}
-              />
-            </div>
-
-            <div className="min-w-0 space-y-1">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-400">
-                  Tier 3 · Guidelines & Controversy
-                </span>
-                {guidelines.examControversyAlert && (
-                  <span className="text-[9.5px] font-mono font-semibold px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                    ⚡ Resolver
-                  </span>
-                )}
-              </div>
-
-              <h4 className="text-xs font-bold text-white group-hover:text-amber-200 transition-colors leading-snug line-clamp-1">
-                {guidelines.program || guidelines.title || 'National Health Program Protocol'}
-              </h4>
-
-              <p className="text-[11px] text-zinc-300 line-clamp-1 font-sans">
-                {guidelines.examControversyAlert || guidelines.keyUpdates || 'Tap to consult clinical guidelines sheet'}
-              </p>
-            </div>
-          </div>
-
-          {/* Action indicator on Right */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="hidden sm:inline text-[11px] text-amber-300 font-semibold group-hover:underline">
-              Consult Sheet
-            </span>
-            <div className="w-7 h-7 rounded-xl bg-amber-500/10 group-hover:bg-amber-500/20 text-amber-400 flex items-center justify-center transition-colors border border-amber-500/25">
-              <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Active Layer View */}
       <div className="pt-0.5">
         <ErrorBoundary>
@@ -305,41 +254,37 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
         </ErrorBoundary>
       </div>
 
-      {/* Floating Side Doctor Companion (Docked to right, accessible across all 3 modes) */}
-      {guidelines && (
-        <div
-          className="fixed bottom-6 z-40 animate-fade-in"
-          style={{ right: 'max(1rem, calc(50% - 200px))' }}
+      {/* Floating Clinical Doctor Guide (Permanently Fixed to Right Corner) */}
+      <div
+        className="fixed bottom-6 z-40 animate-fade-in select-none"
+        style={{ right: 'max(12px, calc(50% - 200px))' }}
+      >
+        <button
+          type="button"
+          onClick={() => setIsGuidelinesSheetOpen(true)}
+          className="relative flex items-center justify-center w-14 h-16 rounded-2xl bg-[#0D1220]/90 hover:bg-[#141C30] backdrop-blur-md border border-[#222E48] hover:border-amber-500/50 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-amber-500/10 transition-all duration-200 cursor-pointer active:scale-90 group"
+          title="Clinical Guidelines & Controversy Sheet"
+          aria-label="Open Clinical Guidelines"
         >
-          <button
-            type="button"
-            onClick={() => setIsGuidelinesSheetOpen(true)}
-            className="relative flex items-center gap-2 p-1.5 pr-3 rounded-full bg-[#121624]/95 hover:bg-[#182034] backdrop-blur-md border border-[#2B3754] shadow-2xl hover:border-amber-500/50 transition-all cursor-pointer active:scale-90 group"
-            title="Open National Guidelines Sheet"
-          >
-            {/* Animated Doctor Avatar */}
-            <div className="w-10 h-12 -my-2 -ml-1">
-              <AnimatedDoctorGuide
-                className="w-full h-full"
-                hasAlert={Boolean(guidelines.examControversyAlert)}
-              />
-            </div>
-
-            {/* Compact Label */}
-            <div className="flex flex-col text-left">
-              <div className="flex items-center gap-1">
-                <span className="text-[11px] font-bold text-white group-hover:text-amber-200 transition-colors">
-                  Guidelines
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              </div>
-              <span className="text-[9px] font-mono text-zinc-400 leading-none">
-                Sheet & Resolver
+          {/* Live amber controversy indicator dot at top-right */}
+          {guidelines?.examControversyAlert && (
+            <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 z-10 pointer-events-none">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+              <span className="relative inline-flex items-center justify-center rounded-full h-3.5 w-3.5 bg-amber-500 text-[8.5px] font-bold text-obsidian-950 border border-obsidian-900 shadow-sm">
+                ⚡
               </span>
-            </div>
-          </button>
-        </div>
-      )}
+            </span>
+          )}
+
+          {/* Animated Doctor Character */}
+          <div className="w-12 h-14 pointer-events-none">
+            <AnimatedDoctorGuide
+              className="w-full h-full"
+              hasAlert={Boolean(guidelines?.examControversyAlert)}
+            />
+          </div>
+        </button>
+      </div>
 
       {/* Guidelines Bottom Sheet */}
       <GuidelinesSheet
