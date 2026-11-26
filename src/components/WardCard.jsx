@@ -35,7 +35,7 @@ export default function WardCard({ topic }) {
   const mccItems = formatAnchorText(goldenAnchors?.mcc)
 
   return (
-    <div className="space-y-3.5 pb-20 animate-fade-in">
+    <div className="space-y-3.5 pb-4 animate-fade-in">
       {/* 1. THREE GOLDEN ANCHORS (DOC, IOC, MCC) */}
       <div className="space-y-2.5">
         {/* DOC: Drug / Treatment of Choice */}

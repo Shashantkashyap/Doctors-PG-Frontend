@@ -158,7 +158,7 @@ export default function Checklist({ checklist = [] }) {
   }
 
   return (
-    <div className="space-y-3 pb-20 animate-fade-in">
+    <div className="space-y-3 pb-4 animate-fade-in">
       {/* Controls & Domain Progress Header */}
       <div className="p-3.5 rounded-2xl bg-[#121622] border border-[#20283C] shadow-xs flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">

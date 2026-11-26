@@ -214,7 +214,7 @@ export default function McqDrill({ topic, topicSlug, onAttemptDone }) {
   const optionLetters = ['A', 'B', 'C', 'D']
 
   return (
-    <div className="space-y-3.5 pb-20 animate-fade-in">
+    <div className="space-y-3.5 pb-4 animate-fade-in">
       {/* Progress Header */}
       <div className="flex items-center justify-between text-xs text-obsidian-400 px-0.5 font-medium">
         <span className="font-semibold text-white">

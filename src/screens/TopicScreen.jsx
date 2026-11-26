@@ -135,7 +135,7 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
   const guidelines = resolveTopicGuidelines(topic, topicSlug)
 
   return (
-    <div className="space-y-3.5 animate-fade-in relative pb-20">
+    <div className="space-y-3.5 animate-fade-in relative pb-8">
       {/* Toast Alert */}
       {toastMessage && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-obsidian-800 text-white border border-obsidian-600 text-xs font-semibold shadow-float flex items-center gap-2 animate-fade-in">
@@ -254,36 +254,35 @@ export default function TopicScreen({ topicSlug, onBack, onAttemptDone, initialL
         </ErrorBoundary>
       </div>
 
-      {/* Floating Clinical Doctor Guide (Permanently Fixed to Right Corner) */}
-      <div
-        className="fixed bottom-6 z-40 animate-fade-in select-none"
-        style={{ right: 'max(12px, calc(50% - 200px))' }}
-      >
-        <button
-          type="button"
-          onClick={() => setIsGuidelinesSheetOpen(true)}
-          className="relative flex items-center justify-center w-14 h-16 rounded-2xl bg-[#0D1220]/90 hover:bg-[#141C30] backdrop-blur-md border border-[#222E48] hover:border-amber-500/50 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-amber-500/10 transition-all duration-200 cursor-pointer active:scale-90 group"
-          title="Clinical Guidelines & Controversy Sheet"
-          aria-label="Open Clinical Guidelines"
-        >
-          {/* Live amber controversy indicator dot at top-right */}
-          {guidelines?.examControversyAlert && (
-            <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 z-10 pointer-events-none">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex items-center justify-center rounded-full h-3.5 w-3.5 bg-amber-500 text-[8.5px] font-bold text-obsidian-950 border border-obsidian-900 shadow-sm">
-                ⚡
+      {/* Floating Clinical Doctor Guide (Permanently Fixed to Viewport Right Corner like Chatbot) */}
+      <div className="fixed bottom-6 left-0 right-0 z-40 pointer-events-none select-none">
+        <div className="w-full max-w-[430px] mx-auto px-4 relative flex justify-end">
+          <button
+            type="button"
+            onClick={() => setIsGuidelinesSheetOpen(true)}
+            className="pointer-events-auto relative flex items-center justify-center w-14 h-16 rounded-2xl bg-[#0D1220]/95 hover:bg-[#141C30] backdrop-blur-md border border-[#222E48] hover:border-amber-500/60 shadow-[0_10px_35px_rgba(0,0,0,0.7)] hover:shadow-amber-500/15 transition-all duration-200 cursor-pointer active:scale-90 group"
+            title="Clinical Guidelines & Controversy Sheet"
+            aria-label="Open Clinical Guidelines"
+          >
+            {/* Live amber controversy indicator dot at top-right */}
+            {guidelines?.examControversyAlert && (
+              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 z-10 pointer-events-none">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                <span className="relative inline-flex items-center justify-center rounded-full h-3.5 w-3.5 bg-amber-500 text-[8.5px] font-bold text-obsidian-950 border border-obsidian-900 shadow-sm">
+                  ⚡
+                </span>
               </span>
-            </span>
-          )}
+            )}
 
-          {/* Animated Doctor Character */}
-          <div className="w-12 h-14 pointer-events-none">
-            <AnimatedDoctorGuide
-              className="w-full h-full"
-              hasAlert={Boolean(guidelines?.examControversyAlert)}
-            />
-          </div>
-        </button>
+            {/* Animated Doctor Character */}
+            <div className="w-12 h-14 pointer-events-none">
+              <AnimatedDoctorGuide
+                className="w-full h-full"
+                hasAlert={Boolean(guidelines?.examControversyAlert)}
+              />
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Guidelines Bottom Sheet */}
